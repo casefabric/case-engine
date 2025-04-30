@@ -16,6 +16,20 @@ jobs:
       - run-in-memory-tests
       - show-engine-logs-on-fail
 
+  cluster-build:
+    working_directory: ~/cafienne-engine
+    machine:
+      image: ubuntu-2404:2024.11.1
+    resource_class: large
+    steps:
+      - build-preparation
+      - sonarcloud/scan
+      - docker-login
+      - setup-test-infra
+      - setup-databases
+      - build-docker-image
+      - run-cluster-tests
+
   main-build:
     working_directory: ~/cafienne-engine
     machine:
@@ -337,6 +351,71 @@ commands:
           name: Stop and remove the Cafienne container
           command: docker rm -f cafienne
 
+  run-cluster-tests:
+    steps:
+      # Starting docker environment for Cluster testing
+      - run:
+          name: Create test folders
+          command: |
+            mkdir definitions
+            chmod 777 definitions
+            mkdir -p .circleci/run/cafienne/archive
+            chmod 777 .circleci/run/cafienne/archive*
+      - run:
+          name: Start Case Engine - Node 1 - for Cluster testing
+          command: |
+            sudo docker-compose -f .circleci/docker-config/cluster-engine-with-postgres.yml up cluster-node-1 -d
+            echo Give node 1 some time to start
+            sleep 5
+      - run:
+          name: Start Case Engine -  Node 2 - for Cluster testing
+          command: sudo docker-compose -f .circleci/docker-config/cluster-engine-with-postgres.yml up cluster-node-2 -d
+      - run:
+          name: Give engines time to start
+          command: sleep 30
+      - run:
+          name: Docker logs of database
+          command: |
+            docker-compose -f .circleci/docker-config/databases.yml logs postgres-for-cluster
+      - run:
+          name: Docker logs of cluster engine before starting test
+          command: docker-compose -f .circleci/docker-config/cluster-engine-with-postgres.yml logs
+      - run:
+          name: Test engine against framework
+          command: |
+            cd ..
+            cd ./cmmn-test-framework
+            # Enable the test framework to use both nodes 
+            npm run test -- -urls "http://0.0.0.0:2028,http://0.0.0.0:2027"
+      - run:
+          name: Test archival & deletion
+          command: |
+            cd ..
+            cd ./cmmn-test-framework
+            # Enable the test framework to use both nodes 
+            npm run test -- -urls "http://0.0.0.0:2028,http://0.0.0.0:2027" storage
+      - run:
+          name: Docker logs of engine after the test
+          command: docker-compose -f .circleci/docker-config/cluster-engine-with-postgres.yml logs
+      - run:
+          name: Docker logs of database
+          command: |
+            echo 
+            echo Logs for PostgreSQL cluster database
+            echo
+            docker-compose -f .circleci/docker-config/databases.yml logs postgres-for-cluster
+      - run:
+          name: Stop and remove the Cafienne container
+          command: docker-compose -f .circleci/docker-config/cluster-engine-with-postgres.yml down
+      - run:
+          name: Docker logs of node 1 after the test
+          command: docker-compose -f .circleci/docker-config/cluster-engine-with-postgres.yml logs cluster-node-1
+          when: on_fail
+      - run:
+          name: Docker logs of node 2 after the test
+          command: docker-compose -f .circleci/docker-config/cluster-engine-with-postgres.yml logs cluster-node-2
+          when: on_fail
+
   run-cassandra-tests:
     steps:
       # Starting docker environment for Cassandra testing
@@ -413,6 +492,13 @@ workflows:
                 - dependency-updates
                 - snapshot
                 - run-compatibility-tests
+                - support-pekko-clustering
+      - cluster-build:
+          context: automation-context
+          filters:
+            branches:
+              only:
+                - support-pekko-clustering
       - release-build:
           context: automation-context
           filters:
