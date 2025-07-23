@@ -18,6 +18,8 @@
 package org.cafienne.cmmn.test;
 
 import com.fasterxml.jackson.core.JsonGenerator;
+import org.cafienne.actormodel.ActorMetadata;
+import org.cafienne.actormodel.ActorType;
 import org.cafienne.actormodel.identity.CaseUserIdentity;
 import org.cafienne.cmmn.actorapi.command.CaseCommand;
 import org.cafienne.cmmn.instance.Case;
@@ -42,6 +44,10 @@ abstract class TestScriptCommand extends CaseCommand {
     protected TestScriptCommand(ValueMap json) {
         super(json);
         this.tenant = json.readString(Fields.tenant);
+    }
+
+    protected ActorMetadata getActorMetadata() {
+        return new ActorMetadata(ActorType.Case, getActorId(), null);
     }
 
     abstract void beforeSendCommand(TestScript testScript);

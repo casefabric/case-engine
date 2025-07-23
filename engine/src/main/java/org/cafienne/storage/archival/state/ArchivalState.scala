@@ -18,12 +18,12 @@
 package org.cafienne.storage.archival.state
 
 import org.cafienne.actormodel.message.event.ModelEvent
-import org.cafienne.util.json.{ValueList, ValueMap}
-import org.cafienne.storage.actormodel.message.{StorageActionStarted, StorageActionUpdated, StorageEvent}
+import org.cafienne.storage.actormodel.message.{StorageActionUpdated, StorageEvent}
 import org.cafienne.storage.actormodel.state.StorageActorState
-import org.cafienne.storage.archival.event._
 import org.cafienne.storage.archival.event.cmmn.ModelActorArchived
+import org.cafienne.storage.archival.event.{ArchivalStarted, ArchiveCreated, ArchiveReceived, QueryDataArchived}
 import org.cafienne.storage.archival.{ActorDataArchiver, Archive, ModelEventSerializer}
+import org.cafienne.util.json.{ValueList, ValueMap}
 
 trait ArchivalState extends StorageActorState {
   override val actor: ActorDataArchiver
@@ -48,8 +48,6 @@ trait ArchivalState extends StorageActorState {
   def parentReceivedArchive: Boolean = events.exists(_.isInstanceOf[ArchiveReceived])
 
   def isCleared: Boolean = events.exists(_.isInstanceOf[ModelActorArchived])
-
-  override def createStorageStartedEvent: StorageActionStarted = ArchivalStarted(user, metadata, findCascadingChildren())
 
   override def startStorageProcess(): Unit = {
     val children = findCascadingChildren()

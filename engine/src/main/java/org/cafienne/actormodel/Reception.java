@@ -17,17 +17,19 @@
 
 package org.cafienne.actormodel;
 
+import org.apache.pekko.actor.ActorRef;
 import org.cafienne.actormodel.communication.CaseSystemCommunicationMessage;
 import org.cafienne.actormodel.communication.request.command.RequestModelActor;
 import org.cafienne.actormodel.exception.InvalidCommandException;
 import org.cafienne.actormodel.message.command.ModelCommand;
+import org.cafienne.actormodel.message.command.TerminateModelActor;
 import org.cafienne.actormodel.message.event.ModelEvent;
-import org.cafienne.actormodel.message.response.ActorChokedFailure;
-import org.cafienne.actormodel.message.response.ActorExistsFailure;
-import org.cafienne.actormodel.message.response.ActorInStorage;
-import org.cafienne.actormodel.message.response.CommandFailure;
+import org.cafienne.actormodel.message.response.*;
 import org.cafienne.infrastructure.serialization.DeserializationFailure;
 import org.cafienne.storage.actormodel.message.StorageEvent;
+
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * All actor system incoming traffic (either during recovery or upon receiving incoming messages)
@@ -43,6 +45,7 @@ public class Reception {
     private String recoveryFailureInformation = "";
     private boolean isInStorageProcess = false;
     private ActorType actorType;
+    private List<ModelActorShutdownHook> hooks = new ArrayList<>();
 
     Reception(ModelActor actor) {
         this.actor = actor;
@@ -61,10 +64,19 @@ public class Reception {
         handleMessage(message);
     }
 
+    private void terminateActor() {
+        ActorRef replyTo = actor.sender();
+        hooks.add(() -> replyTo.tell(new ActorTerminated(actor.getId()), actor.self()));
+        actor.takeABreak("Upon request");
+    }
+
     void handleMessage(Object message) {
-        if (message instanceof ModelEvent event) new RecoveryTransaction(actor, this, event).perform();
-        else if (message instanceof ModelCommand command) new ModelActorTransaction(actor, this, monitor, command).perform();
-        else new SystemMessageTransaction(actor, this, message).perform();
+        switch (message) {
+            case TerminateModelActor tma -> terminateActor();
+            case ModelEvent event -> new RecoveryTransaction(actor, this, event).perform();
+            case ModelCommand command -> new ModelActorTransaction(actor, this, monitor, command).perform();
+            case null, default -> new SystemMessageTransaction(actor, this, message).perform();
+        }
     }
 
     boolean canPass(ModelCommand visitor) {
@@ -174,5 +186,11 @@ public class Reception {
 
     void close() {
         monitor.cancelTimer(); // Clear in mem scheduler to stop the actor after idle time
+        hooks.forEach(ModelActorShutdownHook::afterShutdown);
     }
+}
+
+@FunctionalInterface
+interface ModelActorShutdownHook {
+    void afterShutdown();
 }

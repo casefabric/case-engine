@@ -17,7 +17,7 @@
 
 package org.cafienne.storage.deletion.state
 
-import org.cafienne.storage.actormodel.message.{StorageActionStarted, StorageActionUpdated, StorageEvent}
+import org.cafienne.storage.actormodel.message.{StorageActionUpdated, StorageEvent}
 import org.cafienne.storage.actormodel.state.StorageActorState
 import org.cafienne.storage.deletion.ActorDataRemover
 import org.cafienne.storage.deletion.event.{QueryDataRemoved, RemovalStarted}
@@ -47,8 +47,6 @@ trait DeletionState extends StorageActorState {
     printLogMessage(s"Found ${children.length} children: ${children.mkString("\n--- ", s"\n--- ", "")}")
     informOwner(RemovalStarted(user, metadata, children))
   }
-
-  override def createStorageStartedEvent: StorageActionStarted = RemovalStarted(user, metadata, findCascadingChildren())
 
   /**
    * The removal process is idempotent (i.e., it can be triggered multiple times without ado).

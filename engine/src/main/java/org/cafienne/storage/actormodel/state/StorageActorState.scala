@@ -22,11 +22,10 @@ import org.apache.pekko.actor.ActorRef
 import org.cafienne.actormodel.ActorMetadata
 import org.cafienne.actormodel.message.event.{ModelEvent, ModelEventCollection}
 import org.cafienne.storage.StorageUser
+import org.cafienne.storage.actormodel.BaseStorageActor
 import org.cafienne.storage.actormodel.command.ClearTimerData
 import org.cafienne.storage.actormodel.event.{ChildrenReceived, QueryDataCleared, TimerDataCleared}
 import org.cafienne.storage.actormodel.message.{StorageActionStarted, StorageEvent}
-import org.cafienne.storage.actormodel.BaseStorageActor
-import org.cafienne.storage.archival.event.ArchivalStarted
 import org.cafienne.storage.querydb.QueryDBStorage
 
 trait StorageActorState extends ModelEventCollection with LazyLogging {
@@ -53,17 +52,11 @@ trait StorageActorState extends ModelEventCollection with LazyLogging {
     .headOption // Take the actor class of the bootstrap message found, or else just give a message with the event types that are found.
     .getOrElse(s"Bootstrap message is missing; found ${events.length} events of types: [${events.map(_.getClass.getName).toSet.mkString(",")}]")
 
-  def createStorageStartedEvent: StorageActionStarted
-
   def hasStartEvent: Boolean = events.exists(_.isInstanceOf[StorageActionStarted])
 
   def storageStartedEvent: StorageActionStarted = getEvent(classOf[StorageActionStarted])
 
-  def startStorageProcess(): Unit = {
-    val children = findCascadingChildren()
-    printLogMessage(s"Found ${children.length} children: ${children.mkString("\n--- ", s"\n--- ", "")}")
-    informOwner(ArchivalStarted(user, metadata, children))
-  }
+  def startStorageProcess(): Unit
 
   /**
    * ModelActor specific implementation. E.g., a Tenant retrieves it's children from the QueryDB,

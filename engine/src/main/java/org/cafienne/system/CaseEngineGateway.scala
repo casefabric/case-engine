@@ -19,6 +19,7 @@ package org.cafienne.system
 
 import org.apache.pekko.actor.{Actor, ActorRef, ActorSystem, Props}
 import org.apache.pekko.util.Timeout
+import org.cafienne.actormodel.ActorMetadata
 import org.cafienne.actormodel.message.command.{ModelCommand, TerminateModelActor}
 import org.cafienne.actormodel.message.response.{ActorTerminated, ModelResponse}
 import org.cafienne.cmmn.instance.Case
@@ -50,15 +51,15 @@ class CaseEngineGateway(caseSystem: CaseSystem) {
     getRouter(message).tell(message, sender)
   }
 
-  def terminate(actorId: String): Unit = {
-    defaultRouterService.tell(TerminateModelActor(actorId), ActorRef.noSender)
+  def terminate(metadata: ActorMetadata): Unit = {
+    defaultRouterService.tell(TerminateModelActor(metadata), ActorRef.noSender)
   }
 
-  def awaitTermination(actorId: String): Future[ActorTerminated] = {
+  def awaitTermination(metadata: ActorMetadata): Future[ActorTerminated] = {
     import org.apache.pekko.pattern.ask
     implicit val timeout: Timeout = caseSystem.config.actor.askTimout
 
-    defaultRouterService.ask(TerminateModelActor(actorId)).asInstanceOf[Future[ActorTerminated]]
+    defaultRouterService.ask(TerminateModelActor(metadata)).asInstanceOf[Future[ActorTerminated]]
   }
 
   private def getRouter(message: ModelCommand): ActorRef = {

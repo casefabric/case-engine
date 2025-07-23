@@ -35,19 +35,20 @@ class LocalRouter(caseSystem: CaseSystem, actors: mutable.Map[String, ActorRef],
 
   def receive: Actor.Receive = {
     case kill: TerminateModelActor =>
-      logger.info(s"Received termination request for actor ${kill.actorId}")
+      logger.info(s"Received termination request for actor ${kill.metadata.actorId}")
       terminateActor(kill)
     case m: ModelCommand => forwardMessage(m)
+    case t: ActorTerminated => handleActorTerminated(t)
     case t: Terminated => removeActorRef(t)
     case d: DeserializationFailure => handleDeserializationFailure(d)
     case other => handleUnknownMessage(other);
   }
 
-  def handleDeserializationFailure(value: DeserializationFailure): Unit = {
+  private def handleDeserializationFailure(value: DeserializationFailure): Unit = {
     logger.warn(s"The ${getClass.getSimpleName} received a ${value.getClass.getSimpleName} on manifest ${value.manifest}.", value.exception)
   }
 
-  def handleUnknownMessage(value: Any): Unit = {
+  private def handleUnknownMessage(value: Any): Unit = {
     logger.warn("The " + getClass.getSimpleName + " received an unknown message of type " + value.getClass.getName + ". Enable debug logging to see the contents of the message")
     logger.whenDebugEnabled(logger.debug("Message:\n", value))
   }
@@ -57,7 +58,7 @@ class LocalRouter(caseSystem: CaseSystem, actors: mutable.Map[String, ActorRef],
     *
     * @param m
     */
-  def forwardMessage(m: ModelCommand): Unit = {
+  private def forwardMessage(m: ModelCommand): Unit = {
     actors.getOrElseUpdate(m.actorId, createActorRef(m)).forward(m)
   }
 
@@ -75,16 +76,21 @@ class LocalRouter(caseSystem: CaseSystem, actors: mutable.Map[String, ActorRef],
     ref
   }
 
-  def terminateActor(msg: TerminateModelActor): Unit = {
-    val actorId = msg.actorId;
+  private def terminateActor(msg: TerminateModelActor): Unit = {
+    val actorId = msg.metadata.actorId;
     // If the actor is not (or no longer) in memory, We can immediately inform the sender
     actors.get(actorId).fold({
       sender() ! ActorTerminated(actorId)
     })(actor => {
       // Otherwise, store the request, stop the actor and, when the Termination is received, we will inform the requester.
       terminationRequests.put(actorId, sender())
-      context.stop(actor)
+      actor ! msg
     })
+  }
+
+  private def handleActorTerminated(actorTerminated: ActorTerminated): Unit = {
+    // Note: this code is "idempotent", it is invoked both when receiving Terminated msg from underlying Pekko and when ActorTerminated is received from our infra.
+    terminationRequests.remove(actorTerminated.actorId).foreach(requester => requester ! actorTerminated)
   }
 
   /**
@@ -93,12 +99,12 @@ class LocalRouter(caseSystem: CaseSystem, actors: mutable.Map[String, ActorRef],
     * @param t
     * @return
     */
-  def removeActorRef(t: Terminated): Unit = {
+  private def removeActorRef(t: Terminated): Unit = {
     val actorId = t.actor.path.name
     logger.whenDebugEnabled(logger.debug("ModelActor[" + actorId + "] has been terminated. Removing routing reference"))
+    handleActorTerminated(ActorTerminated(t.actor.path.name))
     if (actors.remove(actorId).isEmpty) {
       logger.warn("Received a Termination message for actor " + actorId + ", but it was not registered in the LocalRoutingService. Termination message is ignored")
     }
-    terminationRequests.remove(actorId).foreach(requester => requester ! ActorTerminated(actorId))
   }
 }

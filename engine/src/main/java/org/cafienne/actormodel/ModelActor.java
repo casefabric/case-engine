@@ -240,7 +240,7 @@ public abstract class ModelActor extends AbstractPersistentActor {
     void takeABreak(String msg) {
         getLogger().debug(msg);
 //        System.out.println(msg);
-        self().tell(PoisonPill.getInstance(), self());
+        context().stop(self());
     }
 
     protected void handleBootstrapMessage(BootstrapMessage message) {

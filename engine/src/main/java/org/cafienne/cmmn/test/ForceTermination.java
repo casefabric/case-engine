@@ -45,7 +45,7 @@ public class ForceTermination extends TestScriptCommand {
 
     @Override
     public void beforeSendCommand(TestScript testScript) {
-        testScript.getCaseSystem().engine().terminate(getActorId());
+        testScript.getCaseSystem().engine().terminate(getActorMetadata());
     }
 
     @Override
