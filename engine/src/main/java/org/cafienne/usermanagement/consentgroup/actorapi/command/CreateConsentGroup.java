@@ -20,11 +20,11 @@ package org.cafienne.usermanagement.consentgroup.actorapi.command;
 import org.cafienne.actormodel.exception.InvalidCommandException;
 import org.cafienne.actormodel.identity.ConsentGroupUser;
 import org.cafienne.actormodel.message.command.BootstrapMessage;
+import org.cafienne.infrastructure.serialization.Manifest;
 import org.cafienne.usermanagement.consentgroup.ConsentGroupActor;
 import org.cafienne.usermanagement.consentgroup.actorapi.ConsentGroup;
 import org.cafienne.usermanagement.consentgroup.actorapi.exception.ConsentGroupException;
 import org.cafienne.usermanagement.consentgroup.actorapi.response.ConsentGroupCreatedResponse;
-import org.cafienne.infrastructure.serialization.Manifest;
 import org.cafienne.util.json.ValueMap;
 
 @Manifest

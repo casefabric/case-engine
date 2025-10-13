@@ -17,9 +17,9 @@
 
 package org.cafienne.persistence.querydb.materializer.slick
 
-import org.cafienne.cmmn.actorapi.command.platform.NewUserInformation
-import org.cafienne.cmmn.instance.team.MemberType
 import org.cafienne.infrastructure.cqrs.offset.OffsetRecord
+import org.cafienne.model.cmmn.actorapi.command.platform.NewUserInformation
+import org.cafienne.model.cmmn.instance.team.MemberType
 import org.cafienne.persistence.querydb.materializer.cases.CaseStorageTransaction
 import org.cafienne.persistence.querydb.materializer.cases.team.CaseTeamMemberKey
 import org.cafienne.persistence.querydb.record._

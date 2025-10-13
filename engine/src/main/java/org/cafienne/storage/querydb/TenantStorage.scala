@@ -18,8 +18,8 @@
 package org.cafienne.storage.querydb
 
 import org.cafienne.persistence.querydb.materializer.slick.QueryDBWriter
-import org.cafienne.persistence.querydb.schema.table.userregistration.{ConsentGroupTables, TenantTables}
 import org.cafienne.persistence.querydb.schema.table.CaseTables
+import org.cafienne.persistence.querydb.schema.table.userregistration.{ConsentGroupTables, TenantTables}
 
 class TenantStorage(val writer: QueryDBWriter)
   extends QueryDBStorage

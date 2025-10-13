@@ -19,10 +19,10 @@ package org.cafienne.infrastructure.config.api
 
 import com.typesafe.config.{Config, ConfigObject}
 import org.cafienne.actormodel.identity.{CaseUserIdentity, Origin, PlatformUser, TenantUser}
-import org.cafienne.cmmn.actorapi.command.team.{CaseTeam, CaseTeamUser}
-import org.cafienne.cmmn.definition.CaseDefinition
 import org.cafienne.infrastructure.config.RepositoryConfig
 import org.cafienne.infrastructure.config.util.{ChildConfigReader, ConfigReader}
+import org.cafienne.model.cmmn.actorapi.command.team.{CaseTeam, CaseTeamUser}
+import org.cafienne.model.cmmn.definition.CaseDefinition
 
 class AnonymousConfig(val parent: ApiConfig) extends ChildConfigReader {
   lazy val anonymousUser = new AnonymousUserConfig(readConfig("user"))

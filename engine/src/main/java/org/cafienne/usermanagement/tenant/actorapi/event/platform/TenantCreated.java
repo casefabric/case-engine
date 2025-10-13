@@ -22,8 +22,8 @@ import org.cafienne.actormodel.message.command.BootstrapMessage;
 import org.cafienne.infrastructure.EngineVersion;
 import org.cafienne.infrastructure.serialization.Fields;
 import org.cafienne.infrastructure.serialization.Manifest;
-import org.cafienne.util.json.ValueMap;
 import org.cafienne.usermanagement.tenant.TenantActor;
+import org.cafienne.util.json.ValueMap;
 
 import java.io.IOException;
 

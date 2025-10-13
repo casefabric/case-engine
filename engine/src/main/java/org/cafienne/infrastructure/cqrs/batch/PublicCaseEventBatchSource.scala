@@ -20,8 +20,8 @@ package org.cafienne.infrastructure.cqrs.batch
 import com.typesafe.scalalogging.LazyLogging
 import org.apache.pekko.NotUsed
 import org.apache.pekko.stream.scaladsl.Source
-import org.cafienne.cmmn.actorapi.event.CaseEvent
 import org.cafienne.infrastructure.cqrs.batch.public_events.PublicCaseEventBatch
+import org.cafienne.model.cmmn.actorapi.event.CaseEvent
 
 trait PublicCaseEventBatchSource extends EventBatchSource[PublicCaseEventBatch] with LazyLogging {
   // PublicCaseEventBatch works on CaseEvents only

@@ -5,13 +5,13 @@
  * License, v. 2.0. If a copy of the MPL was not distributed with this
  * file, You can obtain one at http://mozilla.org/MPL/2.0/.
  */
-package org.cafienne.cmmn.test.expression;
+package org.cafienne.model.cmmn.test.expression;
 
-import org.cafienne.cmmn.test.basic.TestPlanning;
-import org.cafienne.cmmn.test.basic.TestRepeatRule;
-import org.cafienne.cmmn.test.basic.TestRequiredRule;
-import org.cafienne.cmmn.test.basic.TestSentry;
-import org.cafienne.cmmn.test.task.TestGetListGetDetails;
+import org.cafienne.model.cmmn.test.basic.TestPlanning;
+import org.cafienne.model.cmmn.test.basic.TestRepeatRule;
+import org.cafienne.model.cmmn.test.basic.TestRequiredRule;
+import org.cafienne.model.cmmn.test.basic.TestSentry;
+import org.cafienne.model.cmmn.test.task.TestGetListGetDetails;
 import org.junit.runner.RunWith;
 import org.junit.runners.Suite;
 import org.junit.runners.Suite.SuiteClasses;

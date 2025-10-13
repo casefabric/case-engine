@@ -17,11 +17,11 @@
 
 package org.cafienne.infrastructure.cqrs.batch.public_events
 
-import org.cafienne.cmmn.actorapi.event.CaseDefinitionApplied
-import org.cafienne.cmmn.actorapi.event.file.CaseFileItemTransitioned
 import org.cafienne.infrastructure.serialization.{Fields, Manifest}
-import org.cafienne.util.json.ValueMap
+import org.cafienne.model.cmmn.actorapi.event.CaseDefinitionApplied
+import org.cafienne.model.cmmn.actorapi.event.file.CaseFileItemTransitioned
 import org.cafienne.persistence.querydb.materializer.cases.file.CaseFileMerger
+import org.cafienne.util.json.ValueMap
 
 @Manifest
 case class CaseStarted(caseInstanceId: String, caseName: String, parentCaseId: String, rootCaseId: String, caseFile: ValueMap) extends CafiennePublicEventContent {

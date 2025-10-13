@@ -29,7 +29,7 @@
     <!--    <logger name="org.cafienne.persistence.querydb.materializer" level="DEBUG" />-->
 
     <!-- Show logging for cases in the engine -->
-    <!--    <logger name="org.cafienne.cmmn" level="DEBUG" />-->
+    <!--    <logger name="org.cafienne.model.cmmn" level="DEBUG" />-->
 
     <!-- Show timer service logging -->
     <!--    <logger name="org.cafienne.timerservice" level="DEBUG" />-->

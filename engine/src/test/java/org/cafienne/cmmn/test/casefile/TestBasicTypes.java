@@ -5,24 +5,24 @@
  * License, v. 2.0. If a copy of the MPL was not distributed with this
  * file, You can obtain one at http://mozilla.org/MPL/2.0/.
  */
-package org.cafienne.cmmn.test.casefile;
+package org.cafienne.model.cmmn.test.casefile;
 
-import org.cafienne.cmmn.actorapi.command.StartCase;
-import org.cafienne.cmmn.actorapi.command.casefile.CreateCaseFileItem;
-import org.cafienne.cmmn.actorapi.command.casefile.DeleteCaseFileItem;
-import org.cafienne.cmmn.actorapi.command.casefile.ReplaceCaseFileItem;
-import org.cafienne.cmmn.actorapi.command.casefile.UpdateCaseFileItem;
-import org.cafienne.cmmn.definition.CaseDefinition;
-import org.cafienne.cmmn.definition.casefile.CaseFileError;
-import org.cafienne.cmmn.instance.Path;
-import org.cafienne.cmmn.test.TestScript;
+import org.cafienne.model.cmmn.actorapi.command.StartCase;
+import org.cafienne.model.cmmn.actorapi.command.casefile.CreateCaseFileItem;
+import org.cafienne.model.cmmn.actorapi.command.casefile.DeleteCaseFileItem;
+import org.cafienne.model.cmmn.actorapi.command.casefile.ReplaceCaseFileItem;
+import org.cafienne.model.cmmn.actorapi.command.casefile.UpdateCaseFileItem;
+import org.cafienne.model.cmmn.definition.CaseDefinition;
+import org.cafienne.model.cmmn.definition.casefile.CaseFileError;
+import org.cafienne.model.cmmn.instance.Path;
+import org.cafienne.model.cmmn.test.TestScript;
 import org.cafienne.util.json.Value;
 import org.cafienne.util.json.ValueList;
 import org.cafienne.util.json.ValueMap;
 import org.cafienne.util.Guid;
 import org.junit.Test;
 
-import static org.cafienne.cmmn.test.TestScript.*;
+import static org.cafienne.model.cmmn.test.TestScript.*;
 
 public class TestBasicTypes {
     // This tests a set of basic case file types and properties

@@ -17,9 +17,9 @@
 
 package org.cafienne.persistence.querydb.query.result
 
-import org.cafienne.cmmn.definition.casefile.{CaseFileItemCollectionDefinition, CaseFileItemDefinition}
-import org.cafienne.util.json.{CafienneJson, Value, ValueList, ValueMap}
+import org.cafienne.model.cmmn.definition.casefile.{CaseFileItemCollectionDefinition, CaseFileItemDefinition}
 import org.cafienne.persistence.querydb.record.CaseDefinitionRecord
+import org.cafienne.util.json.{CafienneJson, Value, ValueList, ValueMap}
 
 final case class CaseFileDocumentation(record: CaseDefinitionRecord) extends CafienneJson {
   private def docs = (item: CaseFileItemDefinition) => Documentation(item.documentation.text, item.documentation.textFormat).toValue

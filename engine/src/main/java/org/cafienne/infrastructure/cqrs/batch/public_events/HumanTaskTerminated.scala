@@ -17,9 +17,9 @@
 
 package org.cafienne.infrastructure.cqrs.batch.public_events
 
-import org.cafienne.cmmn.actorapi.event.plan.task.humantask
-import org.cafienne.cmmn.instance.Path
 import org.cafienne.infrastructure.serialization.{Fields, Manifest}
+import org.cafienne.model.cmmn.actorapi.event.plan.task.humantask
+import org.cafienne.model.cmmn.instance.Path
 import org.cafienne.util.json.{Value, ValueMap}
 
 @Manifest

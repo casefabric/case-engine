@@ -18,10 +18,10 @@
 package org.cafienne.persistence.querydb.materializer.cases.team
 
 import com.typesafe.scalalogging.LazyLogging
-import org.cafienne.cmmn.actorapi.command.team._
-import org.cafienne.cmmn.actorapi.event.team.group.{CaseTeamGroupAdded, CaseTeamGroupChanged}
-import org.cafienne.cmmn.actorapi.event.team.{CaseTeamMemberEvent, CaseTeamMemberRemoved}
-import org.cafienne.cmmn.instance.team.MemberType
+import org.cafienne.model.cmmn.actorapi.command.team._
+import org.cafienne.model.cmmn.actorapi.event.team.group.{CaseTeamGroupAdded, CaseTeamGroupChanged}
+import org.cafienne.model.cmmn.actorapi.event.team.{CaseTeamMemberEvent, CaseTeamMemberRemoved}
+import org.cafienne.model.cmmn.instance.team.MemberType
 import org.cafienne.persistence.querydb.materializer.cases.CaseStorageTransaction
 import org.cafienne.persistence.querydb.record.{CaseTeamGroupRecord, CaseTeamTenantRoleRecord, CaseTeamUserRecord}
 

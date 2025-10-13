@@ -3,7 +3,6 @@ package org.cafienne.actormodel.communication;
 import com.fasterxml.jackson.core.JsonGenerator;
 import org.cafienne.actormodel.ModelActor;
 import org.cafienne.actormodel.message.event.CaseSystemEvent;
-import org.cafienne.actormodel.message.event.CommitEvent;
 import org.cafienne.infrastructure.serialization.Fields;
 import org.cafienne.util.json.ValueMap;
 

@@ -1,21 +1,21 @@
-package org.cafienne.cmmn.test.casefile;
+package org.cafienne.model.cmmn.test.casefile;
 
-import org.cafienne.cmmn.actorapi.command.StartCase;
-import org.cafienne.cmmn.actorapi.command.casefile.CreateCaseFileItem;
-import org.cafienne.cmmn.actorapi.command.casefile.ReplaceCaseFileItem;
-import org.cafienne.cmmn.actorapi.command.casefile.UpdateCaseFileItem;
-import org.cafienne.cmmn.actorapi.event.file.CaseFileItemTransitioned;
-import org.cafienne.cmmn.definition.CaseDefinition;
-import org.cafienne.cmmn.instance.Path;
-import org.cafienne.cmmn.test.TestScript;
-import org.cafienne.cmmn.test.assertions.file.CaseFileAssertion;
+import org.cafienne.model.cmmn.actorapi.command.StartCase;
+import org.cafienne.model.cmmn.actorapi.command.casefile.CreateCaseFileItem;
+import org.cafienne.model.cmmn.actorapi.command.casefile.ReplaceCaseFileItem;
+import org.cafienne.model.cmmn.actorapi.command.casefile.UpdateCaseFileItem;
+import org.cafienne.model.cmmn.actorapi.event.file.CaseFileItemTransitioned;
+import org.cafienne.model.cmmn.definition.CaseDefinition;
+import org.cafienne.model.cmmn.instance.Path;
+import org.cafienne.model.cmmn.test.TestScript;
+import org.cafienne.model.cmmn.test.assertions.file.CaseFileAssertion;
 import org.cafienne.util.json.Value;
 import org.cafienne.util.json.ValueList;
 import org.cafienne.util.json.ValueMap;
 import org.cafienne.util.Guid;
 import org.junit.Test;
 
-import static org.cafienne.cmmn.test.TestScript.*;
+import static org.cafienne.model.cmmn.test.TestScript.*;
 
 public class TestNewCaseFile {
     private final String caseName = "NewCaseFileTest";

@@ -17,10 +17,10 @@
 
 package org.cafienne.infrastructure.cqrs.batch.public_events.migration
 
-import org.cafienne.cmmn.actorapi.event.migration.PlanItemDropped
-import org.cafienne.cmmn.instance.Path
 import org.cafienne.infrastructure.cqrs.batch.public_events.{CafiennePublicEventContent, PublicCaseEventBatch, PublicEventWrapper}
 import org.cafienne.infrastructure.serialization.{Fields, Manifest}
+import org.cafienne.model.cmmn.actorapi.event.migration.PlanItemDropped
+import org.cafienne.model.cmmn.instance.Path
 import org.cafienne.util.json.{Value, ValueMap}
 
 @Manifest

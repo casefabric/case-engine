@@ -20,8 +20,8 @@ package org.cafienne.usermanagement.tenant.actorapi.command.platform;
 import com.fasterxml.jackson.core.JsonGenerator;
 import org.cafienne.actormodel.identity.PlatformOwner;
 import org.cafienne.infrastructure.serialization.Manifest;
-import org.cafienne.util.json.ValueMap;
 import org.cafienne.usermanagement.tenant.TenantActor;
+import org.cafienne.util.json.ValueMap;
 
 import java.io.IOException;
 

@@ -1,18 +1,18 @@
-package org.cafienne.cmmn.test.task;
+package org.cafienne.model.cmmn.test.task;
 
-import org.cafienne.cmmn.actorapi.command.StartCase;
-import org.cafienne.cmmn.actorapi.event.plan.PlanItemTransitioned;
-import org.cafienne.cmmn.definition.CaseDefinition;
-import org.cafienne.cmmn.expression.InvalidExpressionException;
-import org.cafienne.cmmn.instance.Path;
-import org.cafienne.cmmn.instance.State;
-import org.cafienne.cmmn.test.TestScript;
-import org.cafienne.cmmn.test.TestUser;
-import org.cafienne.cmmn.actorapi.command.plan.task.humantask.CompleteHumanTask;
+import org.cafienne.model.cmmn.actorapi.command.StartCase;
+import org.cafienne.model.cmmn.actorapi.event.plan.PlanItemTransitioned;
+import org.cafienne.model.cmmn.definition.CaseDefinition;
+import org.cafienne.model.cmmn.expression.InvalidExpressionException;
+import org.cafienne.model.cmmn.instance.Path;
+import org.cafienne.model.cmmn.instance.State;
+import org.cafienne.model.cmmn.test.TestScript;
+import org.cafienne.model.cmmn.test.TestUser;
+import org.cafienne.model.cmmn.actorapi.command.plan.task.humantask.CompleteHumanTask;
 import org.cafienne.util.json.ValueMap;
 import org.junit.Test;
 
-import static org.cafienne.cmmn.test.TestScript.*;
+import static org.cafienne.model.cmmn.test.TestScript.*;
 
 public class TestTaskOutputParameters {
 

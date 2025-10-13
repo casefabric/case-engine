@@ -20,8 +20,8 @@ package org.cafienne.storage.actormodel.event
 import org.cafienne.actormodel.ActorMetadata
 import org.cafienne.infrastructure.serialization.{Fields, Manifest}
 import org.cafienne.storage.StorageUser
-import org.cafienne.util.json.ValueMap
 import org.cafienne.storage.actormodel.message.StorageActionUpdated
+import org.cafienne.util.json.ValueMap
 
 @Manifest
 case class TimerDataCleared(user: StorageUser, metadata: ActorMetadata, override val optionalJson: Option[ValueMap] = None) extends StorageActionUpdated

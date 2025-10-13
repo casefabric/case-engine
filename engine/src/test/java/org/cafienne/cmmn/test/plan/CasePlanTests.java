@@ -1,4 +1,4 @@
-package org.cafienne.cmmn.test.plan;
+package org.cafienne.model.cmmn.test.plan;
 
 import org.junit.runner.RunWith;
 import org.junit.runners.Suite;

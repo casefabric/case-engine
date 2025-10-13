@@ -20,8 +20,8 @@ package org.cafienne.storage.archival.response
 import org.cafienne.actormodel.ActorMetadata
 import org.cafienne.infrastructure.serialization.{Fields, Manifest}
 import org.cafienne.storage.StorageUser
-import org.cafienne.util.json.ValueMap
 import org.cafienne.storage.actormodel.message.StorageActionCompleted
+import org.cafienne.util.json.ValueMap
 
 @Manifest
 case class ArchivalCompleted(user: StorageUser, metadata: ActorMetadata, override val optionalJson: Option[ValueMap] = None) extends StorageActionCompleted

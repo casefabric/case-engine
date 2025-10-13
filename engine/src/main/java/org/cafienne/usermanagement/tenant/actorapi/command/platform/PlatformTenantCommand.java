@@ -22,9 +22,9 @@ import org.cafienne.actormodel.exception.AuthorizationException;
 import org.cafienne.actormodel.exception.InvalidCommandException;
 import org.cafienne.actormodel.identity.PlatformOwner;
 import org.cafienne.infrastructure.serialization.Manifest;
-import org.cafienne.util.json.ValueMap;
 import org.cafienne.usermanagement.tenant.TenantActor;
 import org.cafienne.usermanagement.tenant.actorapi.command.TenantCommand;
+import org.cafienne.util.json.ValueMap;
 
 import java.io.IOException;
 

@@ -21,8 +21,8 @@ import com.fasterxml.jackson.core.JsonGenerator;
 import org.cafienne.actormodel.identity.TenantUser;
 import org.cafienne.infrastructure.serialization.Fields;
 import org.cafienne.infrastructure.serialization.Manifest;
-import org.cafienne.util.json.ValueMap;
 import org.cafienne.usermanagement.tenant.TenantActor;
+import org.cafienne.util.json.ValueMap;
 
 import java.io.IOException;
 import java.util.List;

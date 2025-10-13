@@ -21,8 +21,8 @@ import org.cafienne.actormodel.identity.TenantUser;
 import org.cafienne.actormodel.message.command.ModelCommand;
 import org.cafienne.actormodel.message.event.ActorModified;
 import org.cafienne.infrastructure.serialization.Manifest;
-import org.cafienne.util.json.ValueMap;
 import org.cafienne.usermanagement.tenant.TenantActor;
+import org.cafienne.util.json.ValueMap;
 
 /**
  * Event that is published after an {@link org.cafienne.usermanagement.tenant.actorapi.command.TenantCommand} has been fully handled by a {@link TenantActor} instance.

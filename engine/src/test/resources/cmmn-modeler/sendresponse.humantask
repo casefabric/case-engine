@@ -1,5 +1,5 @@
 <humantask>
-    <cafienne:implementation name="SendResponse" xmlns:cafienne="org.cafienne" class="org.cafienne.cmmn.definition.task.WorkflowTaskDefinition">
+    <cafienne:implementation name="SendResponse" xmlns:cafienne="org.cafienne" class="org.cafienne.model.cmmn.definition.task.WorkflowTaskDefinition">
         <documentation textFormat="text/plain">
             <text>
                 <![CDATA[Sends a response back to the initiator of the hello world case]]>

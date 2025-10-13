@@ -17,10 +17,10 @@
 
 package org.cafienne.persistence.querydb.materializer.cases.plan
 
-import org.cafienne.cmmn.actorapi.event.CaseModified
-import org.cafienne.cmmn.actorapi.event.migration.{PlanItemMigrated, PlanItemMoved}
-import org.cafienne.cmmn.actorapi.event.plan.task.{TaskInputFilled, TaskOutputFilled}
-import org.cafienne.cmmn.actorapi.event.plan.{PlanItemCreated, PlanItemTransitioned, RepetitionRuleEvaluated, RequiredRuleEvaluated}
+import org.cafienne.model.cmmn.actorapi.event.CaseModified
+import org.cafienne.model.cmmn.actorapi.event.migration.{PlanItemMigrated, PlanItemMoved}
+import org.cafienne.model.cmmn.actorapi.event.plan.task.{TaskInputFilled, TaskOutputFilled}
+import org.cafienne.model.cmmn.actorapi.event.plan.{PlanItemCreated, PlanItemTransitioned, RepetitionRuleEvaluated, RequiredRuleEvaluated}
 import org.cafienne.persistence.querydb.record.PlanItemRecord
 
 object PlanItemMerger {

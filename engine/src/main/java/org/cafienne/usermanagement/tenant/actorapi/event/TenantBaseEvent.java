@@ -20,8 +20,8 @@ package org.cafienne.usermanagement.tenant.actorapi.event;
 import com.fasterxml.jackson.core.JsonGenerator;
 import org.cafienne.actormodel.identity.TenantUser;
 import org.cafienne.actormodel.message.event.BaseModelEvent;
-import org.cafienne.util.json.ValueMap;
 import org.cafienne.usermanagement.tenant.TenantActor;
+import org.cafienne.util.json.ValueMap;
 
 import java.io.IOException;
 

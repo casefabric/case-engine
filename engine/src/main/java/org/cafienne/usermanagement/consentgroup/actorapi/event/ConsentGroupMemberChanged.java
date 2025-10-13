@@ -18,10 +18,10 @@
 package org.cafienne.usermanagement.consentgroup.actorapi.event;
 
 import com.fasterxml.jackson.core.JsonGenerator;
-import org.cafienne.usermanagement.consentgroup.ConsentGroupActor;
-import org.cafienne.usermanagement.consentgroup.actorapi.ConsentGroupMember;
 import org.cafienne.infrastructure.serialization.Fields;
 import org.cafienne.infrastructure.serialization.Manifest;
+import org.cafienne.usermanagement.consentgroup.ConsentGroupActor;
+import org.cafienne.usermanagement.consentgroup.actorapi.ConsentGroupMember;
 import org.cafienne.util.json.ValueMap;
 
 import java.io.IOException;

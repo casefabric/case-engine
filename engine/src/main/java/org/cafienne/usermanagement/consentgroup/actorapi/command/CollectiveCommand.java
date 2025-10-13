@@ -19,10 +19,10 @@ package org.cafienne.usermanagement.consentgroup.actorapi.command;
 
 import com.fasterxml.jackson.core.JsonGenerator;
 import org.cafienne.actormodel.identity.ConsentGroupUser;
+import org.cafienne.infrastructure.serialization.Fields;
 import org.cafienne.usermanagement.consentgroup.actorapi.ConsentGroup;
 import org.cafienne.usermanagement.consentgroup.actorapi.ConsentGroupMember;
 import org.cafienne.usermanagement.consentgroup.actorapi.exception.ConsentGroupException;
-import org.cafienne.infrastructure.serialization.Fields;
 import org.cafienne.util.json.ValueMap;
 import scala.collection.immutable.Seq;
 

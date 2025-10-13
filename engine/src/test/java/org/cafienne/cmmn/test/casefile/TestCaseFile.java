@@ -1,15 +1,15 @@
-package org.cafienne.cmmn.test.casefile;
+package org.cafienne.model.cmmn.test.casefile;
 
-import org.cafienne.cmmn.actorapi.command.StartCase;
-import org.cafienne.cmmn.definition.CaseDefinition;
-import org.cafienne.cmmn.instance.State;
-import org.cafienne.cmmn.instance.Transition;
-import org.cafienne.cmmn.test.TestScript;
+import org.cafienne.model.cmmn.actorapi.command.StartCase;
+import org.cafienne.model.cmmn.definition.CaseDefinition;
+import org.cafienne.model.cmmn.instance.State;
+import org.cafienne.model.cmmn.instance.Transition;
+import org.cafienne.model.cmmn.test.TestScript;
 import org.cafienne.util.json.ValueMap;
 import org.cafienne.util.Guid;
 import org.junit.Test;
 
-import static org.cafienne.cmmn.test.TestScript.*;
+import static org.cafienne.model.cmmn.test.TestScript.*;
 
 public class TestCaseFile {
     private final String caseName = "CaseFileTest";

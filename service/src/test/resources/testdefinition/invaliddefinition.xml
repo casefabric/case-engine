@@ -20,7 +20,7 @@ and Send response" isBlocking="true">
                 <inputs id="inTP_cm_cs2F1_174_1" name="Greeting" bindingRef="cfi_csVQy_0"/>
                 <outputs id="outTP_cm_cs2F1_174_1" name="Response" bindingRef="cfi_csVQy_1"/>
                 <extensionElements mustUnderstand="false">
-                    <cafienne:implementation xmlns:cafienne="org.cafienne" class="org.cafienne.cmmn.definition.task.WorkflowTaskDefinition" name="SendResponse" description="Sends a response back to the initiator of the hello world case" humanTaskRef="sendresponse.humantask">
+                    <cafienne:implementation xmlns:cafienne="org.cafienne" class="org.cafienne.model.cmmn.definition.task.WorkflowTaskDefinition" name="SendResponse" description="Sends a response back to the initiator of the hello world case" humanTaskRef="sendresponse.humantask">
                         <input name="Greeting" id="Greeting"/>
                         <input name="DueDate" id="DueDate"/>
                         <output name="Response" id="Response"/>
@@ -111,7 +111,7 @@ and Send response" isBlocking="true">
                 <inputs id="inTP_cm_cs3hg_196_1" name="DueDate"/>
                 <inputs id="inTP_cm_cs3hg_196_2" name="Greeting" bindingRef="cfi_csVQy_0"/>
                 <extensionElements mustUnderstand="false">
-                    <cafienne:implementation xmlns:cafienne="org.cafienne" class="org.cafienne.cmmn.definition.task.WorkflowTaskDefinition" humanTaskRef="readresponse.humantask">
+                    <cafienne:implementation xmlns:cafienne="org.cafienne" class="org.cafienne.model.cmmn.definition.task.WorkflowTaskDefinition" humanTaskRef="readresponse.humantask">
                         <input name="Response" id="Response"/>
                         <input name="DueDate" id="DueDate"/>
                         <input id="_VOzX_Assignee" name="Assignee"/>

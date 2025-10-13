@@ -21,8 +21,8 @@ import com.typesafe.scalalogging.LazyLogging
 import org.apache.pekko.persistence.DeleteMessagesSuccess
 import org.cafienne.actormodel.{ActorMetadata, ActorType}
 import org.cafienne.storage.StorageUser
-import org.cafienne.storage.actormodel.message.StorageEvent
 import org.cafienne.storage.actormodel.StorageActor
+import org.cafienne.storage.actormodel.message.StorageEvent
 import org.cafienne.storage.deletion.command.RemoveActorData
 import org.cafienne.storage.deletion.event.RemovalCompleted
 import org.cafienne.storage.deletion.response.RemovalRejected

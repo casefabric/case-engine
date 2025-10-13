@@ -18,8 +18,8 @@
 package org.cafienne.usermanagement.tenant.actorapi.event.deprecated;
 
 import org.cafienne.infrastructure.serialization.Manifest;
-import org.cafienne.util.json.ValueMap;
 import org.cafienne.usermanagement.tenant.TenantActor;
+import org.cafienne.util.json.ValueMap;
 
 @Manifest
 public class TenantUserEnabled extends DeprecatedTenantUserEvent {

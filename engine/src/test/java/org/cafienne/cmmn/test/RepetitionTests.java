@@ -1,9 +1,9 @@
-package org.cafienne.cmmn.test;
+package org.cafienne.model.cmmn.test;
 
-import org.cafienne.cmmn.test.basic.TestRepeatRule;
-import org.cafienne.cmmn.test.casefile.TestCaseFileTransition;
-import org.cafienne.cmmn.test.casefile.TestRepetitiveFileItems;
-import org.cafienne.cmmn.test.task.TestGetListGetDetails;
+import org.cafienne.model.cmmn.test.basic.TestRepeatRule;
+import org.cafienne.model.cmmn.test.casefile.TestCaseFileTransition;
+import org.cafienne.model.cmmn.test.casefile.TestRepetitiveFileItems;
+import org.cafienne.model.cmmn.test.task.TestGetListGetDetails;
 import org.junit.runner.RunWith;
 import org.junit.runners.Suite;
 import org.junit.runners.Suite.SuiteClasses;

@@ -19,8 +19,8 @@ package org.cafienne.storage.deletion.command
 
 import org.cafienne.actormodel.ActorMetadata
 import org.cafienne.storage.StorageUser
-import org.cafienne.storage.actormodel.command.StorageCommand
 import org.cafienne.storage.actormodel.RootStorageActor
+import org.cafienne.storage.actormodel.command.StorageCommand
 import org.cafienne.storage.deletion.RootRemover
 
 /** @param user User initiating the removal process

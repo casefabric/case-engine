@@ -22,7 +22,7 @@ import org.apache.pekko.Done
 import org.apache.pekko.actor.{ActorRef, Scheduler}
 import org.apache.pekko.persistence.query.Offset
 import org.cafienne.actormodel.message.response.ModelResponse
-import org.cafienne.cmmn.actorapi.event.plan.eventlistener.TimerSet
+import org.cafienne.model.cmmn.actorapi.event.plan.eventlistener.TimerSet
 import org.cafienne.storage.actormodel.command.ClearTimerData
 import org.cafienne.storage.actormodel.event.TimerDataCleared
 import org.cafienne.system.health.HealthMonitor

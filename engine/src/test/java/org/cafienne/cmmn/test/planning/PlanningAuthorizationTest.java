@@ -6,22 +6,22 @@
  * file, You can obtain one at http://mozilla.org/MPL/2.0/.
  */
 
-package org.cafienne.cmmn.test.planning;
+package org.cafienne.model.cmmn.test.planning;
 
-import org.cafienne.cmmn.actorapi.command.StartCase;
-import org.cafienne.cmmn.actorapi.command.plan.AddDiscretionaryItem;
-import org.cafienne.cmmn.actorapi.command.plan.GetDiscretionaryItems;
-import org.cafienne.cmmn.actorapi.command.team.CaseTeam;
-import org.cafienne.cmmn.actorapi.response.GetDiscretionaryItemsResponse;
-import org.cafienne.cmmn.definition.CaseDefinition;
-import org.cafienne.cmmn.test.TestScript;
-import org.cafienne.cmmn.test.TestUser;
-import org.cafienne.cmmn.test.assertions.CaseAssertion;
-import org.cafienne.cmmn.test.assertions.DiscretionaryItemAssertion;
-import org.cafienne.cmmn.test.assertions.PlanningTableAssertion;
+import org.cafienne.model.cmmn.actorapi.command.StartCase;
+import org.cafienne.model.cmmn.actorapi.command.plan.AddDiscretionaryItem;
+import org.cafienne.model.cmmn.actorapi.command.plan.GetDiscretionaryItems;
+import org.cafienne.model.cmmn.actorapi.command.team.CaseTeam;
+import org.cafienne.model.cmmn.actorapi.response.GetDiscretionaryItemsResponse;
+import org.cafienne.model.cmmn.definition.CaseDefinition;
+import org.cafienne.model.cmmn.test.TestScript;
+import org.cafienne.model.cmmn.test.TestUser;
+import org.cafienne.model.cmmn.test.assertions.CaseAssertion;
+import org.cafienne.model.cmmn.test.assertions.DiscretionaryItemAssertion;
+import org.cafienne.model.cmmn.test.assertions.PlanningTableAssertion;
 import org.junit.Test;
 
-import static org.cafienne.cmmn.test.TestScript.*;
+import static org.cafienne.model.cmmn.test.TestScript.*;
 
 public class PlanningAuthorizationTest {
 

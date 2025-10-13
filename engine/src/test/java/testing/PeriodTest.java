@@ -7,7 +7,7 @@
  */
 package testing;
 
-import org.cafienne.cmmn.test.TestScript;
+import org.cafienne.model.cmmn.test.TestScript;
 
 import java.time.Duration;
 import java.time.Instant;

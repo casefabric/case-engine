@@ -20,9 +20,9 @@ package org.cafienne.usermanagement.tenant.actorapi.response;
 import com.fasterxml.jackson.core.JsonGenerator;
 import org.cafienne.infrastructure.serialization.Fields;
 import org.cafienne.infrastructure.serialization.Manifest;
+import org.cafienne.usermanagement.tenant.actorapi.command.GetTenantOwners;
 import org.cafienne.util.json.Value;
 import org.cafienne.util.json.ValueMap;
-import org.cafienne.usermanagement.tenant.actorapi.command.GetTenantOwners;
 
 import java.io.IOException;
 import java.util.List;

@@ -18,10 +18,10 @@
 package org.cafienne.persistence.querydb.query.cmmn
 
 import org.cafienne.actormodel.identity.UserIdentity
-import org.cafienne.util.json.{CafienneJson, LongValue, Value, ValueMap}
 import org.cafienne.persistence.infrastructure.jdbc.query.{Area, Sort}
 import org.cafienne.persistence.querydb.query.cmmn.filter.TaskFilter
 import org.cafienne.persistence.querydb.record.TaskRecord
+import org.cafienne.util.json.{CafienneJson, LongValue, Value, ValueMap}
 
 import scala.concurrent.Future
 

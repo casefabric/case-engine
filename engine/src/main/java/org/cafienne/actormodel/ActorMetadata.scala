@@ -17,7 +17,7 @@
 
 package org.cafienne.actormodel
 
-import org.cafienne.cmmn.instance.Path
+import org.cafienne.model.cmmn.instance.Path
 import org.cafienne.infrastructure.serialization.JacksonSerializable
 import org.cafienne.util.json._
 

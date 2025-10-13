@@ -1,6 +1,6 @@
-package org.cafienne.cmmn.instance;
+package org.cafienne.model.cmmn.instance;
 
-import org.cafienne.cmmn.test.TestScript;
+import org.cafienne.model.cmmn.test.TestScript;
 import org.cafienne.util.json.ValueList;
 import org.cafienne.util.json.ValueMap;
 import org.junit.Test;

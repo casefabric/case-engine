@@ -22,10 +22,10 @@ import org.apache.pekko.util.Timeout
 import org.cafienne.actormodel.ActorMetadata
 import org.cafienne.actormodel.message.command.{ModelCommand, TerminateModelActor}
 import org.cafienne.actormodel.message.response.{ActorTerminated, ModelResponse}
-import org.cafienne.cmmn.instance.Case
-import org.cafienne.usermanagement.consentgroup.ConsentGroupActor
-import org.cafienne.processtask.instance.ProcessTaskActor
+import org.cafienne.model.cmmn.instance.Case
+import org.cafienne.model.processtask.instance.ProcessTaskActor
 import org.cafienne.system.router.LocalRouter
+import org.cafienne.usermanagement.consentgroup.ConsentGroupActor
 import org.cafienne.usermanagement.tenant.TenantActor
 
 import scala.concurrent.Future

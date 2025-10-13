@@ -19,7 +19,7 @@ package org.cafienne.util.json;
 
 import com.fasterxml.jackson.core.JsonGenerator;
 import jakarta.xml.bind.DatatypeConverter;
-import org.cafienne.cmmn.definition.casefile.PropertyDefinition;
+import org.cafienne.model.cmmn.definition.casefile.PropertyDefinition;
 
 import javax.xml.datatype.DatatypeConfigurationException;
 import javax.xml.datatype.DatatypeFactory;

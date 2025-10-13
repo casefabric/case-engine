@@ -18,9 +18,9 @@
 package org.cafienne.usermanagement.tenant.actorapi.event.platform;
 
 import com.fasterxml.jackson.core.JsonGenerator;
-import org.cafienne.util.json.ValueMap;
 import org.cafienne.usermanagement.tenant.TenantActor;
 import org.cafienne.usermanagement.tenant.actorapi.event.TenantBaseEvent;
+import org.cafienne.util.json.ValueMap;
 
 import java.io.IOException;
 

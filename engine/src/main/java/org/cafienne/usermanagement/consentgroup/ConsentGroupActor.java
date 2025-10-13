@@ -21,12 +21,12 @@ import org.cafienne.actormodel.ModelActor;
 import org.cafienne.actormodel.identity.ConsentGroupUser;
 import org.cafienne.actormodel.message.command.ModelCommand;
 import org.cafienne.actormodel.message.event.ModelEvent;
+import org.cafienne.system.CaseSystem;
 import org.cafienne.usermanagement.consentgroup.actorapi.ConsentGroupMember;
 import org.cafienne.usermanagement.consentgroup.actorapi.command.ConsentGroupCommand;
 import org.cafienne.usermanagement.consentgroup.actorapi.command.CreateConsentGroup;
 import org.cafienne.usermanagement.consentgroup.actorapi.command.ReplaceConsentGroup;
 import org.cafienne.usermanagement.consentgroup.actorapi.event.*;
-import org.cafienne.system.CaseSystem;
 
 import java.util.*;
 import java.util.stream.Collectors;

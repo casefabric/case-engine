@@ -17,8 +17,8 @@
 
 package org.cafienne.persistence.querydb.query.cmmn.identifier
 
-import org.cafienne.util.json.{CafienneJson, Value, ValueList, ValueMap}
 import org.cafienne.persistence.querydb.record.CaseBusinessIdentifierRecord
+import org.cafienne.util.json.{CafienneJson, Value, ValueList, ValueMap}
 
 final case class IdentifierSet(records: Seq[CaseBusinessIdentifierRecord]) extends CafienneJson {
   override def toValue: Value[_] = {

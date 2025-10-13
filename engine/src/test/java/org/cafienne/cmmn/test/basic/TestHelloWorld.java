@@ -1,17 +1,17 @@
-package org.cafienne.cmmn.test.basic;
+package org.cafienne.model.cmmn.test.basic;
 
-import org.cafienne.cmmn.actorapi.command.StartCase;
-import org.cafienne.cmmn.definition.CaseDefinition;
-import org.cafienne.cmmn.instance.State;
-import org.cafienne.cmmn.instance.Transition;
-import org.cafienne.cmmn.test.TestScript;
-import org.cafienne.cmmn.actorapi.command.plan.task.humantask.CompleteHumanTask;
-import org.cafienne.cmmn.actorapi.event.plan.task.humantask.HumanTaskAssigned;
-import org.cafienne.cmmn.actorapi.event.plan.task.humantask.HumanTaskDueDateFilled;
+import org.cafienne.model.cmmn.actorapi.command.StartCase;
+import org.cafienne.model.cmmn.definition.CaseDefinition;
+import org.cafienne.model.cmmn.instance.State;
+import org.cafienne.model.cmmn.instance.Transition;
+import org.cafienne.model.cmmn.test.TestScript;
+import org.cafienne.model.cmmn.actorapi.command.plan.task.humantask.CompleteHumanTask;
+import org.cafienne.model.cmmn.actorapi.event.plan.task.humantask.HumanTaskAssigned;
+import org.cafienne.model.cmmn.actorapi.event.plan.task.humantask.HumanTaskDueDateFilled;
 import org.cafienne.util.json.ValueMap;
 import org.junit.Test;
 
-import static org.cafienne.cmmn.test.TestScript.*;
+import static org.cafienne.model.cmmn.test.TestScript.*;
 
 public class TestHelloWorld {
     private final CaseDefinition definitions = loadCaseDefinition("testdefinition/helloworld.xml");

@@ -17,8 +17,8 @@
 
 package org.cafienne.infrastructure.config
 
-import org.cafienne.cmmn.repository.DefinitionProvider
 import org.cafienne.infrastructure.config.util.MandatoryConfig
+import org.cafienne.model.cmmn.repository.DefinitionProvider
 
 class RepositoryConfig(val parent: CaseSystemConfig) extends MandatoryConfig {
   def path = "definitions"
@@ -28,7 +28,7 @@ class RepositoryConfig(val parent: CaseSystemConfig) extends MandatoryConfig {
     * DefinitionProvider provides an interface for loading Case Definitions
     */
   lazy val DefinitionProvider: DefinitionProvider = {
-    val providerClassName = config.getString("provider")
+    val providerClassName = config.getString("provider").replace("org.cafienne.cmmn", "org.cafienne.model.cmmn")
     Class.forName(providerClassName).getDeclaredConstructor(classOf[RepositoryConfig]).newInstance(this).asInstanceOf[DefinitionProvider]
   }
 

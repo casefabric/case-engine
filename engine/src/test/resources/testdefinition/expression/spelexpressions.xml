@@ -89,7 +89,7 @@
                 <outputs id="outTP_cm_csTql_4_5" name="CaseID" bindingRef="cfi_csvwt_2"/>
                 <outputs id="outTP_cm_cstko_4_3" name="MultiOutput" bindingRef="cfi_cstko_4"/>
                 <extensionElements mustUnderstand="false">
-                    <cafienne:implementation xmlns:cafienne="org.cafienne" class="org.cafienne.cmmn.definition.task.WorkflowTaskDefinition" name="SpelExpressionsTask" description="" humanTaskRef="expression/spelexpressionstask.humantask">
+                    <cafienne:implementation xmlns:cafienne="org.cafienne" class="org.cafienne.model.cmmn.definition.task.WorkflowTaskDefinition" name="SpelExpressionsTask" description="" humanTaskRef="expression/spelexpressionstask.humantask">
                         <input id="_f5oP_HumanTaskInput" name="HumanTaskInput"/>
                         <output id="_9oOB_TaskOutput" name="Output"/>
                         <output id="_x59I_SpecialOutput" name="SpecialOutput"/>

@@ -18,9 +18,9 @@
 package org.cafienne.usermanagement.consentgroup.actorapi.response;
 
 import org.cafienne.actormodel.message.response.BaseModelResponse;
+import org.cafienne.infrastructure.serialization.Manifest;
 import org.cafienne.usermanagement.consentgroup.actorapi.ConsentGroupMessage;
 import org.cafienne.usermanagement.consentgroup.actorapi.command.ConsentGroupCommand;
-import org.cafienne.infrastructure.serialization.Manifest;
 import org.cafienne.util.json.ValueMap;
 
 @Manifest

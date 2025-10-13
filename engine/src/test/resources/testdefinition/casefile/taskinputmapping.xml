@@ -50,7 +50,7 @@
                 <inputs id="_ilffQ_6" name="Container" bindingRef="cfi_casefile/testcontext.case_3"/>
                 <outputs id="_3X9aF" name="Child" bindingRef="cfi_casefile/testcontext.case_4"/>
                 <extensionElements mustUnderstand="false">
-                    <cafienne:implementation xmlns:cafienne="org.cafienne" class="org.cafienne.cmmn.definition.task.WorkflowTaskDefinition" name="simplehumantask" description="" humanTaskRef="task/simplehumantask.humantask">
+                    <cafienne:implementation xmlns:cafienne="org.cafienne" class="org.cafienne.model.cmmn.definition.task.WorkflowTaskDefinition" name="simplehumantask" description="" humanTaskRef="task/simplehumantask.humantask">
                         <input id="_Hun3_Input" name="Input"/>
                         <output id="_SkQG_Result" name="Result"/>
                         <task-model/>
@@ -70,7 +70,7 @@
                 <inputs id="_v9FEK" name="inputChildren" bindingRef="cfi_casefile/testcontext.case_3"/>
                 <outputs id="_NXDUT" name="Result"/>
                 <extensionElements mustUnderstand="false">
-                    <cafienne:implementation xmlns:cafienne="org.cafienne" class="org.cafienne.cmmn.definition.task.WorkflowTaskDefinition" name="simplehumantask" description="" humanTaskRef="task/simplehumantask.humantask">
+                    <cafienne:implementation xmlns:cafienne="org.cafienne" class="org.cafienne.model.cmmn.definition.task.WorkflowTaskDefinition" name="simplehumantask" description="" humanTaskRef="task/simplehumantask.humantask">
                         <input id="_Hun3_Input" name="Input"/>
                         <output id="_SkQG_Result" name="Result"/>
                         <task-model/>
@@ -89,7 +89,7 @@
                 <inputs id="_axaLd" name="inputChild" bindingRef="cfi_casefile/testcontext.case_4"/>
                 <outputs id="_dDqEH" name="Result"/>
                 <extensionElements mustUnderstand="false">
-                    <cafienne:implementation xmlns:cafienne="org.cafienne" class="org.cafienne.cmmn.definition.task.WorkflowTaskDefinition" name="simplehumantask" description="" humanTaskRef="task/simplehumantask.humantask">
+                    <cafienne:implementation xmlns:cafienne="org.cafienne" class="org.cafienne.model.cmmn.definition.task.WorkflowTaskDefinition" name="simplehumantask" description="" humanTaskRef="task/simplehumantask.humantask">
                         <input id="_Hun3_Input" name="Input"/>
                         <output id="_SkQG_Result" name="Result"/>
                         <task-model/>

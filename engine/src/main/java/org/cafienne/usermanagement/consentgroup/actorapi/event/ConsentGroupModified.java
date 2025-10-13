@@ -20,8 +20,8 @@ package org.cafienne.usermanagement.consentgroup.actorapi.event;
 import org.cafienne.actormodel.identity.ConsentGroupUser;
 import org.cafienne.actormodel.message.command.ModelCommand;
 import org.cafienne.actormodel.message.event.ActorModified;
-import org.cafienne.usermanagement.consentgroup.ConsentGroupActor;
 import org.cafienne.infrastructure.serialization.Manifest;
+import org.cafienne.usermanagement.consentgroup.ConsentGroupActor;
 import org.cafienne.util.json.ValueMap;
 
 /**

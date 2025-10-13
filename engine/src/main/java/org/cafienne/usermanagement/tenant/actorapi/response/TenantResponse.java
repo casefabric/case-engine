@@ -19,9 +19,9 @@ package org.cafienne.usermanagement.tenant.actorapi.response;
 
 import org.cafienne.actormodel.message.response.BaseModelResponse;
 import org.cafienne.infrastructure.serialization.Manifest;
-import org.cafienne.util.json.ValueMap;
 import org.cafienne.usermanagement.tenant.actorapi.TenantMessage;
 import org.cafienne.usermanagement.tenant.actorapi.command.TenantCommand;
+import org.cafienne.util.json.ValueMap;
 
 @Manifest
 public class TenantResponse extends BaseModelResponse implements TenantMessage {

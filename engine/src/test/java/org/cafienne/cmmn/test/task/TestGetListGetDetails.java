@@ -5,22 +5,22 @@
  * License, v. 2.0. If a copy of the MPL was not distributed with this
  * file, You can obtain one at http://mozilla.org/MPL/2.0/.
  */
-package org.cafienne.cmmn.test.task;
+package org.cafienne.model.cmmn.test.task;
 
 import com.github.tomakehurst.wiremock.junit.WireMockRule;
-import org.cafienne.cmmn.actorapi.command.StartCase;
-import org.cafienne.cmmn.actorapi.command.casefile.CreateCaseFileItem;
-import org.cafienne.cmmn.actorapi.command.plan.MakePlanItemTransition;
-import org.cafienne.cmmn.actorapi.event.plan.PlanItemTransitioned;
-import org.cafienne.cmmn.definition.CaseDefinition;
-import org.cafienne.cmmn.instance.Path;
-import org.cafienne.cmmn.instance.State;
-import org.cafienne.cmmn.instance.Transition;
-import org.cafienne.cmmn.test.TestScript;
-import org.cafienne.cmmn.test.filter.EventFilter;
+import org.cafienne.model.cmmn.actorapi.command.StartCase;
+import org.cafienne.model.cmmn.actorapi.command.casefile.CreateCaseFileItem;
+import org.cafienne.model.cmmn.actorapi.command.plan.MakePlanItemTransition;
+import org.cafienne.model.cmmn.actorapi.event.plan.PlanItemTransitioned;
+import org.cafienne.model.cmmn.definition.CaseDefinition;
+import org.cafienne.model.cmmn.instance.Path;
+import org.cafienne.model.cmmn.instance.State;
+import org.cafienne.model.cmmn.instance.Transition;
+import org.cafienne.model.cmmn.test.TestScript;
+import org.cafienne.model.cmmn.test.filter.EventFilter;
 import org.cafienne.util.json.ValueMap;
-import org.cafienne.processtask.actorapi.event.ProcessCompleted;
-import org.cafienne.processtask.actorapi.event.ProcessFailed;
+import org.cafienne.model.processtask.actorapi.event.ProcessCompleted;
+import org.cafienne.model.processtask.actorapi.event.ProcessFailed;
 import org.junit.Rule;
 import org.junit.Test;
 
@@ -29,7 +29,7 @@ import java.util.HashSet;
 import java.util.Set;
 
 import static com.github.tomakehurst.wiremock.client.WireMock.*;
-import static org.cafienne.cmmn.test.TestScript.*;
+import static org.cafienne.model.cmmn.test.TestScript.*;
 
 /**
  * The flow tested in this case, is to get a list of identifiers from a web service,

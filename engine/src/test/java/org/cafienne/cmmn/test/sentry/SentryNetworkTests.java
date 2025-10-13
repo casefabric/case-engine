@@ -5,11 +5,11 @@
  * License, v. 2.0. If a copy of the MPL was not distributed with this
  * file, You can obtain one at http://mozilla.org/MPL/2.0/.
  */
-package org.cafienne.cmmn.test.sentry;
+package org.cafienne.model.cmmn.test.sentry;
 
-import org.cafienne.cmmn.test.casefile.TestRepetitiveFileItems;
-import org.cafienne.cmmn.test.expression.TestVariousSpelExpressions;
-import org.cafienne.cmmn.test.task.TestGetListGetDetails;
+import org.cafienne.model.cmmn.test.casefile.TestRepetitiveFileItems;
+import org.cafienne.model.cmmn.test.expression.TestVariousSpelExpressions;
+import org.cafienne.model.cmmn.test.task.TestGetListGetDetails;
 import org.junit.runner.RunWith;
 import org.junit.runners.Suite;
 import org.junit.runners.Suite.SuiteClasses;

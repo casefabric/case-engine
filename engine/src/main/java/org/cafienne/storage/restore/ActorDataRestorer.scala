@@ -23,8 +23,8 @@ import org.apache.pekko.persistence.{DeleteMessagesSuccess, RecoveryCompleted}
 import org.cafienne.actormodel.ActorMetadata
 import org.cafienne.actormodel.message.event.ModelEvent
 import org.cafienne.storage.StorageUser
-import org.cafienne.storage.actormodel.message.StorageEvent
 import org.cafienne.storage.actormodel.BaseStorageActor
+import org.cafienne.storage.actormodel.message.StorageEvent
 import org.cafienne.storage.archival.{Archive, ModelEventSerializer}
 import org.cafienne.storage.restore.command.RestoreArchive
 import org.cafienne.storage.restore.event.RestoreCompleted

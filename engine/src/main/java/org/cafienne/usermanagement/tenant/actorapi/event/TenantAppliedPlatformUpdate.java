@@ -19,11 +19,11 @@ package org.cafienne.usermanagement.tenant.actorapi.event;
 
 import com.fasterxml.jackson.core.JsonGenerator;
 import org.cafienne.actormodel.message.event.CommitEvent;
-import org.cafienne.cmmn.actorapi.command.platform.PlatformUpdate;
 import org.cafienne.infrastructure.serialization.Fields;
 import org.cafienne.infrastructure.serialization.Manifest;
-import org.cafienne.util.json.ValueMap;
+import org.cafienne.model.cmmn.actorapi.command.platform.PlatformUpdate;
 import org.cafienne.usermanagement.tenant.TenantActor;
+import org.cafienne.util.json.ValueMap;
 
 import java.io.IOException;
 

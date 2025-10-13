@@ -21,11 +21,11 @@ import org.cafienne.actormodel.exception.AuthorizationException;
 import org.cafienne.actormodel.exception.InvalidCommandException;
 import org.cafienne.actormodel.identity.TenantUser;
 import org.cafienne.actormodel.message.command.BaseModelCommand;
-import org.cafienne.util.json.ValueMap;
 import org.cafienne.usermanagement.tenant.TenantActor;
 import org.cafienne.usermanagement.tenant.actorapi.TenantMessage;
 import org.cafienne.usermanagement.tenant.actorapi.exception.TenantException;
 import org.cafienne.usermanagement.tenant.actorapi.response.TenantResponse;
+import org.cafienne.util.json.ValueMap;
 
 import java.util.List;
 import java.util.Map;

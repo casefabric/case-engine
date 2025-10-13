@@ -20,10 +20,10 @@ package org.cafienne.usermanagement.consentgroup.actorapi.command;
 import com.fasterxml.jackson.core.JsonGenerator;
 import org.cafienne.actormodel.exception.InvalidCommandException;
 import org.cafienne.actormodel.identity.ConsentGroupUser;
-import org.cafienne.usermanagement.consentgroup.ConsentGroupActor;
-import org.cafienne.usermanagement.consentgroup.actorapi.ConsentGroupMember;
 import org.cafienne.infrastructure.serialization.Fields;
 import org.cafienne.infrastructure.serialization.Manifest;
+import org.cafienne.usermanagement.consentgroup.ConsentGroupActor;
+import org.cafienne.usermanagement.consentgroup.actorapi.ConsentGroupMember;
 import org.cafienne.util.json.ValueMap;
 
 import java.io.IOException;

@@ -5,21 +5,21 @@
  * License, v. 2.0. If a copy of the MPL was not distributed with this
  * file, You can obtain one at http://mozilla.org/MPL/2.0/.
  */
-package org.cafienne.cmmn.test.team;
+package org.cafienne.model.cmmn.test.team;
 
-import org.cafienne.cmmn.actorapi.command.StartCase;
-import org.cafienne.cmmn.actorapi.command.plan.MakeCaseTransition;
-import org.cafienne.cmmn.actorapi.command.plan.MakePlanItemTransition;
-import org.cafienne.cmmn.actorapi.command.team.CaseTeam;
-import org.cafienne.cmmn.definition.CaseDefinition;
-import org.cafienne.cmmn.instance.Transition;
-import org.cafienne.cmmn.instance.TransitionDeniedException;
-import org.cafienne.cmmn.test.TestScript;
-import org.cafienne.cmmn.test.TestUser;
-import org.cafienne.cmmn.test.assertions.CaseAssertion;
+import org.cafienne.model.cmmn.actorapi.command.StartCase;
+import org.cafienne.model.cmmn.actorapi.command.plan.MakeCaseTransition;
+import org.cafienne.model.cmmn.actorapi.command.plan.MakePlanItemTransition;
+import org.cafienne.model.cmmn.actorapi.command.team.CaseTeam;
+import org.cafienne.model.cmmn.definition.CaseDefinition;
+import org.cafienne.model.cmmn.instance.Transition;
+import org.cafienne.model.cmmn.instance.TransitionDeniedException;
+import org.cafienne.model.cmmn.test.TestScript;
+import org.cafienne.model.cmmn.test.TestUser;
+import org.cafienne.model.cmmn.test.assertions.CaseAssertion;
 import org.junit.Test;
 
-import static org.cafienne.cmmn.test.TestScript.*;
+import static org.cafienne.model.cmmn.test.TestScript.*;
 
 public class TestRole {
 
