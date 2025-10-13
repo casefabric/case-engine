@@ -11,8 +11,8 @@
     <!--    <logger name="org.cafienne.infrastructure.config" level="DEBUG"/>-->
 
     <!-- Show Storage Service logging INFO is light, DEBUG is full logging -->
-    <!--    <logger name="org.cafienne.storage" level="INFO"/>-->
-    <!--    <logger name="org.cafienne.storage" level="DEBUG"/>-->
+    <!--    <logger name="org.cafienne.service.storage" level="INFO"/>-->
+    <!--    <logger name="org.cafienne.service.storage" level="DEBUG"/>-->
 
     <!-- Show HTTP traffic logging -->
     <!--        <logger name="org.cafienne.service.http" level="DEBUG" />-->
@@ -32,7 +32,7 @@
     <!--    <logger name="org.cafienne.model.cmmn" level="DEBUG" />-->
 
     <!-- Show timer service logging -->
-    <!--    <logger name="org.cafienne.timerservice" level="DEBUG" />-->
+    <!--    <logger name="org.cafienne.service.timerservice" level="DEBUG" />-->
 
     <logger name="com.datastax" level="WARN"/>
     <logger name="com.wordnik" level="ERROR"/>

@@ -26,7 +26,7 @@ import org.cafienne.actormodel.message.command.TerminateModelActor;
 import org.cafienne.actormodel.message.event.ModelEvent;
 import org.cafienne.actormodel.message.response.*;
 import org.cafienne.infrastructure.serialization.DeserializationFailure;
-import org.cafienne.storage.actormodel.message.StorageEvent;
+import org.cafienne.service.storage.actormodel.message.StorageEvent;
 
 import java.util.ArrayList;
 import java.util.List;
