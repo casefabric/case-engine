@@ -30,7 +30,7 @@ import org.cafienne.persistence.querydb.query.cmmn.authorization.CaseOwnership
 import org.cafienne.persistence.querydb.query.exception.CaseSearchFailure
 import org.cafienne.service.http.CaseEngineHttpServer
 import org.cafienne.service.http.cases.CasesRoute
-import org.cafienne.service.http.tenant.route.TenantRoute
+import org.cafienne.service.http.userregistration.tenant.route.TenantRoute
 import org.cafienne.storage.StorageUser
 
 import scala.util.{Failure, Success}

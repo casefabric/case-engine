@@ -22,8 +22,8 @@ import com.typesafe.scalalogging.LazyLogging
 import org.cafienne.actormodel.identity.TenantUser
 import org.cafienne.actormodel.message.response.{ActorExistsFailure, CommandFailure, ModelResponse}
 import org.cafienne.system.CaseSystem
-import org.cafienne.tenant.actorapi.command.platform.CreateTenant
-import org.cafienne.tenant.actorapi.response.TenantResponse
+import org.cafienne.usermanagement.tenant.actorapi.command.platform.CreateTenant
+import org.cafienne.usermanagement.tenant.actorapi.response.TenantResponse
 
 import java.io.File
 import scala.concurrent._

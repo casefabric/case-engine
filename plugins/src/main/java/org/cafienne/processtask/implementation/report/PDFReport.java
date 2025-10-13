@@ -19,10 +19,10 @@ package org.cafienne.processtask.implementation.report;
 
 import net.sf.jasperreports.engine.*;
 import net.sf.jasperreports.engine.query.JsonQueryExecuterFactory;
-import org.cafienne.util.json.StringValue;
-import org.cafienne.util.json.ValueMap;
 import org.cafienne.processtask.implementation.SubProcess;
 import org.cafienne.processtask.instance.ProcessTaskActor;
+import org.cafienne.util.json.StringValue;
+import org.cafienne.util.json.ValueMap;
 
 import java.io.ByteArrayOutputStream;
 import java.util.Base64;

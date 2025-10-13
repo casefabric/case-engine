@@ -20,12 +20,12 @@ package org.cafienne.infrastructure.serialization.serializers;
 import org.cafienne.actormodel.message.response.*;
 import org.cafienne.cmmn.actorapi.response.*;
 import org.cafienne.cmmn.actorapi.response.migration.MigrationStartedResponse;
-import org.cafienne.consentgroup.actorapi.response.ConsentGroupCreatedResponse;
-import org.cafienne.consentgroup.actorapi.response.ConsentGroupResponse;
 import org.cafienne.infrastructure.serialization.CafienneSerializer;
 import org.cafienne.processtask.actorapi.response.ProcessResponse;
-import org.cafienne.tenant.actorapi.response.TenantOwnersResponse;
-import org.cafienne.tenant.actorapi.response.TenantResponse;
+import org.cafienne.usermanagement.consentgroup.actorapi.response.ConsentGroupCreatedResponse;
+import org.cafienne.usermanagement.consentgroup.actorapi.response.ConsentGroupResponse;
+import org.cafienne.usermanagement.tenant.actorapi.response.TenantOwnersResponse;
+import org.cafienne.usermanagement.tenant.actorapi.response.TenantResponse;
 
 public class ResponseSerializers {
     public static void register() {

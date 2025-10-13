@@ -22,12 +22,12 @@ import jakarta.mail.internet.AddressException;
 import jakarta.mail.internet.InternetAddress;
 import jakarta.mail.internet.MimeMessage;
 import jakarta.mail.internet.MimeMultipart;
-import org.cafienne.util.json.Value;
-import org.cafienne.util.json.ValueList;
-import org.cafienne.util.json.ValueMap;
 import org.cafienne.processtask.implementation.SubProcess;
 import org.cafienne.processtask.implementation.mail.definition.AddressDefinition;
 import org.cafienne.processtask.instance.ProcessTaskActor;
+import org.cafienne.util.json.Value;
+import org.cafienne.util.json.ValueList;
+import org.cafienne.util.json.ValueMap;
 
 import java.util.List;
 import java.util.Properties;

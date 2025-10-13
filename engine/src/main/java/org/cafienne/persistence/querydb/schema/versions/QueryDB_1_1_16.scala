@@ -18,7 +18,8 @@
 package org.cafienne.persistence.querydb.schema.versions
 
 import org.cafienne.persistence.infrastructure.jdbc.schema.QueryDBSchemaVersion
-import org.cafienne.persistence.querydb.schema.table.{CaseTables, ConsentGroupTables}
+import org.cafienne.persistence.querydb.schema.table.CaseTables
+import org.cafienne.persistence.querydb.schema.table.userregistration.ConsentGroupTables
 import org.cafienne.persistence.querydb.schema.versions.util.Projections
 import slick.basic.DatabaseConfig
 import slick.jdbc.JdbcProfile

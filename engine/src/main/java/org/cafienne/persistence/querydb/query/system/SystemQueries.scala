@@ -5,7 +5,8 @@ import org.cafienne.actormodel.{ActorMetadata, ActorType}
 import org.cafienne.persistence.querydb.query.cmmn.implementations.BaseQueryImpl
 import org.cafienne.persistence.querydb.query.exception.ActorSearchFailure
 import org.cafienne.persistence.querydb.schema.QueryDB
-import org.cafienne.persistence.querydb.schema.table.{CaseTables, TenantTables}
+import org.cafienne.persistence.querydb.schema.table.CaseTables
+import org.cafienne.persistence.querydb.schema.table.userregistration.TenantTables
 
 import scala.concurrent.Future
 

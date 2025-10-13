@@ -22,9 +22,9 @@ import net.sf.jasperreports.engine.JasperCompileManager;
 import net.sf.jasperreports.engine.JasperReport;
 import org.cafienne.cmmn.definition.CMMNElementDefinition;
 import org.cafienne.cmmn.definition.ModelDefinition;
+import org.cafienne.util.XMLHelper;
 import org.cafienne.util.json.StringValue;
 import org.cafienne.util.json.Value;
-import org.cafienne.util.XMLHelper;
 import org.w3c.dom.Element;
 
 import java.io.ByteArrayInputStream;

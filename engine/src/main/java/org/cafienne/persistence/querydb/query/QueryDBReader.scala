@@ -20,6 +20,7 @@ package org.cafienne.persistence.querydb.query
 import org.cafienne.persistence.infrastructure.jdbc.query.SlickQueryExtensions
 import org.cafienne.persistence.querydb.schema.QueryDB
 import org.cafienne.persistence.querydb.schema.table._
+import org.cafienne.persistence.querydb.schema.table.userregistration.{ConsentGroupTables, TenantTables}
 
 /**
  * Expose tables available in the QueryDB

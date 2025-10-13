@@ -18,10 +18,10 @@
 package org.cafienne.service.http.cases
 
 import io.swagger.v3.oas.annotations.media.Schema
-import org.cafienne.util.json.ValueMap
 import org.cafienne.service.http.cases.plan.PlanItemAPIFormat.PlanItemResponseFormat
 import org.cafienne.service.http.cases.team.CaseTeamAPI
 import org.cafienne.service.infrastructure.payload.EntityReader.{EntityReader, entityReader}
+import org.cafienne.util.json.ValueMap
 
 import java.time.Instant
 import scala.annotation.meta.field

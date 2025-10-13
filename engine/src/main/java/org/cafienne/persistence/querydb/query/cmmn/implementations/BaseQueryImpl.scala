@@ -22,6 +22,7 @@ import org.cafienne.actormodel.identity.{ConsentGroupMembership, Origin, UserIde
 import org.cafienne.persistence.querydb.query.cmmn.authorization.CaseMembership
 import org.cafienne.persistence.querydb.query.cmmn.implementations.basequeries.{IdentifierFilterQuery, TaskAccessHelper, TenantRegistrationQueries}
 import org.cafienne.persistence.querydb.record._
+import org.cafienne.persistence.querydb.record.userregistration.ConsentGroupMemberRecord
 import org.cafienne.persistence.querydb.schema.QueryDB
 import org.cafienne.persistence.querydb.schema.table.CaseIdentifierRecord
 

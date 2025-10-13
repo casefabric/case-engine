@@ -18,7 +18,7 @@
 package org.cafienne.actormodel.identity
 
 import org.cafienne.persistence.infrastructure.lastmodified.LastModifiedHeader
-import org.cafienne.persistence.querydb.record.TenantRecord
+import org.cafienne.persistence.querydb.record.userregistration.TenantRecord
 
 import scala.concurrent.Future
 

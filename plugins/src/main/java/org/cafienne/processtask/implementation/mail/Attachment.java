@@ -24,9 +24,9 @@ import jakarta.mail.MessagingException;
 import jakarta.mail.internet.MimeBodyPart;
 import jakarta.mail.util.ByteArrayDataSource;
 import org.cafienne.infrastructure.serialization.Fields;
-import org.cafienne.util.json.ValueMap;
 import org.cafienne.processtask.implementation.mail.definition.AttachmentDefinition;
 import org.cafienne.processtask.instance.ProcessTaskActor;
+import org.cafienne.util.json.ValueMap;
 
 import java.util.Base64;
 

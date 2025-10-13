@@ -17,8 +17,8 @@
 
 package org.cafienne.service.http.cases.history
 
-import org.cafienne.util.json.{CafienneJson, Value}
 import org.cafienne.persistence.querydb.record.PlanItemHistoryRecord
+import org.cafienne.util.json.{CafienneJson, Value}
 
 final case class PlanItemHistory(records: Seq[PlanItemHistoryRecord]) extends CafienneJson {
   override def toValue: Value[_] = Value.convert(records.map(item => item.toValue))

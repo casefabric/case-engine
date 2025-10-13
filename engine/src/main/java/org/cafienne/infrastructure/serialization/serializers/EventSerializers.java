@@ -47,18 +47,18 @@ import org.cafienne.cmmn.actorapi.event.team.tenantrole.CaseTeamTenantRoleRemove
 import org.cafienne.cmmn.actorapi.event.team.user.CaseTeamUserAdded;
 import org.cafienne.cmmn.actorapi.event.team.user.CaseTeamUserChanged;
 import org.cafienne.cmmn.actorapi.event.team.user.CaseTeamUserRemoved;
-import org.cafienne.consentgroup.actorapi.event.*;
 import org.cafienne.infrastructure.serialization.CafienneSerializer;
 import org.cafienne.processtask.actorapi.event.*;
-import org.cafienne.tenant.actorapi.event.TenantAppliedPlatformUpdate;
-import org.cafienne.tenant.actorapi.event.TenantModified;
-import org.cafienne.tenant.actorapi.event.deprecated.*;
-import org.cafienne.tenant.actorapi.event.platform.TenantCreated;
-import org.cafienne.tenant.actorapi.event.platform.TenantDisabled;
-import org.cafienne.tenant.actorapi.event.platform.TenantEnabled;
-import org.cafienne.tenant.actorapi.event.user.TenantUserAdded;
-import org.cafienne.tenant.actorapi.event.user.TenantUserChanged;
-import org.cafienne.tenant.actorapi.event.user.TenantUserRemoved;
+import org.cafienne.usermanagement.consentgroup.actorapi.event.*;
+import org.cafienne.usermanagement.tenant.actorapi.event.TenantAppliedPlatformUpdate;
+import org.cafienne.usermanagement.tenant.actorapi.event.TenantModified;
+import org.cafienne.usermanagement.tenant.actorapi.event.deprecated.*;
+import org.cafienne.usermanagement.tenant.actorapi.event.platform.TenantCreated;
+import org.cafienne.usermanagement.tenant.actorapi.event.platform.TenantDisabled;
+import org.cafienne.usermanagement.tenant.actorapi.event.platform.TenantEnabled;
+import org.cafienne.usermanagement.tenant.actorapi.event.user.TenantUserAdded;
+import org.cafienne.usermanagement.tenant.actorapi.event.user.TenantUserChanged;
+import org.cafienne.usermanagement.tenant.actorapi.event.user.TenantUserRemoved;
 
 public class EventSerializers {
     public static void register() {

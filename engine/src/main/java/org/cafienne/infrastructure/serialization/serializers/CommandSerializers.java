@@ -52,19 +52,19 @@ import org.cafienne.cmmn.actorapi.command.team.removemember.RemoveCaseTeamUser;
 import org.cafienne.cmmn.actorapi.command.team.setmember.SetCaseTeamGroup;
 import org.cafienne.cmmn.actorapi.command.team.setmember.SetCaseTeamTenantRole;
 import org.cafienne.cmmn.actorapi.command.team.setmember.SetCaseTeamUser;
-import org.cafienne.consentgroup.actorapi.command.CreateConsentGroup;
-import org.cafienne.consentgroup.actorapi.command.RemoveConsentGroupMember;
-import org.cafienne.consentgroup.actorapi.command.ReplaceConsentGroup;
-import org.cafienne.consentgroup.actorapi.command.SetConsentGroupMember;
 import org.cafienne.infrastructure.serialization.CafienneSerializer;
 import org.cafienne.processtask.actorapi.command.*;
-import org.cafienne.tenant.actorapi.command.GetTenantOwners;
-import org.cafienne.tenant.actorapi.command.RemoveTenantUser;
-import org.cafienne.tenant.actorapi.command.ReplaceTenant;
-import org.cafienne.tenant.actorapi.command.SetTenantUser;
-import org.cafienne.tenant.actorapi.command.platform.CreateTenant;
-import org.cafienne.tenant.actorapi.command.platform.DisableTenant;
-import org.cafienne.tenant.actorapi.command.platform.EnableTenant;
+import org.cafienne.usermanagement.consentgroup.actorapi.command.CreateConsentGroup;
+import org.cafienne.usermanagement.consentgroup.actorapi.command.RemoveConsentGroupMember;
+import org.cafienne.usermanagement.consentgroup.actorapi.command.ReplaceConsentGroup;
+import org.cafienne.usermanagement.consentgroup.actorapi.command.SetConsentGroupMember;
+import org.cafienne.usermanagement.tenant.actorapi.command.GetTenantOwners;
+import org.cafienne.usermanagement.tenant.actorapi.command.RemoveTenantUser;
+import org.cafienne.usermanagement.tenant.actorapi.command.ReplaceTenant;
+import org.cafienne.usermanagement.tenant.actorapi.command.SetTenantUser;
+import org.cafienne.usermanagement.tenant.actorapi.command.platform.CreateTenant;
+import org.cafienne.usermanagement.tenant.actorapi.command.platform.DisableTenant;
+import org.cafienne.usermanagement.tenant.actorapi.command.platform.EnableTenant;
 
 public class CommandSerializers {
     public static void register() {

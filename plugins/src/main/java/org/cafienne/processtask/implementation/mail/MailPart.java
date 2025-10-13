@@ -19,8 +19,8 @@ package org.cafienne.processtask.implementation.mail;
 
 import jakarta.mail.MessagingException;
 import jakarta.mail.internet.MimeBodyPart;
-import org.cafienne.util.json.ValueMap;
 import org.cafienne.processtask.instance.ProcessTaskActor;
+import org.cafienne.util.json.ValueMap;
 
 /**
  * Small custom class to print with toString() the body content (for adding the debug information in Mail class)

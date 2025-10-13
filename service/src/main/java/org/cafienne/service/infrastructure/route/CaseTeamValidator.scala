@@ -23,8 +23,8 @@ import org.cafienne.actormodel.exception.MissingTenantException
 import org.cafienne.actormodel.identity.{CaseUserIdentity, Origin, UserIdentity}
 import org.cafienne.cmmn.actorapi.command.team.{CaseTeam, CaseTeamGroup, CaseTeamTenantRole, CaseTeamUser}
 import org.cafienne.persistence.querydb.query.exception.SearchFailure
-import org.cafienne.persistence.querydb.query.tenant.implementation.{ConsentGroupQueriesImpl, TenantQueriesImpl}
-import org.cafienne.persistence.querydb.query.tenant.{ConsentGroupQueries, TenantQueries}
+import org.cafienne.persistence.querydb.query.userregistration.implementation.{ConsentGroupQueriesImpl, TenantQueriesImpl}
+import org.cafienne.persistence.querydb.query.userregistration.{ConsentGroupQueries, TenantQueries}
 
 import scala.concurrent.{ExecutionContext, Future}
 import scala.util.{Failure, Success}
