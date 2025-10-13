@@ -21,8 +21,8 @@ import com.typesafe.scalalogging.LazyLogging
 import org.cafienne.cmmn.actorapi.event.CaseModified
 import org.cafienne.cmmn.actorapi.event.migration.{PlanItemDropped, PlanItemMigrated, PlanItemMoved, PlanItemMoving}
 import org.cafienne.cmmn.actorapi.event.plan._
-import org.cafienne.humantask.actorapi.event._
-import org.cafienne.humantask.actorapi.event.migration.{HumanTaskDropped, HumanTaskMigrated}
+import org.cafienne.cmmn.actorapi.event.plan.task.humantask.migration.{HumanTaskDropped, HumanTaskMigrated}
+import org.cafienne.cmmn.actorapi.event.plan.task.humantask._
 import org.cafienne.persistence.querydb.materializer.cases.{CaseEventBatch, CaseEventMaterializer}
 import org.cafienne.persistence.querydb.record.{PlanItemRecord, TaskRecord}
 

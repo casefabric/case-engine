@@ -18,8 +18,8 @@
 package org.cafienne.persistence.querydb.materializer.cases.plan
 
 import org.cafienne.cmmn.actorapi.event.CaseModified
-import org.cafienne.humantask.actorapi.event._
-import org.cafienne.humantask.actorapi.event.migration.HumanTaskMigrated
+import org.cafienne.cmmn.actorapi.event.plan.task.humantask.migration.HumanTaskMigrated
+import org.cafienne.cmmn.actorapi.event.plan.task.humantask._
 import org.cafienne.persistence.querydb.record.TaskRecord
 
 object TaskMerger {

@@ -8,7 +8,7 @@ import org.cafienne.cmmn.instance.Path;
 import org.cafienne.cmmn.instance.State;
 import org.cafienne.cmmn.test.TestScript;
 import org.cafienne.cmmn.test.TestUser;
-import org.cafienne.humantask.actorapi.command.CompleteHumanTask;
+import org.cafienne.cmmn.actorapi.command.plan.task.humantask.CompleteHumanTask;
 import org.cafienne.util.json.ValueMap;
 import org.junit.Test;
 

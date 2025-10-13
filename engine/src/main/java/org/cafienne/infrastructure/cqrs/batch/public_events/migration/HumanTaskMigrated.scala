@@ -46,7 +46,7 @@ object HumanTaskMigrated {
   )
 
   def from(batch: PublicCaseEventBatch): Seq[PublicEventWrapper] = batch
-    .filterMap(classOf[org.cafienne.humantask.actorapi.event.migration.HumanTaskMigrated])
+    .filterMap(classOf[org.cafienne.cmmn.actorapi.event.plan.task.humantask.migration.HumanTaskMigrated])
     .map(event => {
       val taskId = event.getTaskId
       val path = event.path

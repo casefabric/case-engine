@@ -22,7 +22,7 @@ import org.cafienne.cmmn.definition.parameter.InputParameterDefinition;
 import org.cafienne.cmmn.definition.parameter.OutputParameterDefinition;
 import org.cafienne.cmmn.definition.task.TaskImplementationContract;
 import org.cafienne.cmmn.instance.task.humantask.HumanTask;
-import org.cafienne.humantask.instance.WorkflowTask;
+import org.cafienne.cmmn.instance.task.humantask.WorkflowTask;
 import org.w3c.dom.Element;
 
 import java.util.LinkedHashMap;

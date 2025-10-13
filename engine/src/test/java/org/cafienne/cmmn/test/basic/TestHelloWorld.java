@@ -5,9 +5,9 @@ import org.cafienne.cmmn.definition.CaseDefinition;
 import org.cafienne.cmmn.instance.State;
 import org.cafienne.cmmn.instance.Transition;
 import org.cafienne.cmmn.test.TestScript;
-import org.cafienne.humantask.actorapi.command.CompleteHumanTask;
-import org.cafienne.humantask.actorapi.event.HumanTaskAssigned;
-import org.cafienne.humantask.actorapi.event.HumanTaskDueDateFilled;
+import org.cafienne.cmmn.actorapi.command.plan.task.humantask.CompleteHumanTask;
+import org.cafienne.cmmn.actorapi.event.plan.task.humantask.HumanTaskAssigned;
+import org.cafienne.cmmn.actorapi.event.plan.task.humantask.HumanTaskDueDateFilled;
 import org.cafienne.util.json.ValueMap;
 import org.junit.Test;
 

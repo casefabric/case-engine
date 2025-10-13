@@ -26,11 +26,10 @@ import org.cafienne.cmmn.definition.team.CaseRoleDefinition;
 import org.cafienne.cmmn.instance.*;
 import org.cafienne.cmmn.instance.task.validation.TaskOutputValidator;
 import org.cafienne.cmmn.instance.task.validation.ValidationResponse;
-import org.cafienne.humantask.actorapi.event.HumanTaskResumed;
-import org.cafienne.humantask.actorapi.event.HumanTaskSuspended;
-import org.cafienne.humantask.actorapi.event.HumanTaskTerminated;
-import org.cafienne.humantask.actorapi.event.migration.HumanTaskDropped;
-import org.cafienne.humantask.instance.WorkflowTask;
+import org.cafienne.cmmn.actorapi.event.plan.task.humantask.HumanTaskResumed;
+import org.cafienne.cmmn.actorapi.event.plan.task.humantask.HumanTaskSuspended;
+import org.cafienne.cmmn.actorapi.event.plan.task.humantask.HumanTaskTerminated;
+import org.cafienne.cmmn.actorapi.event.plan.task.humantask.migration.HumanTaskDropped;
 import org.cafienne.util.json.ValueMap;
 import org.w3c.dom.Element;
 
