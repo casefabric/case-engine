@@ -18,7 +18,8 @@
 
 package org.cafienne.system
 
-import org.apache.pekko.actor.{ActorRef, Props}
+import org.apache.pekko.actor.{ActorRef, PoisonPill, Props}
+import org.apache.pekko.cluster.singleton.{ClusterSingletonManager, ClusterSingletonManagerSettings, ClusterSingletonProxy, ClusterSingletonProxySettings}
 import org.apache.pekko.util.Timeout
 import org.cafienne.service.storage.StorageCoordinator
 import org.cafienne.service.storage.actormodel.command.{ClearTimerData, StorageCommand}
@@ -29,8 +30,8 @@ import scala.concurrent.Future
 
 class CaseServiceGateway(caseSystem: CaseSystem) {
   // Create singleton actors
-  private val timerService: ActorRef = createSingleton(classOf[TimerService], TimerService.IDENTIFIER)
-  private val storageCoordinator: ActorRef = createSingleton(classOf[StorageCoordinator], StorageCoordinator.IDENTIFIER)
+  private val timerService: ActorRef = createSingletonReference(classOf[TimerService], TimerService.IDENTIFIER)
+  private val storageCoordinator: ActorRef = createSingletonReference(classOf[StorageCoordinator], StorageCoordinator.IDENTIFIER)
 
   def askStorageCoordinator(command: StorageCommand): Future[StorageMessage] = {
     import org.apache.pekko.pattern.ask
@@ -43,7 +44,23 @@ class CaseServiceGateway(caseSystem: CaseSystem) {
     timerService.tell(message, sender)
   }
 
-  private def createSingleton(actorClass: Class[_], identifier: String): ActorRef = {
-    caseSystem.system.actorOf(Props.create(actorClass, caseSystem), identifier)
+  def createSingletonReference(actorClass: Class[_], identifier: String): ActorRef = {
+    if (caseSystem.hasClusteredConfiguration) {
+      //TODO handle shutdown of service (now PoisonPill is sent to the service, but it is not handled)
+      caseSystem.system.actorOf(
+        ClusterSingletonManager.props(
+          singletonProps = Props(actorClass, this.caseSystem),
+          terminationMessage = PoisonPill,
+          settings = ClusterSingletonManagerSettings(caseSystem.system)),
+        name = s"$identifier")
+      //return access to the singleton actor
+      caseSystem.system.actorOf(
+        ClusterSingletonProxy.props(
+          singletonManagerPath = s"/user/$identifier",
+          settings = ClusterSingletonProxySettings(caseSystem.system)),
+        name = s"$identifier-proxy")
+    } else {
+      caseSystem.system.actorOf(Props.create(actorClass, caseSystem), identifier)
+    }
   }
 }
