@@ -21,6 +21,7 @@ import org.apache.pekko.actor.{Actor, ActorRef}
 import org.cafienne.actormodel.ActorMetadata
 import org.cafienne.actormodel.message.command.ModelCommand
 import org.cafienne.actormodel.message.response.{ActorTerminated, ModelResponse}
+import org.cafienne.system.router.cluster.ClusterGateway
 import org.cafienne.system.router.singleton.SingletonGateway
 
 import scala.concurrent.Future
@@ -37,6 +38,10 @@ trait CaseEngineGateway {
 
 object CaseEngineGateway {
   def createGateway(caseSystem: CaseSystem): CaseEngineGateway = {
-    new SingletonGateway(caseSystem)
+    if (caseSystem.hasClusteredConfiguration) {
+      new ClusterGateway(caseSystem)
+    } else {
+      new SingletonGateway(caseSystem)
+    }
   }
 }

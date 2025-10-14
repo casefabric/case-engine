@@ -19,11 +19,12 @@ import java.util.function.Function;
 
 public enum ActorType {
     ModelActor(ModelActor.class, ModelEvent.class, UserIdentity::deserialize),
-    Case(Case.class, CaseEvent.class, CaseUserIdentity::deserialize),
-    Process(ProcessTaskActor.class, ProcessEvent.class, CaseUserIdentity::deserialize),
-    Group(ConsentGroupActor.class, ConsentGroupEvent.class, ConsentGroupUser::deserialize),
-    Tenant(TenantActor.class, TenantEvent.class, TenantUser::deserialize);
+    Case("case", Case.class, CaseEvent.class, CaseUserIdentity::deserialize),
+    Process("process", ProcessTaskActor.class, ProcessEvent.class, CaseUserIdentity::deserialize),
+    Group("consentgroup", ConsentGroupActor.class, ConsentGroupEvent.class, ConsentGroupUser::deserialize),
+    Tenant("tenant", TenantActor.class, TenantEvent.class, TenantUser::deserialize);
 
+    public final String description;
     public final String value;
     public final Class<? extends ModelActor> actorClass;
     public final Class<? extends ModelEvent> actorEventClass;
@@ -36,6 +37,11 @@ public enum ActorType {
     private final Function<ValueMap, UserIdentity> userReader;
 
     ActorType(Class<? extends ModelActor> actorClass, Class<? extends ModelEvent> actorEventClass, Function<ValueMap, UserIdentity> userReader) {
+        this(actorClass.getSimpleName(), actorClass, actorEventClass, userReader);
+    }
+
+    ActorType(String description, Class<? extends ModelActor> actorClass, Class<? extends ModelEvent> actorEventClass, Function<ValueMap, UserIdentity> userReader) {
+        this.description = description;
         this.actorClass = actorClass;
         this.actorEventClass = actorEventClass;
         this.userReader = userReader;
