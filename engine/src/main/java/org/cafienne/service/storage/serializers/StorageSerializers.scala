@@ -15,7 +15,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package org.cafienne.infrastructure.serialization.serializers
+package org.cafienne.service.storage.serializers
 
 import org.cafienne.infrastructure.serialization.CafienneSerializer
 import org.cafienne.service.storage.actormodel.event.{ChildrenReceived, TimerDataCleared}

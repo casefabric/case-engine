@@ -19,10 +19,12 @@ package org.cafienne.infrastructure.serialization;
 
 import org.apache.pekko.actor.ExtendedActorSystem;
 import org.apache.pekko.serialization.SerializerWithStringManifest;
-import org.cafienne.infrastructure.serialization.serializers.CommandSerializers;
-import org.cafienne.infrastructure.serialization.serializers.EventSerializers;
-import org.cafienne.infrastructure.serialization.serializers.ResponseSerializers;
-import org.cafienne.infrastructure.serialization.serializers.StorageSerializers;
+import org.cafienne.actormodel.serializers.BaseSerializers;
+import org.cafienne.model.cmmn.serializers.CaseSerializers;
+import org.cafienne.model.processtask.serializers.ProcessTaskSerializers;
+import org.cafienne.service.storage.serializers.StorageSerializers;
+import org.cafienne.usermanagement.consentgroup.serializers.ConsentGroupSerializers;
+import org.cafienne.usermanagement.tenant.serializers.TenantSerializers;
 import org.cafienne.util.json.JSONParseFailure;
 import org.cafienne.util.json.JSONReader;
 import org.cafienne.util.json.ValueMap;
@@ -51,9 +53,11 @@ public class CafienneSerializer extends SerializerWithStringManifest {
     }
 
     static {
-        EventSerializers.register();
-        CommandSerializers.register();
-        ResponseSerializers.register();
+        BaseSerializers.register();
+        CaseSerializers.register();
+        ProcessTaskSerializers.register();
+        ConsentGroupSerializers.register();
+        TenantSerializers.register();
         StorageSerializers.register();
     }
 
@@ -61,7 +65,7 @@ public class CafienneSerializer extends SerializerWithStringManifest {
         return manifests.get(manifestString);
     }
 
-    public static <CS extends CafienneSerializable>void addManifestWrapper(Class<CS> eventClass, ValueMapDeserializer<CS> deserializer) {
+    public static <CS extends CafienneSerializable> void addManifestWrapper(Class<CS> eventClass, ValueMapDeserializer<CS> deserializer) {
         ManifestWrapper manifest = new ManifestWrapper(eventClass, deserializer);
         manifestsByClass.put(manifest.eventClass, manifest);
         // Now register manifest strings of all versions, starting from the current
@@ -123,6 +127,7 @@ public class CafienneSerializer extends SerializerWithStringManifest {
 
     /**
      * Deserialize an already parsed json structure into the object described by the manifest string
+     *
      * @param json
      * @param manifestString
      * @return

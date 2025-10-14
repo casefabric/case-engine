@@ -15,13 +15,40 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package org.cafienne.infrastructure.serialization.serializers;
+package org.cafienne.model.cmmn.serializers;
 
-import org.cafienne.actormodel.message.event.DebugEvent;
 import org.cafienne.actormodel.message.event.EngineVersionChanged;
-import org.cafienne.actormodel.message.event.SentryEvent;
 import org.cafienne.infrastructure.serialization.CafienneSerializer;
-import org.cafienne.model.cmmn.actorapi.event.*;
+import org.cafienne.model.cmmn.actorapi.command.ReactivateCase;
+import org.cafienne.model.cmmn.actorapi.command.StartCase;
+import org.cafienne.model.cmmn.actorapi.command.casefile.CreateCaseFileItem;
+import org.cafienne.model.cmmn.actorapi.command.casefile.DeleteCaseFileItem;
+import org.cafienne.model.cmmn.actorapi.command.casefile.ReplaceCaseFileItem;
+import org.cafienne.model.cmmn.actorapi.command.casefile.UpdateCaseFileItem;
+import org.cafienne.model.cmmn.actorapi.command.debug.SwitchDebugMode;
+import org.cafienne.model.cmmn.actorapi.command.migration.MigrateCaseDefinition;
+import org.cafienne.model.cmmn.actorapi.command.migration.MigrateDefinition;
+import org.cafienne.model.cmmn.actorapi.command.plan.AddDiscretionaryItem;
+import org.cafienne.model.cmmn.actorapi.command.plan.GetDiscretionaryItems;
+import org.cafienne.model.cmmn.actorapi.command.plan.MakeCaseTransition;
+import org.cafienne.model.cmmn.actorapi.command.plan.MakePlanItemTransition;
+import org.cafienne.model.cmmn.actorapi.command.plan.eventlistener.RaiseEvent;
+import org.cafienne.model.cmmn.actorapi.command.plan.task.CompleteTask;
+import org.cafienne.model.cmmn.actorapi.command.plan.task.FailTask;
+import org.cafienne.model.cmmn.actorapi.command.plan.task.HandleTaskImplementationTransition;
+import org.cafienne.model.cmmn.actorapi.command.plan.task.humantask.*;
+import org.cafienne.model.cmmn.actorapi.command.team.DeprecatedUpsert;
+import org.cafienne.model.cmmn.actorapi.command.team.SetCaseTeam;
+import org.cafienne.model.cmmn.actorapi.command.team.removemember.RemoveCaseTeamGroup;
+import org.cafienne.model.cmmn.actorapi.command.team.removemember.RemoveCaseTeamTenantRole;
+import org.cafienne.model.cmmn.actorapi.command.team.removemember.RemoveCaseTeamUser;
+import org.cafienne.model.cmmn.actorapi.command.team.setmember.SetCaseTeamGroup;
+import org.cafienne.model.cmmn.actorapi.command.team.setmember.SetCaseTeamTenantRole;
+import org.cafienne.model.cmmn.actorapi.command.team.setmember.SetCaseTeamUser;
+import org.cafienne.model.cmmn.actorapi.event.CaseAppliedPlatformUpdate;
+import org.cafienne.model.cmmn.actorapi.event.CaseDefinitionApplied;
+import org.cafienne.model.cmmn.actorapi.event.CaseModified;
+import org.cafienne.model.cmmn.actorapi.event.CaseOutputFilled;
 import org.cafienne.model.cmmn.actorapi.event.file.*;
 import org.cafienne.model.cmmn.actorapi.event.migration.*;
 import org.cafienne.model.cmmn.actorapi.event.plan.PlanItemCreated;
@@ -48,36 +75,67 @@ import org.cafienne.model.cmmn.actorapi.event.team.tenantrole.CaseTeamTenantRole
 import org.cafienne.model.cmmn.actorapi.event.team.user.CaseTeamUserAdded;
 import org.cafienne.model.cmmn.actorapi.event.team.user.CaseTeamUserChanged;
 import org.cafienne.model.cmmn.actorapi.event.team.user.CaseTeamUserRemoved;
-import org.cafienne.model.processtask.actorapi.event.*;
-import org.cafienne.usermanagement.consentgroup.actorapi.event.*;
-import org.cafienne.usermanagement.tenant.actorapi.event.TenantAppliedPlatformUpdate;
-import org.cafienne.usermanagement.tenant.actorapi.event.TenantModified;
-import org.cafienne.usermanagement.tenant.actorapi.event.deprecated.*;
-import org.cafienne.usermanagement.tenant.actorapi.event.platform.TenantCreated;
-import org.cafienne.usermanagement.tenant.actorapi.event.platform.TenantDisabled;
-import org.cafienne.usermanagement.tenant.actorapi.event.platform.TenantEnabled;
-import org.cafienne.usermanagement.tenant.actorapi.event.user.TenantUserAdded;
-import org.cafienne.usermanagement.tenant.actorapi.event.user.TenantUserChanged;
-import org.cafienne.usermanagement.tenant.actorapi.event.user.TenantUserRemoved;
+import org.cafienne.model.cmmn.actorapi.response.*;
+import org.cafienne.model.cmmn.actorapi.response.migration.MigrationStartedResponse;
 
-public class EventSerializers {
+public class CaseSerializers {
     public static void register() {
-        registerBaseEvents();
+        registerCaseCommands();
         registerCaseEvents();
-        registerHumanTaskEvents();
-        registerProcessEvents();
-        registerTenantEvents();
-        registerConsentGroupEvents();
-        registerPlatformEvents();
+        registerCaseResponses();
     }
 
-    private static void registerBaseEvents() {
-        CafienneSerializer.addManifestWrapper(DebugEvent.class, DebugEvent::new);
-        CafienneSerializer.addManifestWrapper(SentryEvent.class, SentryEvent::new);
-        CafienneSerializer.addManifestWrapper(DebugDisabled.class, DebugDisabled::new);
-        CafienneSerializer.addManifestWrapper(DebugEnabled.class, DebugEnabled::new);
+    private static void registerCaseCommands() {
+        CafienneSerializer.addManifestWrapper(StartCase.class, StartCase::new);
+        CafienneSerializer.addManifestWrapper(ReactivateCase.class, ReactivateCase::new);
+        CafienneSerializer.addManifestWrapper(MigrateDefinition.class, MigrateDefinition::new);
+        CafienneSerializer.addManifestWrapper(MigrateCaseDefinition.class, MigrateCaseDefinition::new);
+        CafienneSerializer.addManifestWrapper(SwitchDebugMode.class, SwitchDebugMode::new);
+        registerCasePlanCommands();
+        registerCaseFileCommands();
+        registerCaseTeamCommands();
+        registerHumanTaskCommands();
     }
 
+    private static void registerCasePlanCommands() {
+        CafienneSerializer.addManifestWrapper(AddDiscretionaryItem.class, AddDiscretionaryItem::new);
+        CafienneSerializer.addManifestWrapper(GetDiscretionaryItems.class, GetDiscretionaryItems::new);
+        CafienneSerializer.addManifestWrapper(MakeCaseTransition.class, MakeCaseTransition::new);
+        CafienneSerializer.addManifestWrapper(MakePlanItemTransition.class, MakePlanItemTransition::new);
+        CafienneSerializer.addManifestWrapper(HandleTaskImplementationTransition.class, HandleTaskImplementationTransition::new);
+        CafienneSerializer.addManifestWrapper(CompleteTask.class, CompleteTask::new);
+        CafienneSerializer.addManifestWrapper(FailTask.class, FailTask::new);
+        CafienneSerializer.addManifestWrapper(RaiseEvent.class, RaiseEvent::new);
+    }
+
+    private static void registerCaseFileCommands() {
+        CafienneSerializer.addManifestWrapper(CreateCaseFileItem.class, CreateCaseFileItem::new);
+        CafienneSerializer.addManifestWrapper(DeleteCaseFileItem.class, DeleteCaseFileItem::new);
+        CafienneSerializer.addManifestWrapper(ReplaceCaseFileItem.class, ReplaceCaseFileItem::new);
+        CafienneSerializer.addManifestWrapper(UpdateCaseFileItem.class, UpdateCaseFileItem::new);
+    }
+
+    private static void registerCaseTeamCommands() {
+        CafienneSerializer.addManifestWrapper(DeprecatedUpsert.class, DeprecatedUpsert::new);
+        CafienneSerializer.addManifestWrapper(SetCaseTeamUser.class, SetCaseTeamUser::new);
+        CafienneSerializer.addManifestWrapper(SetCaseTeamTenantRole.class, SetCaseTeamTenantRole::new);
+        CafienneSerializer.addManifestWrapper(SetCaseTeamGroup.class, SetCaseTeamGroup::new);
+        CafienneSerializer.addManifestWrapper(RemoveCaseTeamUser.class, RemoveCaseTeamUser::new);
+        CafienneSerializer.addManifestWrapper(RemoveCaseTeamGroup.class, RemoveCaseTeamGroup::new);
+        CafienneSerializer.addManifestWrapper(RemoveCaseTeamTenantRole.class, RemoveCaseTeamTenantRole::new);
+        CafienneSerializer.addManifestWrapper(SetCaseTeam.class, SetCaseTeam::new);
+    }
+
+    private static void registerHumanTaskCommands() {
+        CafienneSerializer.addManifestWrapper(AssignTask.class, AssignTask::new);
+        CafienneSerializer.addManifestWrapper(ClaimTask.class, ClaimTask::new);
+        CafienneSerializer.addManifestWrapper(CompleteHumanTask.class, CompleteHumanTask::new);
+        CafienneSerializer.addManifestWrapper(DelegateTask.class, DelegateTask::new);
+        CafienneSerializer.addManifestWrapper(FillTaskDueDate.class, FillTaskDueDate::new);
+        CafienneSerializer.addManifestWrapper(RevokeTask.class, RevokeTask::new);
+        CafienneSerializer.addManifestWrapper(SaveTaskOutput.class, SaveTaskOutput::new);
+        CafienneSerializer.addManifestWrapper(ValidateTaskOutput.class, ValidateTaskOutput::new);
+    }
     private static void registerCaseEvents() {
         CafienneSerializer.addManifestWrapper(CaseDefinitionApplied.class, CaseDefinitionApplied::new);
         CafienneSerializer.addManifestWrapper(CaseModified.class, CaseModified::new);
@@ -139,23 +197,6 @@ public class EventSerializers {
         CafienneSerializer.addManifestWrapper(TimerSuspended.class, TimerSuspended::new);
         CafienneSerializer.addManifestWrapper(TimerResumed.class, TimerResumed::new);
         CafienneSerializer.addManifestWrapper(TimerDropped.class, TimerDropped::new);
-    }
-
-    private static void registerCaseFileEvents() {
-        CafienneSerializer.addManifestWrapper(CaseFileItemCreated.class, CaseFileItemCreated::new);
-        CafienneSerializer.addManifestWrapper(CaseFileItemUpdated.class, CaseFileItemUpdated::new);
-        CafienneSerializer.addManifestWrapper(CaseFileItemReplaced.class, CaseFileItemReplaced::new);
-        CafienneSerializer.addManifestWrapper(CaseFileItemDeleted.class, CaseFileItemDeleted::new);
-        CafienneSerializer.addManifestWrapper(CaseFileItemChildRemoved.class, CaseFileItemChildRemoved::new);
-        // Note: CaseFileItemTransitioned event cannot be deleted, since sub class events above were introduced only in 1.1.9
-        CafienneSerializer.addManifestWrapper(CaseFileItemTransitioned.class, CaseFileItemTransitioned::new);
-        CafienneSerializer.addManifestWrapper(BusinessIdentifierSet.class, BusinessIdentifierSet::new);
-        CafienneSerializer.addManifestWrapper(BusinessIdentifierCleared.class, BusinessIdentifierCleared::new);
-        CafienneSerializer.addManifestWrapper(CaseFileItemMigrated.class, CaseFileItemMigrated::new);
-        CafienneSerializer.addManifestWrapper(CaseFileItemDropped.class, CaseFileItemDropped::new);
-    }
-
-    private static void registerHumanTaskEvents() {
         CafienneSerializer.addManifestWrapper(HumanTaskCreated.class, HumanTaskCreated::new);
         CafienneSerializer.addManifestWrapper(HumanTaskActivated.class, HumanTaskActivated::new);
         CafienneSerializer.addManifestWrapper(HumanTaskInputSaved.class, HumanTaskInputSaved::new);
@@ -174,50 +215,28 @@ public class EventSerializers {
         CafienneSerializer.addManifestWrapper(HumanTaskDropped.class, HumanTaskDropped::new);
     }
 
-    private static void registerProcessEvents() {
-        CafienneSerializer.addManifestWrapper(ProcessStarted.class, ProcessStarted::new);
-        CafienneSerializer.addManifestWrapper(ProcessCompleted.class, ProcessCompleted::new);
-        CafienneSerializer.addManifestWrapper(ProcessFailed.class, ProcessFailed::new);
-        CafienneSerializer.addManifestWrapper(ProcessReactivated.class, ProcessReactivated::new);
-        CafienneSerializer.addManifestWrapper(ProcessResumed.class, ProcessResumed::new);
-        CafienneSerializer.addManifestWrapper(ProcessSuspended.class, ProcessSuspended::new);
-        CafienneSerializer.addManifestWrapper(ProcessTerminated.class, ProcessTerminated::new);
-        CafienneSerializer.addManifestWrapper(ProcessModified.class, ProcessModified::new);
-        CafienneSerializer.addManifestWrapper(ProcessDefinitionMigrated.class, ProcessDefinitionMigrated::new);
+    private static void registerCaseFileEvents() {
+        CafienneSerializer.addManifestWrapper(CaseFileItemCreated.class, CaseFileItemCreated::new);
+        CafienneSerializer.addManifestWrapper(CaseFileItemUpdated.class, CaseFileItemUpdated::new);
+        CafienneSerializer.addManifestWrapper(CaseFileItemReplaced.class, CaseFileItemReplaced::new);
+        CafienneSerializer.addManifestWrapper(CaseFileItemDeleted.class, CaseFileItemDeleted::new);
+        CafienneSerializer.addManifestWrapper(CaseFileItemChildRemoved.class, CaseFileItemChildRemoved::new);
+        // Note: CaseFileItemTransitioned event cannot be deleted, since sub class events above were introduced only in 1.1.9
+        CafienneSerializer.addManifestWrapper(CaseFileItemTransitioned.class, CaseFileItemTransitioned::new);
+        CafienneSerializer.addManifestWrapper(BusinessIdentifierSet.class, BusinessIdentifierSet::new);
+        CafienneSerializer.addManifestWrapper(BusinessIdentifierCleared.class, BusinessIdentifierCleared::new);
+        CafienneSerializer.addManifestWrapper(CaseFileItemMigrated.class, CaseFileItemMigrated::new);
+        CafienneSerializer.addManifestWrapper(CaseFileItemDropped.class, CaseFileItemDropped::new);
     }
 
-    private static void registerTenantEvents() {
-        CafienneSerializer.addManifestWrapper(TenantOwnersRequested.class, TenantOwnersRequested::new);
-        CafienneSerializer.addManifestWrapper(TenantModified.class, TenantModified::new);
-        CafienneSerializer.addManifestWrapper(TenantAppliedPlatformUpdate.class, TenantAppliedPlatformUpdate::new);
-        CafienneSerializer.addManifestWrapper(TenantUserAdded.class, TenantUserAdded::new);
-        CafienneSerializer.addManifestWrapper(TenantUserChanged.class, TenantUserChanged::new);
-        CafienneSerializer.addManifestWrapper(TenantUserRemoved.class, TenantUserRemoved::new);
-        registerDeprecatedTenantEvents();
-    }
-
-    private static void registerDeprecatedTenantEvents() {
-        CafienneSerializer.addManifestWrapper(TenantUserCreated.class, TenantUserCreated::new);
-        CafienneSerializer.addManifestWrapper(TenantUserUpdated.class, TenantUserUpdated::new);
-        CafienneSerializer.addManifestWrapper(TenantUserRoleAdded.class, TenantUserRoleAdded::new);
-        CafienneSerializer.addManifestWrapper(TenantUserRoleRemoved.class, TenantUserRoleRemoved::new);
-        CafienneSerializer.addManifestWrapper(TenantUserEnabled.class, TenantUserEnabled::new);
-        CafienneSerializer.addManifestWrapper(TenantUserDisabled.class, TenantUserDisabled::new);
-        CafienneSerializer.addManifestWrapper(OwnerAdded.class, OwnerAdded::new);
-        CafienneSerializer.addManifestWrapper(OwnerRemoved.class, OwnerRemoved::new);
-    }
-
-    private static void registerConsentGroupEvents() {
-        CafienneSerializer.addManifestWrapper(ConsentGroupMemberAdded.class, ConsentGroupMemberAdded::new);
-        CafienneSerializer.addManifestWrapper(ConsentGroupMemberChanged.class, ConsentGroupMemberChanged::new);
-        CafienneSerializer.addManifestWrapper(ConsentGroupMemberRemoved.class, ConsentGroupMemberRemoved::new);
-        CafienneSerializer.addManifestWrapper(ConsentGroupCreated.class, ConsentGroupCreated::new);
-        CafienneSerializer.addManifestWrapper(ConsentGroupModified.class, ConsentGroupModified::new);
-    }
-
-    private static void registerPlatformEvents() {
-        CafienneSerializer.addManifestWrapper(TenantCreated.class, TenantCreated::new);
-        CafienneSerializer.addManifestWrapper(TenantDisabled.class, TenantDisabled::new);
-        CafienneSerializer.addManifestWrapper(TenantEnabled.class, TenantEnabled::new);
+    private static void registerCaseResponses() {
+        CafienneSerializer.addManifestWrapper(AddDiscretionaryItemResponse.class, AddDiscretionaryItemResponse::new);
+        CafienneSerializer.addManifestWrapper(GetDiscretionaryItemsResponse.class, GetDiscretionaryItemsResponse::new);
+        CafienneSerializer.addManifestWrapper(CaseStartedResponse.class, CaseStartedResponse::new);
+        CafienneSerializer.addManifestWrapper(MigrationStartedResponse.class, MigrationStartedResponse::new);
+        CafienneSerializer.addManifestWrapper(CaseResponse.class, CaseResponse::new);
+        CafienneSerializer.addManifestWrapper(CaseNotModifiedResponse.class, CaseNotModifiedResponse::new);
+        CafienneSerializer.addManifestWrapper(HumanTaskResponse.class, HumanTaskResponse::new);
+        CafienneSerializer.addManifestWrapper(HumanTaskValidationResponse.class, HumanTaskValidationResponse::new);
     }
 }
