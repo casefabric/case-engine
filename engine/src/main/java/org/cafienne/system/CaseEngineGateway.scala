@@ -17,63 +17,26 @@
 
 package org.cafienne.system
 
-import org.apache.pekko.actor.{Actor, ActorRef, ActorSystem, Props}
-import org.apache.pekko.util.Timeout
+import org.apache.pekko.actor.{Actor, ActorRef}
 import org.cafienne.actormodel.ActorMetadata
-import org.cafienne.actormodel.message.command.{ModelCommand, TerminateModelActor}
+import org.cafienne.actormodel.message.command.ModelCommand
 import org.cafienne.actormodel.message.response.{ActorTerminated, ModelResponse}
-import org.cafienne.model.cmmn.instance.Case
-import org.cafienne.model.processtask.instance.ProcessTaskActor
-import org.cafienne.system.router.LocalRouter
-import org.cafienne.usermanagement.consentgroup.ConsentGroupActor
-import org.cafienne.usermanagement.tenant.TenantActor
+import org.cafienne.system.router.singleton.SingletonGateway
 
 import scala.concurrent.Future
 
-class CaseEngineGateway(caseSystem: CaseSystem) {
-  private val system: ActorSystem = caseSystem.system
-  private val terminationRequests = collection.concurrent.TrieMap[String, ActorRef]()
-  private val actors = collection.concurrent.TrieMap[String, ActorRef]()
-  private val caseService = system.actorOf(Props.create(classOf[LocalRouter], caseSystem, actors, terminationRequests), "cases")
-  private val processTaskService = system.actorOf(Props.create(classOf[LocalRouter], caseSystem, actors, terminationRequests), "process-tasks")
-  private val tenantService = system.actorOf(Props.create(classOf[LocalRouter], caseSystem, actors, terminationRequests), "tenants")
-  private val consentGroupService = system.actorOf(Props.create(classOf[LocalRouter], caseSystem, actors, terminationRequests), "consent-groups")
-  private val defaultRouterService: ActorRef = system.actorOf(Props.create(classOf[LocalRouter], caseSystem, actors, terminationRequests), "default-router")
+trait CaseEngineGateway {
+  def request(message: ModelCommand): Future[ModelResponse]
 
-  def request(message: ModelCommand): Future[ModelResponse] = {
-    import org.apache.pekko.pattern.ask
-    implicit val timeout: Timeout = caseSystem.config.actor.askTimout
+  def inform(message: ModelCommand, sender: ActorRef = Actor.noSender): Unit
 
-    getRouter(message).ask(message).asInstanceOf[Future[ModelResponse]]
-  }
+  def terminate(metadata: ActorMetadata): Unit
 
-  def inform(message: ModelCommand, sender: ActorRef = Actor.noSender): Unit = {
-    getRouter(message).tell(message, sender)
-  }
+  def awaitTermination(metadata: ActorMetadata): Future[ActorTerminated]
+}
 
-  def terminate(metadata: ActorMetadata): Unit = {
-    defaultRouterService.tell(TerminateModelActor(metadata), ActorRef.noSender)
-  }
-
-  def awaitTermination(metadata: ActorMetadata): Future[ActorTerminated] = {
-    import org.apache.pekko.pattern.ask
-    implicit val timeout: Timeout = caseSystem.config.actor.askTimout
-
-    defaultRouterService.ask(TerminateModelActor(metadata)).asInstanceOf[Future[ActorTerminated]]
-  }
-
-  private def getRouter(message: ModelCommand): ActorRef = {
-    message match {
-      case command: ModelCommand =>
-        val actorClass = command.actorType.actorClass
-        // Unfortunately for some reason we cannot use scala matching on the actor class.
-        // Unclear why (most probably lack of scala knowledge ;))
-        if (actorClass == classOf[Case]) return caseService
-        if (actorClass == classOf[ProcessTaskActor]) return processTaskService
-        if (actorClass == classOf[TenantActor]) return tenantService
-        if (actorClass == classOf[ConsentGroupActor]) return consentGroupService
-        defaultRouterService
-      case _ => defaultRouterService
-    }
+object CaseEngineGateway {
+  def createGateway(caseSystem: CaseSystem): CaseEngineGateway = {
+    new SingletonGateway(caseSystem)
   }
 }

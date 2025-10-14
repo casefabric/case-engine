@@ -55,7 +55,7 @@ class CaseSystem(val systemConfig: SystemConfig, val system: ActorSystem, val qu
   /**
     * Retrieve a router for case messages. This will forward the messages to the correct case instance
     */
-  val engine: CaseEngineGateway = new CaseEngineGateway(this)
+  val engine: CaseEngineGateway = CaseEngineGateway.createGateway(this)
 
   val service: CaseServiceGateway = new CaseServiceGateway(this)
 
