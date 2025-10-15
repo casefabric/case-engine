@@ -178,7 +178,7 @@ public abstract class ModelActor extends AbstractPersistentActor {
      * Returns the user context of the current command, event or response
      */
     public UserIdentity getCurrentUser() {
-        return transaction.getUser();
+        return getCurrentTransaction().getUser();
     }
 
     void setCurrentTransaction(MessageTransaction transaction) {

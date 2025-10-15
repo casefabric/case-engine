@@ -6,21 +6,21 @@ import org.cafienne.actormodel.message.UserMessage;
 import org.cafienne.actormodel.message.event.ModelEvent;
 import org.slf4j.Logger;
 
-public abstract class MessageTransaction<U extends UserMessage> {
-    protected final U message;
+public abstract class MessageTransaction<M> {
+    protected final M message;
     protected final ModelActor actor;
     protected final Reception reception;
 
-    protected MessageTransaction(ModelActor actor, Reception reception, U message) {
+    protected MessageTransaction(ModelActor actor, Reception reception, M message) {
         this.actor = actor;
         this.reception = reception;
         this.message = message;
         this.actor.setCurrentTransaction(this);
     }
 
-    UserIdentity getUser() {
-        return this.message != null ? this.message.getUser() : null;
-    }
+    public abstract String getCorrelationId();
+
+    public abstract UserIdentity getUser();
 
     abstract void perform();
 
@@ -45,11 +45,23 @@ public abstract class MessageTransaction<U extends UserMessage> {
         // defaults to not doing anything
     }
 
-    public U getMessage() {
-        return message;
-    }
-
     public boolean hasState() {
         return false;
+    }
+}
+
+abstract class UserMessageTransaction<UM extends UserMessage> extends MessageTransaction<UM> {
+    protected UserMessageTransaction(ModelActor actor, Reception reception, UM message) {
+        super(actor, reception, message);
+    }
+
+    @Override
+    public String getCorrelationId() {
+        return message.getCorrelationId();
+    }
+
+    @Override
+    public UserIdentity getUser() {
+        return message.getUser();
     }
 }

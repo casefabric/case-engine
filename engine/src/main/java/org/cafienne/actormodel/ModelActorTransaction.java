@@ -45,7 +45,7 @@ import java.util.stream.Collectors;
  * ModelActorTransaction captures all state changing events upon handling an {@link ModelCommand}
  * It also handles failures and sending responses to complete the lifecycle of the message.
  */
-public class ModelActorTransaction extends MessageTransaction<ModelCommand> {
+public class ModelActorTransaction extends UserMessageTransaction<ModelCommand> {
     private final ActorRef sender;
     private final static int avgNumEvents = 30;
     private final List<ModelEvent> events = new ArrayList<>(avgNumEvents);

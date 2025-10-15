@@ -45,7 +45,7 @@ public abstract class BaseModelResponse implements ModelResponse {
         // If a Command never reached the actor (e.g., if CaseSystem routing service ran into an error),
         //  the actor will not be available. Checking that here. Required for CommandFailure.
         this.lastModified = command.getActor() != null ? command.getActor().getLastModified() : null;
-        this.actorChanged = command.getActor() != null && command.getActor().getCurrentTransaction() != null && command.getActor().getCurrentTransaction().hasState();
+        this.actorChanged = command.getActor() != null && command.getActor().getCurrentTransaction().hasState();
         this.user = command.getUser();
         this.commandType = command.getClass().getName();
     }
