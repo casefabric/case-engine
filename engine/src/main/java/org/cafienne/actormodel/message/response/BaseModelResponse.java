@@ -55,7 +55,7 @@ public abstract class BaseModelResponse implements ModelResponse {
         this.correlationId = json.readString(Fields.correlationId);
         this.actorId = json.readString(Fields.actorId);
         this.lastModified = json.readInstant(Fields.lastModified);
-        this.user = json.readObject(Fields.user, UserIdentity::deserialize);
+        this.user = actorType().readUser(json.with(Fields.user));
         this.commandType = json.readString(Fields.commandType);
         this.actorChanged = json.readBoolean(Fields.actorChanged);
     }

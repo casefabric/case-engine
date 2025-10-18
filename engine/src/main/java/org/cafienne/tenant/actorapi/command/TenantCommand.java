@@ -51,11 +51,6 @@ public abstract class TenantCommand extends BaseModelCommand<TenantActor, Tenant
         super(json);
     }
 
-    @Override
-    protected TenantUser readUser(ValueMap json) {
-        return TenantUser.deserialize(json);
-    }
-
     /**
      * Hook to validate the command.
      *

@@ -35,11 +35,6 @@ public abstract class BaseProcessEvent extends BaseModelEvent<ProcessTaskActor, 
     }
 
     @Override
-    protected CaseUserIdentity readUser(ValueMap json) {
-        return CaseUserIdentity.deserialize(json);
-    }
-
-    @Override
     public void updateState(ProcessTaskActor actor) {
         // Nothing to update here. (as of now)
     }

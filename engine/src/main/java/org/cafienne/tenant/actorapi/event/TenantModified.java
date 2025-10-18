@@ -39,8 +39,4 @@ public class TenantModified extends ActorModified<TenantActor, TenantUser> imple
         super(json);
     }
 
-    @Override
-    protected TenantUser readUser(ValueMap json) {
-        return TenantUser.deserialize(json);
-    }
 }

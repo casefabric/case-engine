@@ -37,11 +37,6 @@ public abstract class TenantBaseEvent extends BaseModelEvent<TenantActor, Tenant
         super(json);
     }
 
-    @Override
-    protected TenantUser readUser(ValueMap json) {
-        return TenantUser.deserialize(json);
-    }
-
     protected void writeTenantEvent(JsonGenerator generator) throws IOException {
         super.writeModelEvent(generator);
     }

@@ -30,11 +30,6 @@ public abstract class CaseSystemCommunicationCommand extends BaseModelCommand<Mo
     }
 
     @Override
-    protected UserIdentity readUser(ValueMap json) {
-        return UserIdentity.deserialize(json);
-    }
-
-    @Override
     public ActorType actorType() {
         return command.actorType();
     }

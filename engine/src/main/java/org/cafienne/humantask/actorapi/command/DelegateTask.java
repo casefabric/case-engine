@@ -39,7 +39,7 @@ public class DelegateTask extends TaskManagementCommand {
 
     public DelegateTask(ValueMap json) {
         super(json);
-        this.delegate = readUser(json.with(Fields.delegate));
+        this.delegate = CaseUserIdentity.deserialize(json.with(Fields.delegate));
     }
 
     @Override

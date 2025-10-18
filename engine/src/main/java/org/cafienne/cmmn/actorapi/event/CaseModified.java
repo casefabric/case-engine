@@ -53,11 +53,6 @@ public class CaseModified extends ActorModified<Case, CaseUserIdentity> implemen
         this.state = json.readEnum(Fields.state, State.class);
     }
 
-    @Override
-    protected CaseUserIdentity readUser(ValueMap json) {
-        return CaseUserIdentity.deserialize(json);
-    }
-
     /**
      * Returns the state that the case plan currently has
      * @return

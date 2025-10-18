@@ -45,11 +45,6 @@ public abstract class ConsentGroupCommand extends BaseModelCommand<ConsentGroupA
         super(json);
     }
 
-    @Override
-    protected ConsentGroupUser readUser(ValueMap json) {
-        return ConsentGroupUser.deserialize(json);
-    }
-
     /**
      * Before the group starts processing the command, it will first ask to validate the command.
      * The default implementation is to check whether the case definition is available (i.e., whether StartCase command has been triggered before this command).

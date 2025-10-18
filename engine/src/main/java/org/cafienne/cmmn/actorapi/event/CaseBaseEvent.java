@@ -34,11 +34,6 @@ public abstract class CaseBaseEvent extends BaseModelEvent<Case, CaseUserIdentit
         super(json);
     }
 
-    @Override
-    protected CaseUserIdentity readUser(ValueMap json) {
-        return CaseUserIdentity.deserialize(json);
-    }
-
     protected void writeCaseEvent(JsonGenerator generator) throws IOException {
         super.writeModelEvent(generator);
     }

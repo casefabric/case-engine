@@ -40,8 +40,4 @@ public class ProcessModified extends ActorModified<ProcessTaskActor, CaseUserIde
         super(json);
     }
 
-    @Override
-    protected CaseUserIdentity readUser(ValueMap json) {
-        return CaseUserIdentity.deserialize(json);
-    }
 }

@@ -39,8 +39,4 @@ public class ConsentGroupModified extends ActorModified<ConsentGroupActor, Conse
         super(json);
     }
 
-    @Override
-    protected ConsentGroupUser readUser(ValueMap json) {
-        return ConsentGroupUser.deserialize(json);
-    }
 }

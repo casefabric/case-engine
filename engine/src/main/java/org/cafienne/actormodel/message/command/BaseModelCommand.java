@@ -72,13 +72,8 @@ public abstract class BaseModelCommand<T extends ModelActor, U extends UserIdent
         this.json = json;
         this.correlationId = json.readString(Fields.correlationId);
         this.actorId = json.readString(Fields.actorId);
-        this.user = readUser(json.with(Fields.user));
+        this.user = actorType().readUser(json.with(Fields.user));
     }
-
-    /**
-     * Model actor specific command to is responsible for deserializing user to appropriate type.
-     */
-    protected abstract U readUser(ValueMap json);
 
     /**
      * Through this method, the command is made aware of the actor that is handling it.

@@ -37,11 +37,6 @@ public abstract class ConsentGroupBaseEvent extends BaseModelEvent<ConsentGroupA
         super(json);
     }
 
-    @Override
-    protected ConsentGroupUser readUser(ValueMap json) {
-        return ConsentGroupUser.deserialize(json);
-    }
-
     protected void writeConsentGroupEvent(JsonGenerator generator) throws IOException {
         super.writeModelEvent(generator);
     }

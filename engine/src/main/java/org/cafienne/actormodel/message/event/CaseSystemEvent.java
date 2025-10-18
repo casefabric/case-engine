@@ -13,8 +13,4 @@ public abstract class CaseSystemEvent extends BaseModelEvent<ModelActor, UserIde
         super(json);
     }
 
-    @Override
-    protected UserIdentity readUser(ValueMap json) {
-        return UserIdentity.deserialize(json);
-    }
 }

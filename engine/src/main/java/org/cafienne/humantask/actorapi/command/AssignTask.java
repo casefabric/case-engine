@@ -40,7 +40,7 @@ public class AssignTask extends TaskManagementCommand {
 
     public AssignTask(ValueMap json) {
         super(json);
-        this.assignee = readUser(json.with(Fields.assignee));
+        this.assignee = CaseUserIdentity.deserialize(json.with(Fields.assignee));
     }
 
     @Override

@@ -55,7 +55,7 @@ public abstract class BaseModelEvent<M extends ModelActor, U extends UserIdentit
         this.actorId = modelEventJson.readString(Fields.actorId);
         this.tenant = modelEventJson.readString(Fields.tenant);
         this.timestamp = modelEventJson.readInstant(Fields.timestamp);
-        this.user = readUser(modelEventJson.with(Fields.user));
+        this.user = actorType().readUser(modelEventJson.with(Fields.user));
         this.correlationId = modelEventJson.readString(Fields.correlationId);
     }
 
@@ -63,11 +63,6 @@ public abstract class BaseModelEvent<M extends ModelActor, U extends UserIdentit
     public String getCorrelationId() {
         return correlationId;
     }
-
-    /**
-     * Model actor specific command to is responsible for deserializing user to appropriate type.
-     */
-    protected abstract U readUser(ValueMap json);
 
     @Override
     public String tenant() {

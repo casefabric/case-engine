@@ -47,11 +47,6 @@ public abstract class CaseCommand extends BaseModelCommand<Case, CaseUserIdentit
         super(json);
     }
 
-    @Override
-    protected CaseUserIdentity readUser(ValueMap json) {
-        return CaseUserIdentity.deserialize(json);
-    }
-
     /**
      * The id of the case on which to perform the command
      *

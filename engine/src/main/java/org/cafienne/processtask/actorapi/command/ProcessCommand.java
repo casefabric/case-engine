@@ -36,11 +36,6 @@ public abstract class ProcessCommand extends BaseModelCommand<ProcessTaskActor, 
     }
 
     @Override
-    protected CaseUserIdentity readUser(ValueMap json) {
-        return CaseUserIdentity.deserialize(json);
-    }
-
-    @Override
     public void validate(ProcessTaskActor modelActor) throws InvalidCommandException {
         // Nothing to validate
     }
