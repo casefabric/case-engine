@@ -37,7 +37,7 @@ import java.io.IOException;
 import java.io.StringWriter;
 
 public abstract class BaseModelCommand<T extends ModelActor, U extends UserIdentity> implements ModelCommand {
-    private final ValueMap json;
+    protected final ValueMap json;
     public final String correlationId;
     public final String actorId;
     private ActorRef sender;

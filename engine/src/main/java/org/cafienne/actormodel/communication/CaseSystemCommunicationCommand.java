@@ -12,16 +12,24 @@ import org.cafienne.util.json.ValueMap;
 import java.io.IOException;
 
 public abstract class CaseSystemCommunicationCommand extends BaseModelCommand<ModelActor, UserIdentity> implements CaseSystemCommunicationMessage {
+    private ModelCommand deserializedModelCommand;
     public final ModelCommand command;
 
     protected CaseSystemCommunicationCommand(ModelCommand command) {
         super(command.getUser(), command.actorId());
-        this.command = command;
+        this.command = this.deserializedModelCommand = command;
     }
 
     protected CaseSystemCommunicationCommand(ValueMap json) {
         super(json);
-        this.command = json.readManifestField(Fields.command);
+        this.command = readCommand(json);
+    }
+
+    private ModelCommand readCommand(ValueMap json) {
+        if (this.deserializedModelCommand == null) {
+            this.deserializedModelCommand = json.readManifestField(Fields.command);
+        }
+        return this.deserializedModelCommand;
     }
 
     @Override
@@ -31,7 +39,20 @@ public abstract class CaseSystemCommunicationCommand extends BaseModelCommand<Mo
 
     @Override
     public ActorType actorType() {
-        return command.actorType();
+        if (command == null) {
+            // This code is typically read during json deserialization of the UserIdentity in the super class
+            // In that case the command is still null. Therefore, we deserialize it
+            //  and only then read the actor type from it.
+            // (Deserializing is optimized through a private field in order to do it only once)
+            if (this.json != null) {
+                return readCommand(json).actorType();
+            } else {
+                // Let's just make it not crash and see what happens ...
+                return ActorType.ModelActor;
+            }
+        } else {
+            return command.actorType();
+        }
     }
 
     @Override
