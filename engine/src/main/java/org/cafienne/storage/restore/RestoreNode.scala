@@ -17,12 +17,13 @@
 
 package org.cafienne.storage.restore
 
+import org.cafienne.storage.StorageUser
 import org.cafienne.storage.actormodel.{ActorMetadata, OffspringNode}
 import org.cafienne.storage.archival.Archive
 import org.cafienne.storage.restore.command.RestoreArchive
 
-class RestoreNode(val metadata: ActorMetadata, val actor: RootRestorer) extends OffspringNode {
-  override def createStorageCommand: Any = RestoreArchive(metadata, archive)
+case class RestoreNode(user: StorageUser, metadata: ActorMetadata, actor: RootRestorer) extends OffspringNode {
+  override def createStorageCommand: Any = RestoreArchive(user, metadata, archive)
   var archive: Archive = _
 
   private def parentCompleted: Boolean = actor.getParent(this).fold(true)(_.hasCompleted)

@@ -18,8 +18,8 @@
 package org.cafienne.storage.archival
 
 import org.cafienne.infrastructure.serialization.{Fields, JacksonSerializable}
-import org.cafienne.util.json.{CafienneJson, Value, ValueList, ValueMap}
 import org.cafienne.storage.actormodel.ActorMetadata
+import org.cafienne.util.json.{CafienneJson, Value, ValueList, ValueMap}
 
 import scala.jdk.CollectionConverters.CollectionHasAsScala
 
@@ -35,7 +35,7 @@ object Archive {
    */
   def deserialize(json: ValueMap): Archive = {
     Archive(
-      metadata = ActorMetadata.deserializeMetadata(json),
+      metadata = json.readMetadata(Fields.metadata),
       events = json.withArray(Fields.events),
       children = json.withArray(Fields.children).getValue.asScala.toSeq.map(_.asInstanceOf[ValueMap]).map(Archive.deserialize)
     )

@@ -17,16 +17,15 @@
 
 package org.cafienne.storage.deletion.event
 
-import org.cafienne.infrastructure.serialization.Manifest
-import org.cafienne.util.json.ValueMap
+import org.cafienne.infrastructure.serialization.{Fields, Manifest}
+import org.cafienne.storage.StorageUser
 import org.cafienne.storage.actormodel.ActorMetadata
 import org.cafienne.storage.actormodel.event.StorageRequestReceived
+import org.cafienne.util.json.ValueMap
 
 @Manifest
-case class RemovalRequested(metadata: ActorMetadata, override val optionalJson: Option[ValueMap] = None) extends StorageRequestReceived
+case class RemovalRequested(user: StorageUser, metadata: ActorMetadata, override val optionalJson: Option[ValueMap] = None) extends StorageRequestReceived
 
 object RemovalRequested {
-  def deserialize(json: ValueMap): RemovalRequested = {
-    RemovalRequested(ActorMetadata.deserializeMetadata(json), Some(json))
-  }
+  def deserialize(json: ValueMap): RemovalRequested = RemovalRequested(StorageUser.deserialize(json), json.readMetadata(Fields.metadata), Some(json))
 }

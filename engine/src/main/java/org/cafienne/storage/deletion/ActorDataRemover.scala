@@ -20,6 +20,7 @@ package org.cafienne.storage.deletion
 import com.typesafe.scalalogging.LazyLogging
 import org.apache.pekko.persistence.DeleteMessagesSuccess
 import org.cafienne.actormodel.ActorType
+import org.cafienne.storage.StorageUser
 import org.cafienne.storage.actormodel.message.StorageEvent
 import org.cafienne.storage.actormodel.{ActorMetadata, StorageActor}
 import org.cafienne.storage.deletion.command.RemoveActorData
@@ -28,7 +29,7 @@ import org.cafienne.storage.deletion.response.RemovalRejected
 import org.cafienne.storage.deletion.state._
 import org.cafienne.system.CaseSystem
 
-class ActorDataRemover(val caseSystem: CaseSystem, val metadata: ActorMetadata) extends StorageActor[DeletionState] with LazyLogging {
+class ActorDataRemover(val caseSystem: CaseSystem, val user: StorageUser, val metadata: ActorMetadata) extends StorageActor[DeletionState] with LazyLogging {
   printLogMessage(s"\n========== Launching Storage Deletion Service ${metadata.path}")
 
   /**
@@ -76,7 +77,7 @@ class ActorDataRemover(val caseSystem: CaseSystem, val metadata: ActorMetadata) 
     } else {
       printLogMessage(s"Completed clearing event journal $msg; informing StorageCoordinator (since we have no parent) and stopping ActorDataRemover on $metadata")
     }
-    context.parent ! RemovalCompleted(metadata)
+    context.parent ! RemovalCompleted(user, metadata)
     context.stop(self)
   }
 
@@ -97,10 +98,10 @@ class ActorDataRemover(val caseSystem: CaseSystem, val metadata: ActorMetadata) 
   def startStorageProcess(command: RemoveActorData): Unit = {
     if (lastSequenceNr == 0) {
       printLogMessage("Actor has not recovered any events. Probably does not exist at all")
-      sender() ! RemovalRejected(command.metadata, "Actor does not exist in the event journal")
+      sender() ! RemovalRejected(user, command.metadata, "Actor does not exist in the event journal")
     } else if (state.events.nonEmpty && !state.hasExpectedEvents) {
       printLogMessage(s"State does not match expected actor type $metadata; state contains: ${state.actualModelActorType}")
-      sender() ! RemovalRejected(command.metadata, s"Expected actor $metadata; Found: ${state.actualModelActorType}")
+      sender() ! RemovalRejected(user, command.metadata, s"Expected actor $metadata; Found: ${state.actualModelActorType}")
     } else {
       if (state.events.isEmpty) {
         printLogMessage("Event count is 0")

@@ -18,15 +18,14 @@
 package org.cafienne.storage.archival.response
 
 import org.cafienne.infrastructure.serialization.{Fields, Manifest}
-import org.cafienne.util.json.ValueMap
+import org.cafienne.storage.StorageUser
 import org.cafienne.storage.actormodel.ActorMetadata
 import org.cafienne.storage.actormodel.message.StorageActionRejected
+import org.cafienne.util.json.ValueMap
 
 @Manifest
-case class ArchivalRejected(metadata: ActorMetadata, msg: String, override val optionalJson: Option[ValueMap] = None) extends StorageActionRejected
+case class ArchivalRejected(user: StorageUser, metadata: ActorMetadata, msg: String, override val optionalJson: Option[ValueMap] = None) extends StorageActionRejected
 
 object ArchivalRejected {
-  def deserialize(json: ValueMap): ArchivalRejected = {
-    ArchivalRejected(ActorMetadata.deserializeMetadata(json), json.readString(Fields.message, ""), Some(json))
-  }
+  def deserialize(json: ValueMap): ArchivalRejected = ArchivalRejected(StorageUser.deserialize(json), json.readMetadata(Fields.metadata), json.readString(Fields.message, ""), Some(json))
 }

@@ -17,13 +17,14 @@
 
 package org.cafienne.storage.archival.event.cmmn
 
-import org.cafienne.infrastructure.serialization.Manifest
-import org.cafienne.util.json.ValueMap
+import org.cafienne.infrastructure.serialization.{Fields, Manifest}
+import org.cafienne.storage.StorageUser
 import org.cafienne.storage.actormodel.ActorMetadata
+import org.cafienne.util.json.ValueMap
 
 @Manifest
-case class ProcessArchived(metadata: ActorMetadata, override val optionalJson: Option[ValueMap] = None) extends ModelActorArchived
+case class ProcessArchived(user: StorageUser, metadata: ActorMetadata, override val optionalJson: Option[ValueMap] = None) extends ModelActorArchived
 
 object ProcessArchived {
-  def deserialize(json: ValueMap): ProcessArchived = ProcessArchived(ActorMetadata.deserializeMetadata(json), Some(json))
+  def deserialize(json: ValueMap): ProcessArchived = ProcessArchived(StorageUser.deserialize(json), json.readMetadata(Fields.metadata), Some(json))
 }

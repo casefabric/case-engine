@@ -17,16 +17,15 @@
 
 package org.cafienne.storage.archival.response
 
-import org.cafienne.infrastructure.serialization.Manifest
-import org.cafienne.util.json.ValueMap
+import org.cafienne.infrastructure.serialization.{Fields, Manifest}
+import org.cafienne.storage.StorageUser
 import org.cafienne.storage.actormodel.ActorMetadata
+import org.cafienne.util.json.ValueMap
 import org.cafienne.storage.actormodel.message.StorageActionCompleted
 
 @Manifest
-case class ArchivalCompleted(metadata: ActorMetadata, override val optionalJson: Option[ValueMap] = None) extends StorageActionCompleted
+case class ArchivalCompleted(user: StorageUser, metadata: ActorMetadata, override val optionalJson: Option[ValueMap] = None) extends StorageActionCompleted
 
 object ArchivalCompleted {
-  def deserialize(json: ValueMap): ArchivalCompleted = {
-    ArchivalCompleted(ActorMetadata.deserializeMetadata(json), Some(json))
-  }
+  def deserialize(json: ValueMap): ArchivalCompleted = ArchivalCompleted(StorageUser.deserialize(json), json.readMetadata(Fields.metadata), Some(json))
 }

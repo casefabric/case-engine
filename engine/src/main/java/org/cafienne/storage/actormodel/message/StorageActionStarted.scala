@@ -20,6 +20,7 @@ package org.cafienne.storage.actormodel.message
 import com.fasterxml.jackson.core.JsonGenerator
 import org.cafienne.infrastructure.serialization.Fields
 import org.cafienne.storage.actormodel.ActorMetadata
+import org.cafienne.util.json.ValueList
 
 trait StorageActionStarted extends StorageEvent {
   val children: Seq[ActorMetadata]
@@ -27,5 +28,12 @@ trait StorageActionStarted extends StorageEvent {
   override def write(generator: JsonGenerator): Unit = {
     super.writeStorageEvent(generator)
     writeField(generator, Fields.children, children.map(_.toString))
+  }
+}
+
+object StorageActionStarted {
+  def deserializeChildren(metadata: ActorMetadata, jsonList: ValueList): Seq[ActorMetadata] = {
+    import scala.jdk.CollectionConverters.CollectionHasAsScala
+    jsonList.getValue.asScala.map(_.getValue.toString).map(s => ActorMetadata.parsePath(s)).map(_.copy(parent = metadata)).toSeq
   }
 }

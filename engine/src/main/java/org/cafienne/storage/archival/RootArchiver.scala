@@ -19,20 +19,21 @@ package org.cafienne.storage.archival
 
 import com.typesafe.scalalogging.LazyLogging
 import org.apache.pekko.actor.Actor
+import org.cafienne.storage.StorageUser
 import org.cafienne.storage.actormodel.{ActorMetadata, RootStorageActor}
 import org.cafienne.storage.archival.event.ArchivalRequested
 import org.cafienne.system.CaseSystem
 
-class RootArchiver(caseSystem: CaseSystem, metadata: ActorMetadata) extends RootStorageActor[ArchiveNode](caseSystem, metadata) with LazyLogging {
-  override def createInitialEvent: ArchivalRequested = ArchivalRequested(metadata)
+class RootArchiver(val caseSystem: CaseSystem, val user: StorageUser, val metadata: ActorMetadata) extends RootStorageActor[ArchiveNode] with LazyLogging {
+  override def createInitialEvent: ArchivalRequested = ArchivalRequested(user, metadata)
 
   override def storageActorType: Class[_ <: Actor] = classOf[ActorDataArchiver]
 
   override def createOffspringNode(nodeMetadata: ActorMetadata): ArchiveNode = {
     if (nodeMetadata == metadata) {
-      new RootArchiveNode(caseSystem, nodeMetadata, this)
+      new RootArchiveNode(user, nodeMetadata, this)
     } else {
-      new ArchiveNode(nodeMetadata, this)
+      ArchiveNode(user, nodeMetadata, this)
     }
   }
 }

@@ -57,7 +57,7 @@ class StorageCoordinator(val caseSystem: CaseSystem)
     start()
   }
 
-  private def getActor(command: StorageCommand): ActorRef = getActorRef(s"root_${command.metadata.actorId}", Props(command.RootStorageActorClass, caseSystem, command.metadata))
+  private def getActor(command: StorageCommand): ActorRef = getActorRef(s"root_${command.metadata.actorId}", Props(command.RootStorageActorClass, caseSystem, command.user, command.metadata))
 
   def start(): Unit = {
     runStream() onComplete {
@@ -81,8 +81,8 @@ class StorageCoordinator(val caseSystem: CaseSystem)
       //  But only trigger it on top level removals, as they will themselves instantiate their children that have not yet been deleted.
       case EventEnvelope(_, _, _, event: StorageActionStarted) =>
         if (event.metadata.isRoot) {
-          def restart(commandMaker: ActorMetadata => StorageCommand): Unit = {
-            val command = commandMaker(event.metadata)
+          def restart(commandMaker: (StorageUser, ActorMetadata) => StorageCommand): Unit = {
+            val command = commandMaker(event.user, event.metadata)
             logger.info(s"Recovering storage process '${command.getClass.getSimpleName}' on actor ${event.metadata}")
             getActor(command).tell(command, self)
           }

@@ -25,12 +25,11 @@ import org.cafienne.actormodel.message.event.ModelEvent
 import org.cafienne.storage.actormodel.command.StorageCommand
 import org.cafienne.storage.actormodel.event.StorageRequestReceived
 import org.cafienne.storage.actormodel.message._
-import org.cafienne.system.CaseSystem
 
 import scala.collection.mutable
 import scala.collection.mutable.ListBuffer
 
-abstract class RootStorageActor[O <: OffspringNode](val caseSystem: CaseSystem, val metadata: ActorMetadata) extends BaseStorageActor with LazyLogging {
+trait RootStorageActor[O <: OffspringNode] extends BaseStorageActor with LazyLogging {
   /**
     * By choosing the same persistence id, the events of the model actor will also be fed to our recovery protocol,
     * and we are able to delete those events and add our own as well, to keep track of deletion state.
@@ -84,7 +83,7 @@ abstract class RootStorageActor[O <: OffspringNode](val caseSystem: CaseSystem, 
     printLogMessage("Stopped " + this)
   }
 
-  def getStorageActorRef(metadata: ActorMetadata): ActorRef = getActorRef(metadata, Props(storageActorType, caseSystem, metadata))
+  def getStorageActorRef(metadata: ActorMetadata): ActorRef = getActorRef(metadata, Props(storageActorType, caseSystem, user, metadata))
 
   /**
     * Recovery is pretty simple. Simply add all events to our state.

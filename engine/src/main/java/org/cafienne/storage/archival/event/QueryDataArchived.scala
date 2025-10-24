@@ -17,16 +17,15 @@
 
 package org.cafienne.storage.archival.event
 
-import org.cafienne.infrastructure.serialization.Manifest
-import org.cafienne.util.json.ValueMap
+import org.cafienne.infrastructure.serialization.{Fields, Manifest}
+import org.cafienne.storage.StorageUser
 import org.cafienne.storage.actormodel.ActorMetadata
 import org.cafienne.storage.actormodel.event.QueryDataCleared
+import org.cafienne.util.json.ValueMap
 
 @Manifest
-case class QueryDataArchived(metadata: ActorMetadata, override val optionalJson: Option[ValueMap] = None) extends ArchivalEvent with QueryDataCleared
+case class QueryDataArchived(user: StorageUser, metadata: ActorMetadata, override val optionalJson: Option[ValueMap] = None) extends ArchivalEvent with QueryDataCleared
 
 object QueryDataArchived {
-  def deserialize(json: ValueMap): QueryDataArchived = {
-    QueryDataArchived(ActorMetadata.deserializeMetadata(json), Some(json))
-  }
+  def deserialize(json: ValueMap): QueryDataArchived = QueryDataArchived(StorageUser.deserialize(json), json.readMetadata(Fields.metadata), Some(json))
 }

@@ -19,6 +19,7 @@ package org.cafienne.storage.actormodel
 
 import com.typesafe.scalalogging.LazyLogging
 import org.apache.pekko.persistence.PersistentActor
+import org.cafienne.storage.StorageUser
 import org.cafienne.system.CaseSystem
 
 trait BaseStorageActor
@@ -26,6 +27,7 @@ trait BaseStorageActor
     with StorageActorSupervisor
     with LazyLogging {
   val caseSystem: CaseSystem
+  val user: StorageUser // StorageUser that triggered the storage process
   val metadata: ActorMetadata
 
   def printLogMessage(msg: String): Unit = {

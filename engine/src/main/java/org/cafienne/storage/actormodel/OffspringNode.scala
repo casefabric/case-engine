@@ -62,7 +62,7 @@ trait OffspringNode extends ModelEventCollection {
   }
 
   protected def uponReceiveEvent(event: StorageEvent): Unit = event match {
-    case event: StorageActionStarted => informActor(ChildrenReceived(event.metadata))  // Tell the remote actor we've successfully received the children
+    case event: StorageActionStarted => informActor(ChildrenReceived(event.user, event.metadata))  // Tell the remote actor we've successfully received the children
     case _ => // no followup needed
   }
 

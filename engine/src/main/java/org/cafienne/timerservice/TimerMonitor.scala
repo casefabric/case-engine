@@ -56,7 +56,7 @@ class TimerMonitor(val timerService: TimerService) extends LazyLogging {
       case clearTimers: ClearTimerData =>
         val sender: ActorRef = timerService.sender()
         removeCaseTimers(clearTimers.metadata.actorId).map(done => {
-          sender.tell(TimerDataCleared(clearTimers.metadata), timerService.self)
+          sender.tell(TimerDataCleared(clearTimers.user, clearTimers.metadata), timerService.self)
           done
         })
       case _ =>

@@ -49,12 +49,12 @@ trait ArchivalState extends StorageActorState {
 
   def isCleared: Boolean = events.exists(_.isInstanceOf[ModelActorArchived])
 
-  override def createStorageStartedEvent: StorageActionStarted = ArchivalStarted(metadata, findCascadingChildren())
+  override def createStorageStartedEvent: StorageActionStarted = ArchivalStarted(user, metadata, findCascadingChildren())
 
   override def startStorageProcess(): Unit = {
     val children = findCascadingChildren()
     printLogMessage(s"Found ${children.length} children: ${children.mkString("\n--- ", s"\n--- ", "")}")
-    informOwner(ArchivalStarted(metadata, children))
+    informOwner(ArchivalStarted(user, metadata, children))
   }
 
   /** The archival process is idempotent (i.e., it can be triggered multiple times without ado).
@@ -75,7 +75,7 @@ trait ArchivalState extends StorageActorState {
       //  per individual case instance. But then ... the case would not really be archived?!
       //  Therefore, it is up to the invoker of the archiving logic to handle such a situation.
       clearQueryData()
-      actor.self ! QueryDataArchived(metadata)
+      actor.self ! QueryDataArchived(user, metadata)
     }
 
 
@@ -108,7 +108,7 @@ trait ArchivalState extends StorageActorState {
     // Convert the events to JSON.
     originalModelActorEvents.zipWithIndex.map(serializeEventToJson).foreach(list.add)
     val archive = Archive(metadata, list, children = Seq())
-    ArchiveCreated(metadata, archive)
+    ArchiveCreated(user, metadata, archive)
   }
 
   def archive: ArchiveCreated = {

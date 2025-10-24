@@ -17,6 +17,7 @@
 
 package org.cafienne.storage.deletion.command
 
+import org.cafienne.storage.StorageUser
 import org.cafienne.storage.actormodel.command.StorageCommand
 import org.cafienne.storage.actormodel.{ActorMetadata, RootStorageActor}
 import org.cafienne.storage.deletion.RootRemover
@@ -26,7 +27,7 @@ import org.cafienne.storage.deletion.RootRemover
   * @param actorId Persistence id of the ModelActor (e.g., tenant name, case instance id, process task id, consent group id)
   * @param parentActorId Optional owner of the parent actor that triggered the remove (e.g., a process task removal is initiated by it's parent case)
   */
-case class RemoveActorData(metadata: ActorMetadata) extends StorageCommand {
+case class RemoveActorData(user: StorageUser, metadata: ActorMetadata) extends StorageCommand {
   override def toString: String = s"RemovalCommand for $metadata"
 
   override val RootStorageActorClass: Class[_ <: RootStorageActor[_]] = classOf[RootRemover]

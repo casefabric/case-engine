@@ -56,6 +56,11 @@ class NullValue extends PrimitiveValue<Object> implements SpelReadable, List<Obj
     }
 
     @Override
+    public boolean isNull() {
+        return true;
+    }
+
+    @Override
     public String toString() {
         return "null";
     }

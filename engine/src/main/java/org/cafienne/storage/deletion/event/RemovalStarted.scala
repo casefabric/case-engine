@@ -18,17 +18,19 @@
 package org.cafienne.storage.deletion.event
 
 import org.cafienne.infrastructure.serialization.{Fields, Manifest}
-import org.cafienne.util.json.ValueMap
+import org.cafienne.storage.StorageUser
 import org.cafienne.storage.actormodel.ActorMetadata
 import org.cafienne.storage.actormodel.message.StorageActionStarted
+import org.cafienne.util.json.ValueMap
 
 @Manifest
-case class RemovalStarted(metadata: ActorMetadata, children: Seq[ActorMetadata], override val optionalJson: Option[ValueMap] = None) extends RemovalEvent with StorageActionStarted
+case class RemovalStarted(user: StorageUser, metadata: ActorMetadata, children: Seq[ActorMetadata], override val optionalJson: Option[ValueMap] = None) extends RemovalEvent with StorageActionStarted
 
 object RemovalStarted {
   def deserialize(json: ValueMap): RemovalStarted = {
-    val metadata = ActorMetadata.deserializeMetadata(json)
-    val children = ActorMetadata.deserializeChildren(metadata, json.withArray(Fields.children))
-    RemovalStarted(metadata, children, Some(json))
+    val user = StorageUser.deserialize(json)
+    val metadata = json.readMetadata(Fields.metadata)
+    val children = StorageActionStarted.deserializeChildren(metadata, json.withArray(Fields.children))
+    RemovalStarted(user, metadata, children, Some(json))
   }
 }

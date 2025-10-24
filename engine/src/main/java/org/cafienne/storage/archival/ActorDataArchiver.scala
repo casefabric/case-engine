@@ -20,6 +20,7 @@ package org.cafienne.storage.archival
 import com.typesafe.scalalogging.LazyLogging
 import org.apache.pekko.persistence.DeleteMessagesSuccess
 import org.cafienne.actormodel.ActorType
+import org.cafienne.storage.StorageUser
 import org.cafienne.storage.actormodel.message.StorageEvent
 import org.cafienne.storage.actormodel.{ActorMetadata, StorageActor}
 import org.cafienne.storage.archival.command.ArchiveActorData
@@ -29,7 +30,7 @@ import org.cafienne.storage.archival.response.{ArchivalCompleted, ArchivalReject
 import org.cafienne.storage.archival.state.{ArchivalState, CaseArchivalState, ProcessArchivalState}
 import org.cafienne.system.CaseSystem
 
-class ActorDataArchiver(override val caseSystem: CaseSystem, override val metadata: ActorMetadata) extends StorageActor[ArchivalState] with LazyLogging {
+class ActorDataArchiver(val caseSystem: CaseSystem, val user: StorageUser, val metadata: ActorMetadata) extends StorageActor[ArchivalState] with LazyLogging {
 
   printLogMessage(s"\n========== Launching Storage Archival Service ${metadata.path}")
 
@@ -55,7 +56,7 @@ class ActorDataArchiver(override val caseSystem: CaseSystem, override val metada
 
   def afterStorageProcessCompleted(): Unit = {
     context.stop(self)
-    context.parent ! ArchivalCompleted(metadata)
+    context.parent ! ArchivalCompleted(user, metadata)
   }
 
   /**
@@ -101,10 +102,10 @@ class ActorDataArchiver(override val caseSystem: CaseSystem, override val metada
     printLogMessage("Received command to archive myself")
     if (lastSequenceNr == 0) {
       printLogMessage("Actor has not recovered any events. Probably does not exist at all")
-      sender() ! ArchivalRejected(command.metadata, "Actor does not exist in the event journal")
+      sender() ! ArchivalRejected(user, command.metadata, "Actor does not exist in the event journal")
     } else if (state.events.nonEmpty && !state.hasExpectedEvents) {
       printLogMessage(s"State does not match expected actor type $metadata; state contains: ${state.actualModelActorType}")
-      sender() ! ArchivalRejected(command.metadata, s"Expected actor $metadata; Found: ${state.actualModelActorType}")
+      sender() ! ArchivalRejected(user, command.metadata, s"Expected actor $metadata; Found: ${state.actualModelActorType}")
     } else {
       if (state.isCleared) {
         // No need to do anything, as our parent is informed and we can simply go offline again

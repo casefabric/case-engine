@@ -19,6 +19,7 @@ package org.cafienne.storage.restore
 
 import com.typesafe.scalalogging.LazyLogging
 import org.apache.pekko.actor.Actor
+import org.cafienne.storage.StorageUser
 import org.cafienne.storage.actormodel.message.StorageEvent
 import org.cafienne.storage.actormodel.{ActorMetadata, RootStorageActor}
 import org.cafienne.storage.archival.Archive
@@ -31,8 +32,8 @@ import org.cafienne.system.CaseSystem
 import scala.concurrent.ExecutionContext
 import scala.util.{Failure, Success}
 
-class RootRestorer(caseSystem: CaseSystem, metadata: ActorMetadata) extends RootStorageActor[RestoreNode](caseSystem, metadata) with LazyLogging {
-  override def createInitialEvent: RestoreRequested = new RestoreRequested(metadata)
+class RootRestorer(val caseSystem: CaseSystem, val user: StorageUser, val metadata: ActorMetadata) extends RootStorageActor[RestoreNode] with LazyLogging {
+  override def createInitialEvent: RestoreRequested = new RestoreRequested(user, metadata)
 
   override def storageActorType: Class[_ <: Actor] = classOf[ActorDataRestorer]
 
@@ -57,8 +58,8 @@ class RootRestorer(caseSystem: CaseSystem, metadata: ActorMetadata) extends Root
     try {
       storage.retrieve(command.metadata).onComplete {
         case Success(archive) =>
-          self ! ArchiveRetrieved(command.metadata, archive)
-          senderRef ! RestoreStarted(metadata)
+          self ! ArchiveRetrieved(user, command.metadata, archive)
+          senderRef ! RestoreStarted(user, metadata)
         case Failure(throwable) => raiseFailure(throwable)
       }
     } catch {
@@ -79,7 +80,7 @@ class RootRestorer(caseSystem: CaseSystem, metadata: ActorMetadata) extends Root
     case other => super.receiveIncomingMessage(other)
   }
 
-  override def createOffspringNode(metadata: ActorMetadata): RestoreNode = new RestoreNode(metadata, this)
+  override def createOffspringNode(metadata: ActorMetadata): RestoreNode = RestoreNode(user, metadata, this)
 }
 
 class RootRestoreState(val actor: RootRestorer) extends LazyLogging {

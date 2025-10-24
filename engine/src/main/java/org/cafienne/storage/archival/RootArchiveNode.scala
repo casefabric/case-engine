@@ -18,14 +18,14 @@
 package org.cafienne.storage.archival
 
 import com.typesafe.scalalogging.LazyLogging
+import org.cafienne.storage.StorageUser
 import org.cafienne.storage.actormodel.ActorMetadata
 import org.cafienne.storage.archival.event.ArchiveStored
 import org.cafienne.storage.archive.Storage
-import org.cafienne.system.CaseSystem
 
 import scala.concurrent.ExecutionContext
 
-class RootArchiveNode(caseSystem: CaseSystem, metadata: ActorMetadata, actor: RootArchiver) extends ArchiveNode(metadata, actor) with LazyLogging {
+class RootArchiveNode(user: StorageUser, metadata: ActorMetadata, actor: RootArchiver) extends ArchiveNode(user, metadata, actor) with LazyLogging {
   override def hasCompleted: Boolean =
     // If we're root, we're also awaiting confirmation of actual storage of the archive
     eventsOfType(classOf[ArchiveStored]).nonEmpty
@@ -37,8 +37,8 @@ class RootArchiveNode(caseSystem: CaseSystem, metadata: ActorMetadata, actor: Ro
       if (!startedExporting) { //  Use the system dispatcher for handling the export success
         implicit val ec: ExecutionContext = actor.caseSystem.system.dispatcher
 
-        val storage: Storage = caseSystem.config.engine.storage.archive.plugin
-        storage.store(archive).map(_ => actor.self ! ArchiveStored(metadata))
+        val storage: Storage = actor.caseSystem.config.engine.storage.archive.plugin
+        storage.store(archive).map(_ => actor.self ! ArchiveStored(user, metadata))
         startedExporting = true
       }
     } else {

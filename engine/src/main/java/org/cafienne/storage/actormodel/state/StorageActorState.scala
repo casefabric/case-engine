@@ -20,6 +20,7 @@ package org.cafienne.storage.actormodel.state
 import com.typesafe.scalalogging.LazyLogging
 import org.apache.pekko.actor.ActorRef
 import org.cafienne.actormodel.message.event.{ModelEvent, ModelEventCollection}
+import org.cafienne.storage.StorageUser
 import org.cafienne.storage.actormodel.command.ClearTimerData
 import org.cafienne.storage.actormodel.event.{ChildrenReceived, QueryDataCleared, TimerDataCleared}
 import org.cafienne.storage.actormodel.message.{StorageActionStarted, StorageEvent}
@@ -32,7 +33,7 @@ trait StorageActorState extends ModelEventCollection with LazyLogging {
 
   val actor: BaseStorageActor
   val rootStorageActor: ActorRef = actor.context.parent
-
+  val user: StorageUser = actor.user
   val metadata: ActorMetadata = actor.metadata
   val actorId: String = metadata.actorId
 
@@ -60,7 +61,7 @@ trait StorageActorState extends ModelEventCollection with LazyLogging {
   def startStorageProcess(): Unit = {
     val children = findCascadingChildren()
     printLogMessage(s"Found ${children.length} children: ${children.mkString("\n--- ", s"\n--- ", "")}")
-    informOwner(ArchivalStarted(metadata, children))
+    informOwner(ArchivalStarted(user, metadata, children))
   }
 
   /**
@@ -79,7 +80,7 @@ trait StorageActorState extends ModelEventCollection with LazyLogging {
    * ModelActor specific implementation to clean up the timers registered in the TimerService
    */
   def clearTimerData(): Unit = {
-    actor.caseSystem.service.informTimerService(ClearTimerData(metadata), actor.self)
+    actor.caseSystem.service.informTimerService(ClearTimerData(user, metadata), actor.self)
   }
 
   /**

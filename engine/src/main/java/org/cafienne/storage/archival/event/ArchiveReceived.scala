@@ -17,15 +17,14 @@
 
 package org.cafienne.storage.archival.event
 
-import org.cafienne.infrastructure.serialization.Manifest
-import org.cafienne.util.json.ValueMap
+import org.cafienne.infrastructure.serialization.{Fields, Manifest}
+import org.cafienne.storage.StorageUser
 import org.cafienne.storage.actormodel.ActorMetadata
+import org.cafienne.util.json.ValueMap
 
 @Manifest
-case class ArchiveReceived(metadata: ActorMetadata, override val optionalJson: Option[ValueMap] = None) extends ArchivalEvent
+case class ArchiveReceived(user: StorageUser, metadata: ActorMetadata, override val optionalJson: Option[ValueMap] = None) extends ArchivalEvent
 
 object ArchiveReceived {
-  def deserialize(json: ValueMap): ArchiveReceived = {
-    ArchiveReceived(ActorMetadata.deserializeMetadata(json), Some(json))
-  }
+  def deserialize(json: ValueMap): ArchiveReceived = ArchiveReceived(StorageUser.deserialize(json), json.readMetadata(Fields.metadata), Some(json))
 }

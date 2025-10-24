@@ -21,6 +21,7 @@ import com.typesafe.scalalogging.LazyLogging
 import org.apache.pekko.persistence.journal.Tagged
 import org.apache.pekko.persistence.{DeleteMessagesSuccess, RecoveryCompleted}
 import org.cafienne.actormodel.message.event.ModelEvent
+import org.cafienne.storage.StorageUser
 import org.cafienne.storage.actormodel.message.StorageEvent
 import org.cafienne.storage.actormodel.{ActorMetadata, BaseStorageActor}
 import org.cafienne.storage.archival.{Archive, ModelEventSerializer}
@@ -31,7 +32,7 @@ import org.cafienne.system.CaseSystem
 import scala.collection.mutable.ListBuffer
 import scala.jdk.CollectionConverters.CollectionHasAsScala
 
-class ActorDataRestorer(val caseSystem: CaseSystem, val metadata: ActorMetadata) extends BaseStorageActor with LazyLogging {
+class ActorDataRestorer(val caseSystem: CaseSystem, val user: StorageUser, val metadata: ActorMetadata) extends BaseStorageActor with LazyLogging {
   val storageEvents: ListBuffer[StorageEvent] = ListBuffer()
   val events: ListBuffer[ModelEvent] = ListBuffer()
 
@@ -52,7 +53,7 @@ class ActorDataRestorer(val caseSystem: CaseSystem, val metadata: ActorMetadata)
   }
 
   def afterStorageProcessCompleted(): Unit = {
-    context.parent ! RestoreCompleted(metadata)
+    context.parent ! RestoreCompleted(user, metadata)
     context.stop(self) // Event journal no longer contains our events, we can be deleted
   }
 

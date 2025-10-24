@@ -23,14 +23,10 @@ import org.apache.pekko.persistence.journal.Tagged
 import org.cafienne.actormodel.message.event.ModelEvent
 import org.cafienne.storage.actormodel.message.StorageEvent
 import org.cafienne.storage.actormodel.state.StorageActorState
-import org.cafienne.system.CaseSystem
 
 trait StorageActor[S <: StorageActorState]
   extends BaseStorageActor
     with LazyLogging {
-  val caseSystem: CaseSystem
-  val metadata: ActorMetadata
-
   /**
    * By choosing the same persistence id, the events of the model actor will also be fed to our recovery protocol,
    * and we are able to delete those events and add our own as well, to keep track of deletion state.

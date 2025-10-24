@@ -18,17 +18,18 @@
 package org.cafienne.storage.archival.event
 
 import org.cafienne.infrastructure.serialization.{Fields, Manifest}
-import org.cafienne.util.json.ValueMap
+import org.cafienne.storage.StorageUser
 import org.cafienne.storage.actormodel.ActorMetadata
 import org.cafienne.storage.actormodel.message.StorageActionStarted
+import org.cafienne.util.json.ValueMap
 
 @Manifest
-case class ArchivalStarted(metadata: ActorMetadata, children: Seq[ActorMetadata], override val optionalJson: Option[ValueMap] = None) extends ArchivalEvent with StorageActionStarted
+case class ArchivalStarted(user: StorageUser, metadata: ActorMetadata, children: Seq[ActorMetadata], override val optionalJson: Option[ValueMap] = None) extends ArchivalEvent with StorageActionStarted
 
 object ArchivalStarted {
   def deserialize(json: ValueMap): ArchivalStarted = {
-    val metadata = ActorMetadata.deserializeMetadata(json)
-    val children = ActorMetadata.deserializeChildren(metadata, json.withArray(Fields.children))
-    ArchivalStarted(metadata, children, Some(json))
+    val metadata = json.readMetadata(Fields.metadata)
+    val children = StorageActionStarted.deserializeChildren(metadata, json.withArray(Fields.children))
+    ArchivalStarted(StorageUser.deserialize(json), metadata, children, Some(json))
   }
 }

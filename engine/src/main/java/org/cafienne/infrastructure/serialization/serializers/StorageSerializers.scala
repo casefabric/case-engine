@@ -44,7 +44,6 @@ object StorageSerializers {
     CafienneSerializer.addManifestWrapper(classOf[RemovalRequested], RemovalRequested.deserialize)
     CafienneSerializer.addManifestWrapper(classOf[QueryDataRemoved], QueryDataRemoved.deserialize)
     CafienneSerializer.addManifestWrapper(classOf[TimerDataCleared], TimerDataCleared.deserialize)
-    CafienneSerializer.addManifestWrapper(classOf[ChildrenRemovalInitiated], ChildrenRemovalInitiated.deserialize)
     CafienneSerializer.addManifestWrapper(classOf[RemovalCompleted], RemovalCompleted.deserialize)
     CafienneSerializer.addManifestWrapper(classOf[RemovalRejected], RemovalRejected.deserialize)
   }

@@ -68,7 +68,7 @@ class TenantStorageRoute(override val httpService: CaseEngineHttpServer) extends
           onComplete(tenantQueries.getTenantGroupsUsage(user, user.tenant)) {
             case Success(usageResult) =>
               usageResult.size match {
-                case 0 => initiateDataRemoval(ActorMetadata(user = StorageUser(user.id, user.tenant), actorType = ActorType.Tenant, actorId = user.tenant))
+                case 0 => initiateDataRemoval(StorageUser(user.id, user.tenant), ActorMetadata(actorType = ActorType.Tenant, actorId = user.tenant))
                 case _ =>
 //                  val json = Value.convert(usageResult)
 //                  println("Found groups in use somewhere else: " + json)

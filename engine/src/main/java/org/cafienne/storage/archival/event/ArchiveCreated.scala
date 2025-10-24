@@ -19,12 +19,13 @@ package org.cafienne.storage.archival.event
 
 import com.fasterxml.jackson.core.JsonGenerator
 import org.cafienne.infrastructure.serialization.{Fields, Manifest}
-import org.cafienne.util.json.ValueMap
+import org.cafienne.storage.StorageUser
 import org.cafienne.storage.actormodel.ActorMetadata
 import org.cafienne.storage.archival.Archive
+import org.cafienne.util.json.ValueMap
 
 @Manifest
-case class ArchiveCreated(metadata: ActorMetadata, archive: Archive, override val optionalJson: Option[ValueMap] = None) extends ArchivalEvent {
+case class ArchiveCreated(user: StorageUser, metadata: ActorMetadata, archive: Archive, override val optionalJson: Option[ValueMap] = None) extends ArchivalEvent {
   override def write(generator: JsonGenerator): Unit = {
     super.writeStorageEvent(generator)
     writeField(generator, Fields.archive, archive)
@@ -32,7 +33,5 @@ case class ArchiveCreated(metadata: ActorMetadata, archive: Archive, override va
 }
 
 object ArchiveCreated {
-  def deserialize(json: ValueMap): ArchiveCreated = {
-    ArchiveCreated(ActorMetadata.deserializeMetadata(json), Archive.deserialize(json.readMap(Fields.archive)), Some(json))
-  }
+  def deserialize(json: ValueMap): ArchiveCreated = ArchiveCreated(StorageUser.deserialize(json), json.readMetadata(Fields.metadata), Archive.deserialize(json.readMap(Fields.archive)), Some(json))
 }

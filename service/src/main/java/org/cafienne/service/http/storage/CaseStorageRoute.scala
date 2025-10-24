@@ -94,7 +94,7 @@ class CaseStorageRoute(override val httpService: CaseEngineHttpServer) extends C
   @Produces(Array("application/json"))
   def archiveCaseInstance: Route = put {
     caseOwner("archive") { owner =>
-      initiateDataArchival(ActorMetadata(user = StorageUser(owner.id, owner.tenant), actorType = ActorType.Case, actorId = owner.caseInstanceId))
+      initiateDataArchival(StorageUser(owner.id, owner.tenant), ActorMetadata(actorType = ActorType.Case, actorId = owner.caseInstanceId))
     }
   }
 
@@ -121,7 +121,7 @@ class CaseStorageRoute(override val httpService: CaseEngineHttpServer) extends C
   @Produces(Array("application/json"))
   def restoreCaseInstance: Route = put {
     caseInstanceSubRoute("restore") { (user, caseInstanceId) =>
-      restoreActorData(ActorMetadata(user = StorageUser(user.id, ""), actorType = ActorType.Case, actorId = caseInstanceId))
+      restoreActorData(StorageUser(user.id, ""), ActorMetadata(actorType = ActorType.Case, actorId = caseInstanceId))
     }
   }
 
@@ -148,7 +148,7 @@ class CaseStorageRoute(override val httpService: CaseEngineHttpServer) extends C
   @Produces(Array("application/json"))
   def deleteCaseInstance: Route = delete {
     caseOwner { owner =>
-      initiateDataRemoval(ActorMetadata(user = StorageUser(owner.id, owner.tenant), actorType = ActorType.Case, actorId = owner.caseInstanceId))
+      initiateDataRemoval(StorageUser(owner.id, owner.tenant), ActorMetadata(actorType = ActorType.Case, actorId = owner.caseInstanceId))
     }
   }
 }

@@ -17,14 +17,15 @@
 
 package org.cafienne.storage.restore.event
 
-import org.cafienne.infrastructure.serialization.Manifest
-import org.cafienne.util.json.ValueMap
+import org.cafienne.infrastructure.serialization.{Fields, Manifest}
+import org.cafienne.storage.StorageUser
 import org.cafienne.storage.actormodel.ActorMetadata
 import org.cafienne.storage.actormodel.message.StorageActionStarted
+import org.cafienne.util.json.ValueMap
 
 @Manifest
-case class RestoreStarted(metadata: ActorMetadata, children: Seq[ActorMetadata] = Seq(), override val optionalJson: Option[ValueMap] = None) extends RestoreEvent with StorageActionStarted
+case class RestoreStarted(user: StorageUser, metadata: ActorMetadata, children: Seq[ActorMetadata] = Seq(), override val optionalJson: Option[ValueMap] = None) extends RestoreEvent with StorageActionStarted
 
 object RestoreStarted {
-  def deserialize(json: ValueMap): RestoreStarted = RestoreStarted(ActorMetadata.deserializeMetadata(json), Seq(), Some(json))
+  def deserialize(json: ValueMap): RestoreStarted = RestoreStarted(StorageUser.deserialize(json), json.readMetadata(Fields.metadata), Seq(), Some(json))
 }

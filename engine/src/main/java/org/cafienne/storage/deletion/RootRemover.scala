@@ -19,14 +19,15 @@ package org.cafienne.storage.deletion
 
 import com.typesafe.scalalogging.LazyLogging
 import org.apache.pekko.actor.Actor
+import org.cafienne.storage.StorageUser
 import org.cafienne.storage.actormodel.{ActorMetadata, RootStorageActor}
 import org.cafienne.storage.deletion.event.RemovalRequested
 import org.cafienne.system.CaseSystem
 
-class RootRemover(caseSystem: CaseSystem, metadata: ActorMetadata) extends RootStorageActor[RemoveNode](caseSystem, metadata) with LazyLogging {
-  override def createInitialEvent: RemovalRequested = RemovalRequested(metadata)
+class RootRemover(val caseSystem: CaseSystem, val user: StorageUser, val metadata: ActorMetadata) extends RootStorageActor[RemoveNode] with LazyLogging {
+  override def createInitialEvent: RemovalRequested = RemovalRequested(user, metadata)
 
   override def storageActorType: Class[_ <: Actor] = classOf[ActorDataRemover]
 
-  override def createOffspringNode(metadata: ActorMetadata): RemoveNode = new RemoveNode(metadata, this)
+  override def createOffspringNode(metadata: ActorMetadata): RemoveNode = RemoveNode(user, metadata, this)
 }

@@ -45,10 +45,10 @@ trait DeletionState extends StorageActorState {
     // No classic event found, using new storage processing
     val children = findCascadingChildren()
     printLogMessage(s"Found ${children.length} children: ${children.mkString("\n--- ", s"\n--- ", "")}")
-    informOwner(RemovalStarted(metadata, children))
+    informOwner(RemovalStarted(user, metadata, children))
   }
 
-  override def createStorageStartedEvent: StorageActionStarted = RemovalStarted(metadata, findCascadingChildren())
+  override def createStorageStartedEvent: StorageActionStarted = RemovalStarted(user, metadata, findCascadingChildren())
 
   /**
    * The removal process is idempotent (i.e., it can be triggered multiple times without ado).
@@ -66,7 +66,7 @@ trait DeletionState extends StorageActorState {
       } else if (!queryDataCleared) {
         printLogMessage("Deleting query data")
         clearQueryData()
-        actor.self ! QueryDataRemoved(metadata)
+        actor.self ! QueryDataRemoved(user, metadata)
       }
     }
 

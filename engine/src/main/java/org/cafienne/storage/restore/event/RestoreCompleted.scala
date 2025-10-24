@@ -17,16 +17,15 @@
 
 package org.cafienne.storage.restore.event
 
-import org.cafienne.infrastructure.serialization.Manifest
-import org.cafienne.util.json.ValueMap
+import org.cafienne.infrastructure.serialization.{Fields, Manifest}
+import org.cafienne.storage.StorageUser
 import org.cafienne.storage.actormodel.ActorMetadata
 import org.cafienne.storage.actormodel.message.StorageActionCompleted
+import org.cafienne.util.json.ValueMap
 
 @Manifest
-case class RestoreCompleted(metadata: ActorMetadata, override val optionalJson: Option[ValueMap] = None) extends RestoreEvent with StorageActionCompleted
+case class RestoreCompleted(user: StorageUser, metadata: ActorMetadata, override val optionalJson: Option[ValueMap] = None) extends RestoreEvent with StorageActionCompleted
 
 object RestoreCompleted {
-  def deserialize(json: ValueMap): RestoreCompleted = {
-    RestoreCompleted(ActorMetadata.deserializeMetadata(json), Some(json))
-  }
+  def deserialize(json: ValueMap): RestoreCompleted = RestoreCompleted(StorageUser.deserialize(json), json.readMetadata(Fields.metadata), Some(json))
 }

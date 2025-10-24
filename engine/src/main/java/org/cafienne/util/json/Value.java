@@ -156,6 +156,10 @@ public abstract class Value<T> implements Serializable {
         return (ValueMap) this;
     }
 
+    public boolean isNull() {
+        return false;
+    }
+
     public void print(JsonGenerator generator) throws IOException {
     }
 
