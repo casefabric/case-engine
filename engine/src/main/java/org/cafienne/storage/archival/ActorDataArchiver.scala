@@ -19,10 +19,10 @@ package org.cafienne.storage.archival
 
 import com.typesafe.scalalogging.LazyLogging
 import org.apache.pekko.persistence.DeleteMessagesSuccess
-import org.cafienne.actormodel.ActorType
+import org.cafienne.actormodel.{ActorMetadata, ActorType}
 import org.cafienne.storage.StorageUser
 import org.cafienne.storage.actormodel.message.StorageEvent
-import org.cafienne.storage.actormodel.{ActorMetadata, StorageActor}
+import org.cafienne.storage.actormodel.StorageActor
 import org.cafienne.storage.archival.command.ArchiveActorData
 import org.cafienne.storage.archival.event._
 import org.cafienne.storage.archival.event.cmmn.ModelActorArchived

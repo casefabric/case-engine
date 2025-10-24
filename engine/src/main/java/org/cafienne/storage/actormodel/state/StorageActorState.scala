@@ -19,12 +19,13 @@ package org.cafienne.storage.actormodel.state
 
 import com.typesafe.scalalogging.LazyLogging
 import org.apache.pekko.actor.ActorRef
+import org.cafienne.actormodel.ActorMetadata
 import org.cafienne.actormodel.message.event.{ModelEvent, ModelEventCollection}
 import org.cafienne.storage.StorageUser
 import org.cafienne.storage.actormodel.command.ClearTimerData
 import org.cafienne.storage.actormodel.event.{ChildrenReceived, QueryDataCleared, TimerDataCleared}
 import org.cafienne.storage.actormodel.message.{StorageActionStarted, StorageEvent}
-import org.cafienne.storage.actormodel.{ActorMetadata, BaseStorageActor}
+import org.cafienne.storage.actormodel.BaseStorageActor
 import org.cafienne.storage.archival.event.ArchivalStarted
 import org.cafienne.storage.querydb.QueryDBStorage
 

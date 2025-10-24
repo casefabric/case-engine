@@ -19,6 +19,7 @@ package org.cafienne.storage.actormodel
 
 import com.typesafe.scalalogging.LazyLogging
 import org.apache.pekko.persistence.PersistentActor
+import org.cafienne.actormodel.ActorMetadata
 import org.cafienne.storage.StorageUser
 import org.cafienne.system.CaseSystem
 

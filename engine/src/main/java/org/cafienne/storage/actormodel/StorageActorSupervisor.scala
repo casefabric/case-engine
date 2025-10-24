@@ -19,6 +19,7 @@ package org.cafienne.storage.actormodel
 
 import com.typesafe.scalalogging.LazyLogging
 import org.apache.pekko.actor.{Actor, ActorRef, Props, Terminated}
+import org.cafienne.actormodel.ActorMetadata
 import org.cafienne.system.CaseSystem
 
 import scala.collection.mutable

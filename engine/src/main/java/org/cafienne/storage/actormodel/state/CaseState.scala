@@ -17,9 +17,9 @@
 
 package org.cafienne.storage.actormodel.state
 
+import org.cafienne.actormodel.ActorMetadata
 import org.cafienne.cmmn.actorapi.event.plan.{PlanItemCreated, PlanItemTransitioned}
 import org.cafienne.cmmn.instance.PlanItemType
-import org.cafienne.storage.actormodel.ActorMetadata
 import org.cafienne.storage.querydb.CaseStorage
 
 trait CaseState extends StorageActorState {

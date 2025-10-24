@@ -23,11 +23,12 @@ import org.apache.pekko.actor.{Actor, ActorRef, ActorSystem, Props, Terminated}
 import org.apache.pekko.persistence.query.{EventEnvelope, Offset}
 import org.apache.pekko.stream.Materializer
 import org.apache.pekko.stream.scaladsl.Sink
+import org.cafienne.actormodel.ActorMetadata
 import org.cafienne.infrastructure.cqrs.ReadJournalProvider
 import org.cafienne.storage.actormodel.command.StorageCommand
 import org.cafienne.storage.actormodel.event.StorageRequestReceived
 import org.cafienne.storage.actormodel.message.{StorageActionCompleted, StorageActionStarted, StorageEvent}
-import org.cafienne.storage.actormodel.{ActorMetadata, StorageActorSupervisor}
+import org.cafienne.storage.actormodel.StorageActorSupervisor
 import org.cafienne.storage.archival.command.ArchiveActorData
 import org.cafienne.storage.archival.event.ArchivalStarted
 import org.cafienne.storage.deletion.command.RemoveActorData

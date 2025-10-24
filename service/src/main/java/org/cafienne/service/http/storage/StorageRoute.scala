@@ -19,9 +19,9 @@ package org.cafienne.service.http.storage
 
 import org.apache.pekko.http.scaladsl.model.StatusCodes
 import org.apache.pekko.http.scaladsl.server.Route
+import org.cafienne.actormodel.ActorMetadata
 import org.cafienne.service.infrastructure.route.AuthenticatedRoute
 import org.cafienne.storage.StorageUser
-import org.cafienne.storage.actormodel.ActorMetadata
 import org.cafienne.storage.actormodel.command.StorageCommand
 import org.cafienne.storage.actormodel.event.StorageRequestReceived
 import org.cafienne.storage.actormodel.message.{StorageActionRejected, StorageActionStarted, StorageFailure, StorageMessage}

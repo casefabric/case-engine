@@ -17,8 +17,9 @@
 
 package org.cafienne.storage.restore
 
+import org.cafienne.actormodel.ActorMetadata
 import org.cafienne.storage.StorageUser
-import org.cafienne.storage.actormodel.{ActorMetadata, OffspringNode}
+import org.cafienne.storage.actormodel.OffspringNode
 import org.cafienne.storage.archival.Archive
 import org.cafienne.storage.restore.command.RestoreArchive
 

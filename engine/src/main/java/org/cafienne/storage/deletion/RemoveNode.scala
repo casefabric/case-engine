@@ -17,8 +17,9 @@
 
 package org.cafienne.storage.deletion
 
+import org.cafienne.actormodel.ActorMetadata
 import org.cafienne.storage.StorageUser
-import org.cafienne.storage.actormodel.{ActorMetadata, OffspringNode}
+import org.cafienne.storage.actormodel.OffspringNode
 import org.cafienne.storage.deletion.command.RemoveActorData
 
 case class RemoveNode(user: StorageUser, metadata: ActorMetadata, actor: RootRemover) extends OffspringNode {

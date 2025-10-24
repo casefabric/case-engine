@@ -15,9 +15,8 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package org.cafienne.storage.actormodel
+package org.cafienne.actormodel
 
-import org.cafienne.actormodel.ActorType
 import org.cafienne.cmmn.instance.Path
 import org.cafienne.infrastructure.serialization.JacksonSerializable
 import org.cafienne.util.json._

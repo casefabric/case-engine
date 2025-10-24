@@ -17,7 +17,7 @@
 
 package org.cafienne.storage.actormodel.state
 
-import org.cafienne.storage.actormodel.ActorMetadata
+import org.cafienne.actormodel.ActorMetadata
 import org.cafienne.storage.querydb.ProcessStorage
 
 trait ProcessState extends StorageActorState {

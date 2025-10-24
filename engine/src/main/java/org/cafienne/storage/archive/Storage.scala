@@ -18,7 +18,7 @@
 package org.cafienne.storage.archive
 
 import org.apache.pekko.Done
-import org.cafienne.storage.actormodel.ActorMetadata
+import org.cafienne.actormodel.ActorMetadata
 import org.cafienne.storage.archival.Archive
 
 import scala.concurrent.Future

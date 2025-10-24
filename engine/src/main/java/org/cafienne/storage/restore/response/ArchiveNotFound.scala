@@ -17,8 +17,8 @@
 
 package org.cafienne.storage.restore.response
 
+import org.cafienne.actormodel.ActorMetadata
 import org.cafienne.persistence.querydb.query.exception.SearchFailure
-import org.cafienne.storage.actormodel.ActorMetadata
 import org.cafienne.storage.actormodel.message.StorageFailure
 
 case class ArchiveNotFound(metadata: ActorMetadata) extends SearchFailure(s"Cannot find archive for ${metadata.path}") with StorageFailure

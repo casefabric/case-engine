@@ -18,9 +18,10 @@
 package org.cafienne.storage.archival
 
 import com.typesafe.scalalogging.LazyLogging
+import org.cafienne.actormodel.ActorMetadata
 import org.cafienne.storage.StorageUser
 import org.cafienne.storage.actormodel.message.StorageEvent
-import org.cafienne.storage.actormodel.{ActorMetadata, OffspringNode}
+import org.cafienne.storage.actormodel.OffspringNode
 import org.cafienne.storage.archival.command.ArchiveActorData
 import org.cafienne.storage.archival.event.{ArchiveCreated, ArchiveReceived}
 

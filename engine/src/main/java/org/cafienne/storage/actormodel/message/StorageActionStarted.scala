@@ -18,8 +18,8 @@
 package org.cafienne.storage.actormodel.message
 
 import com.fasterxml.jackson.core.JsonGenerator
+import org.cafienne.actormodel.ActorMetadata
 import org.cafienne.infrastructure.serialization.Fields
-import org.cafienne.storage.actormodel.ActorMetadata
 import org.cafienne.util.json.ValueList
 
 trait StorageActionStarted extends StorageEvent {

@@ -17,9 +17,10 @@
 
 package org.cafienne.storage.archival.command
 
+import org.cafienne.actormodel.ActorMetadata
 import org.cafienne.storage.StorageUser
 import org.cafienne.storage.actormodel.command.StorageCommand
-import org.cafienne.storage.actormodel.{ActorMetadata, RootStorageActor}
+import org.cafienne.storage.actormodel.RootStorageActor
 import org.cafienne.storage.archival.RootArchiver
 
 case class ArchiveActorData(user: StorageUser, metadata: ActorMetadata) extends StorageCommand {

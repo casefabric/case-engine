@@ -17,9 +17,10 @@
 
 package org.cafienne.storage.restore.command
 
+import org.cafienne.actormodel.ActorMetadata
 import org.cafienne.storage.StorageUser
 import org.cafienne.storage.actormodel.command.StorageCommand
-import org.cafienne.storage.actormodel.{ActorMetadata, RootStorageActor}
+import org.cafienne.storage.actormodel.RootStorageActor
 import org.cafienne.storage.restore.RootRestorer
 
 case class RestoreActorData(user: StorageUser, metadata: ActorMetadata) extends StorageCommand {

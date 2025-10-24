@@ -19,9 +19,10 @@ package org.cafienne.storage.restore
 
 import com.typesafe.scalalogging.LazyLogging
 import org.apache.pekko.actor.Actor
+import org.cafienne.actormodel.ActorMetadata
 import org.cafienne.storage.StorageUser
 import org.cafienne.storage.actormodel.message.StorageEvent
-import org.cafienne.storage.actormodel.{ActorMetadata, RootStorageActor}
+import org.cafienne.storage.actormodel.RootStorageActor
 import org.cafienne.storage.archival.Archive
 import org.cafienne.storage.archive.Storage
 import org.cafienne.storage.restore.command.RestoreActorData

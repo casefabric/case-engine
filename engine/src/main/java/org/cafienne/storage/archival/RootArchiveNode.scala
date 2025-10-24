@@ -18,8 +18,8 @@
 package org.cafienne.storage.archival
 
 import com.typesafe.scalalogging.LazyLogging
+import org.cafienne.actormodel.ActorMetadata
 import org.cafienne.storage.StorageUser
-import org.cafienne.storage.actormodel.ActorMetadata
 import org.cafienne.storage.archival.event.ArchiveStored
 import org.cafienne.storage.archive.Storage
 

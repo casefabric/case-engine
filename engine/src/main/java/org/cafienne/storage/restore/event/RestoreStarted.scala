@@ -17,9 +17,9 @@
 
 package org.cafienne.storage.restore.event
 
+import org.cafienne.actormodel.ActorMetadata
 import org.cafienne.infrastructure.serialization.{Fields, Manifest}
 import org.cafienne.storage.StorageUser
-import org.cafienne.storage.actormodel.ActorMetadata
 import org.cafienne.storage.actormodel.message.StorageActionStarted
 import org.cafienne.util.json.ValueMap
 

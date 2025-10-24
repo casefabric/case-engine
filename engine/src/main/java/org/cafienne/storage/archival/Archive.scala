@@ -17,8 +17,8 @@
 
 package org.cafienne.storage.archival
 
+import org.cafienne.actormodel.ActorMetadata
 import org.cafienne.infrastructure.serialization.{Fields, JacksonSerializable}
-import org.cafienne.storage.actormodel.ActorMetadata
 import org.cafienne.util.json.{CafienneJson, Value, ValueList, ValueMap}
 
 import scala.jdk.CollectionConverters.CollectionHasAsScala
