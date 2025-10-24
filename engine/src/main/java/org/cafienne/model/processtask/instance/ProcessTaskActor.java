@@ -17,6 +17,8 @@
 
 package org.cafienne.model.processtask.instance;
 
+import org.cafienne.actormodel.ActorMetadata;
+import org.cafienne.actormodel.ActorType;
 import org.cafienne.actormodel.ModelActor;
 import org.cafienne.actormodel.communication.request.response.ActorRequestFailure;
 import org.cafienne.actormodel.communication.request.state.RemoteActorState;
@@ -48,6 +50,11 @@ public class ProcessTaskActor extends ModelActor {
 
     public ProcessTaskActor(CaseSystem caseSystem) {
         super(caseSystem);
+    }
+
+    @Override
+    public ActorMetadata metadata() {
+        return new ActorMetadata(ActorType.Process, getId(), null);
     }
 
     @Override
@@ -199,7 +206,7 @@ public class ProcessTaskActor extends ModelActor {
     private static class ParentProcessTaskState extends RemoteActorState<ProcessTaskActor> {
 
         public ParentProcessTaskState(ProcessTaskActor actor) {
-            super(actor, actor.getParentActorId());
+            super(actor, new ActorMetadata(ActorType.Case, actor.getParentActorId(), null));
         }
 
         private void inform(ModelCommand command) {

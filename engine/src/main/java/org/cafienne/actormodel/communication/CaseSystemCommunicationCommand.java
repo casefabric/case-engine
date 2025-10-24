@@ -1,6 +1,7 @@
 package org.cafienne.actormodel.communication;
 
 import com.fasterxml.jackson.core.JsonGenerator;
+import org.cafienne.actormodel.ActorMetadata;
 import org.cafienne.actormodel.ActorType;
 import org.cafienne.actormodel.ModelActor;
 import org.cafienne.actormodel.identity.UserIdentity;
@@ -13,15 +14,18 @@ import java.io.IOException;
 
 public abstract class CaseSystemCommunicationCommand extends BaseModelCommand<ModelActor, UserIdentity> implements CaseSystemCommunicationMessage {
     private ModelCommand deserializedModelCommand;
+    public final ActorMetadata target;
     public final ModelCommand command;
 
-    protected CaseSystemCommunicationCommand(ModelCommand command) {
+    protected CaseSystemCommunicationCommand(ActorMetadata target, ModelCommand command) {
         super(command.getUser(), command.actorId());
+        this.target = target;
         this.command = this.deserializedModelCommand = command;
     }
 
     protected CaseSystemCommunicationCommand(ValueMap json) {
         super(json);
+        this.target = json.readMetadata(Fields.target);
         this.command = readCommand(json);
     }
 
@@ -62,6 +66,7 @@ public abstract class CaseSystemCommunicationCommand extends BaseModelCommand<Mo
 
     protected void writeActorCommand(JsonGenerator generator) throws IOException {
         super.writeModelCommand(generator);
+        writeField(generator, Fields.target, target);
         writeManifestField(generator, Fields.command, command);
     }
 }

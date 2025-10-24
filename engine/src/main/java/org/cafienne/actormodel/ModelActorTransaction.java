@@ -212,7 +212,7 @@ public class ModelActorTransaction extends UserMessageTransaction<ModelCommand> 
         actor.addDebugInfo(() -> "", exception, msg);
         if (this.message instanceof RunActorRequest actorRequest) {
             this.addEvent(new ActorRequestFailed(actorRequest, exception));
-            this.response = new ActorRequestFailure(actorRequest.command, exception);
+            this.response = new ActorRequestFailure(actorRequest.source, actorRequest.command, exception);
         } else {
             this.response = failure;
         }

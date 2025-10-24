@@ -114,6 +114,8 @@ public abstract class ModelActor extends AbstractPersistentActor {
         super.postStop();
     }
 
+    public abstract ActorMetadata metadata();
+
     abstract protected boolean supportsCommand(Object msg);
 
     abstract protected boolean supportsEvent(ModelEvent msg);

@@ -117,6 +117,7 @@ public enum Fields {
     role,
     elementId,
     source,
+    target,
     script,
     waitTime,
     assignee,

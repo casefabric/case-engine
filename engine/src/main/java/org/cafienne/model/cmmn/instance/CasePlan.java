@@ -17,6 +17,8 @@
 
 package org.cafienne.model.cmmn.instance;
 
+import org.cafienne.actormodel.ActorMetadata;
+import org.cafienne.actormodel.ActorType;
 import org.cafienne.actormodel.communication.request.response.ActorRequestFailure;
 import org.cafienne.actormodel.communication.request.state.RemoteActorState;
 import org.cafienne.model.cmmn.actorapi.command.CaseCommand;
@@ -84,7 +86,7 @@ public class CasePlan extends Stage<CasePlanDefinition> {
         private final CasePlan plan;
 
         public ParentCaseTaskState(CasePlan plan) {
-            super(plan.getCaseInstance(), plan.getCaseInstance().getParentActorId());
+            super(plan.getCaseInstance(), new ActorMetadata(ActorType.Case, plan.getCaseInstance().getParentActorId(), null));
             this.plan = plan;
         }
 

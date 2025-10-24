@@ -18,7 +18,7 @@ public class ActorRequestFailed extends ModelActorRequestEvent implements CaseSy
     public final ValueMap exceptionAsJSON;
 
     public ActorRequestFailed(RunActorRequest request, Throwable failure) {
-        super(request.command, request.sourceActorId);
+        super(request.command, request.source);
         this.exception = failure;
         this.exceptionAsJSON = Value.convertThrowable(failure);
         this.serializedException = new SerializedException(failure);

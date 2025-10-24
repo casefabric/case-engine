@@ -17,6 +17,8 @@
 
 package org.cafienne.usermanagement.tenant;
 
+import org.cafienne.actormodel.ActorMetadata;
+import org.cafienne.actormodel.ActorType;
 import org.cafienne.actormodel.ModelActor;
 import org.cafienne.actormodel.identity.TenantUser;
 import org.cafienne.actormodel.message.command.ModelCommand;
@@ -56,6 +58,11 @@ public class TenantActor extends ModelActor {
 
     public TenantActor(CaseSystem caseSystem) {
         super(caseSystem);
+    }
+
+    @Override
+    public ActorMetadata metadata() {
+        return new ActorMetadata(ActorType.Tenant, getId(), null);
     }
 
     @Override

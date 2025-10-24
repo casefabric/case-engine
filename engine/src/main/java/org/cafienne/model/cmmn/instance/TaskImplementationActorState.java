@@ -17,6 +17,8 @@
 
 package org.cafienne.model.cmmn.instance;
 
+import org.cafienne.actormodel.ActorMetadata;
+import org.cafienne.actormodel.ActorType;
 import org.cafienne.actormodel.communication.request.response.ActorRequestDeliveryReceipt;
 import org.cafienne.actormodel.communication.request.response.ActorRequestFailure;
 import org.cafienne.actormodel.communication.request.state.RemoteActorState;
@@ -25,6 +27,8 @@ import org.cafienne.model.cmmn.actorapi.event.plan.task.TaskCommandRejected;
 import org.cafienne.model.cmmn.actorapi.event.plan.task.TaskImplementationNotStarted;
 import org.cafienne.model.cmmn.actorapi.event.plan.task.TaskImplementationReactivated;
 import org.cafienne.model.cmmn.actorapi.event.plan.task.TaskImplementationStarted;
+import org.cafienne.model.cmmn.instance.task.cmmn.CaseTask;
+import org.cafienne.model.cmmn.instance.task.process.ProcessTask;
 
 public class TaskImplementationActorState extends RemoteActorState<Case> {
     private final Task<?> task;
@@ -32,7 +36,7 @@ public class TaskImplementationActorState extends RemoteActorState<Case> {
     private boolean foundFailure = false;
 
     TaskImplementationActorState(Task<?> task) {
-        super(task.getCaseInstance(), task.getId());
+        super(task.getCaseInstance(), task.target());
         this.task = task;
     }
 
@@ -62,7 +66,7 @@ public class TaskImplementationActorState extends RemoteActorState<Case> {
     @Override
     protected void requestDeliveryFailed(Request request) {
         task.addDebugInfo(() -> "Task " + task + " reports failure on sending implementation request " + request);
-        task.getCaseInstance().self().tell(new ActorRequestFailure(request.getCommand(), new Exception("Could not deliver command to implementation")), task.getCaseInstance().self());
+        task.getCaseInstance().self().tell(new ActorRequestFailure(task.getCaseInstance().metadata(), request.getCommand(), new Exception("Could not deliver command to implementation")), task.getCaseInstance().self());
     }
 
     void updateState(TaskImplementationStarted event) {

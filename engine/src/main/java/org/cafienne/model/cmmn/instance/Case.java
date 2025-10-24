@@ -17,6 +17,8 @@
 
 package org.cafienne.model.cmmn.instance;
 
+import org.cafienne.actormodel.ActorMetadata;
+import org.cafienne.actormodel.ActorType;
 import org.cafienne.actormodel.ModelActor;
 import org.cafienne.actormodel.identity.CaseUserIdentity;
 import org.cafienne.actormodel.message.command.ModelCommand;
@@ -107,6 +109,11 @@ public class Case extends ModelActor {
     @Override
     public CaseUserIdentity getCurrentUser() {
         return super.getCurrentUser().asCaseUserIdentity();
+    }
+
+    @Override
+    public ActorMetadata metadata() {
+        return new ActorMetadata(ActorType.Case, getId(), null);
     }
 
     @Override

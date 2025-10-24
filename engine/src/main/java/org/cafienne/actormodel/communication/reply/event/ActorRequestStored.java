@@ -23,7 +23,7 @@ public class ActorRequestStored extends ModelActorRequestEvent implements CaseSy
     public final RequestModelActor request;
 
     public ActorRequestStored(RequestModelActor request) {
-        super(request, request.sourceActorId);
+        super(request, request.source);
         this.request = request;
     }
 
@@ -43,7 +43,7 @@ public class ActorRequestStored extends ModelActorRequestEvent implements CaseSy
     @Override
     public void afterPersist(ModelActor actor) {
         // After event is persisted we send it to ourselves, to trigger the actual command handling.
-        actor.self().tell(new RunActorRequest(this), actor.sender());
+        actor.self().tell(new RunActorRequest(actor.metadata(), this), actor.sender());
     }
 
     @Override

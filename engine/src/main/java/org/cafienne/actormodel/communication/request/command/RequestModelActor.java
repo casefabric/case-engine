@@ -1,6 +1,7 @@
 package org.cafienne.actormodel.communication.request.command;
 
 import com.fasterxml.jackson.core.JsonGenerator;
+import org.cafienne.actormodel.ActorMetadata;
 import org.cafienne.actormodel.ModelActor;
 import org.cafienne.actormodel.communication.CaseSystemCommunicationCommand;
 import org.cafienne.actormodel.communication.request.response.ActorRequestDeliveryReceipt;
@@ -18,18 +19,18 @@ import java.io.IOException;
 @Manifest
 public class RequestModelActor extends CaseSystemCommunicationCommand implements BootstrapMessage {
     public final boolean debugMode;
-    public final String sourceActorId;
+    public final ActorMetadata source;
 
     public RequestModelActor(ModelCommand command, RemoteActorState<?> state) {
-        super(command);
+        super(state.target, command);
         this.debugMode = state.actor.debugMode();
-        this.sourceActorId = state.actor.getId();
+        this.source = state.source;
     }
 
     public RequestModelActor(ValueMap json) {
         super(json);
         this.debugMode = json.readBoolean(Fields.debugMode);
-        this.sourceActorId = json.readString(Fields.sourceActorId);
+        this.source = json.readMetadata(Fields.source);
     }
 
     @Override
@@ -53,13 +54,13 @@ public class RequestModelActor extends CaseSystemCommunicationCommand implements
 
     @Override
     public ModelResponse getResponse() {
-        return new ActorRequestDeliveryReceipt(this.command);
+        return new ActorRequestDeliveryReceipt(source, this.command);
     }
 
     @Override
     public void write(JsonGenerator generator) throws IOException {
         super.writeActorCommand(generator);
-        writeField(generator, Fields.sourceActorId, sourceActorId);
+        writeField(generator, Fields.source, source);
         writeField(generator, Fields.debugMode, debugMode);
     }
 

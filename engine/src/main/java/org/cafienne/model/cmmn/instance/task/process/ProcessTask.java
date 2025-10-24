@@ -17,6 +17,8 @@
 
 package org.cafienne.model.cmmn.instance.task.process;
 
+import org.cafienne.actormodel.ActorMetadata;
+import org.cafienne.actormodel.ActorType;
 import org.cafienne.model.cmmn.definition.ItemDefinition;
 import org.cafienne.model.cmmn.definition.ProcessTaskDefinition;
 import org.cafienne.model.cmmn.instance.Stage;
@@ -29,6 +31,10 @@ public class ProcessTask extends Task<ProcessTaskDefinition> {
     public ProcessTask(String id, int index, ItemDefinition itemDefinition, ProcessTaskDefinition definition, Stage<?> stage) {
         super(id, index, itemDefinition, definition, stage);
         informer = ProcessInformer.getInstance(this, definition);
+    }
+    @Override
+    protected ActorMetadata target() {
+        return new ActorMetadata(ActorType.Process, getId(), getCaseInstance().metadata());
     }
 
     @Override

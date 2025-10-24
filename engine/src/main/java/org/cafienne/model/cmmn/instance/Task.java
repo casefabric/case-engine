@@ -17,6 +17,7 @@
 
 package org.cafienne.model.cmmn.instance;
 
+import org.cafienne.actormodel.ActorMetadata;
 import org.cafienne.actormodel.exception.InvalidCommandException;
 import org.cafienne.actormodel.message.command.ModelCommand;
 import org.cafienne.model.cmmn.actorapi.event.plan.task.*;
@@ -71,6 +72,8 @@ public abstract class Task<D extends TaskDefinition<?>> extends TaskStage<D> {
         transformInputParameters();
         startImplementation(getMappedInputParameters());
     }
+
+    abstract protected ActorMetadata target();
 
     abstract protected void startImplementation(ValueMap inputParameters);
 

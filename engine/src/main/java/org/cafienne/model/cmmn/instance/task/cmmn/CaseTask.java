@@ -17,6 +17,8 @@
 
 package org.cafienne.model.cmmn.instance.task.cmmn;
 
+import org.cafienne.actormodel.ActorMetadata;
+import org.cafienne.actormodel.ActorType;
 import org.cafienne.model.cmmn.actorapi.command.ReactivateCase;
 import org.cafienne.model.cmmn.actorapi.command.StartCase;
 import org.cafienne.model.cmmn.actorapi.command.migration.MigrateCaseDefinition;
@@ -39,6 +41,11 @@ public class CaseTask extends Task<CaseTaskDefinition> {
         super(id, index, itemDefinition, definition, stage);
         subCaseId = getId(); // Our planitem id will also be the id of the subcase.
         mainCase = getCaseInstance();
+    }
+
+    @Override
+    protected ActorMetadata target() {
+        return new ActorMetadata(ActorType.Case, getId(), getCaseInstance().metadata());
     }
 
     @Override

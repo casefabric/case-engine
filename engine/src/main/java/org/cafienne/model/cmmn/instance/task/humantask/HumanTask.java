@@ -17,6 +17,8 @@
 
 package org.cafienne.model.cmmn.instance.task.humantask;
 
+import org.cafienne.actormodel.ActorMetadata;
+import org.cafienne.actormodel.ActorType;
 import org.cafienne.model.cmmn.actorapi.event.CaseAppliedPlatformUpdate;
 import org.cafienne.model.cmmn.actorapi.event.plan.task.humantask.HumanTaskResumed;
 import org.cafienne.model.cmmn.actorapi.event.plan.task.humantask.HumanTaskSuspended;
@@ -41,6 +43,11 @@ public class HumanTask extends Task<HumanTaskDefinition> {
 
     public HumanTask(String id, int index, ItemDefinition itemDefinition, HumanTaskDefinition definition, Stage<?> stage) {
         super(id, index, itemDefinition, definition, stage);
+    }
+
+    @Override
+    protected ActorMetadata target() {
+        return new ActorMetadata(ActorType.ModelActor, this.getId(), null);
     }
 
     /**
