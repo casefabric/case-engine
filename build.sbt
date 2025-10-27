@@ -111,7 +111,7 @@ val engine = (project in file("engine"))
 val plugins = (project in file("plugins"))
   .dependsOn(engine)
   .enablePlugins(BuildInfoPlugin, GitPlugin, GitVersioning, GitBranchPrompt)
-//  .enablePlugins(AutomateHeaderPlugin)
+  //  .enablePlugins(AutomateHeaderPlugin)
   .settings(basicSettings: _*)
   .settings(
     name := "case-plugins",
@@ -121,7 +121,7 @@ val plugins = (project in file("plugins"))
     libraryDependencies ++= Dependencies.plugins ++ Dependencies.engine ++ Dependencies.testEngine)
 
 val service = (project in file("service"))
-  .dependsOn(engine)
+  .dependsOn(engine, plugins)
   .enablePlugins(BuildInfoPlugin, GitPlugin, GitVersioning, GitBranchPrompt, JavaAppPackaging, AshScriptPlugin, DockerPlugin, ClasspathJarPlugin)
 //  .enablePlugins(AutomateHeaderPlugin)
   .settings(basicSettings: _*)
