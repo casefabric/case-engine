@@ -19,6 +19,7 @@ package org.cafienne.persistence.querydb.query.cmmn.implementations
 
 import com.typesafe.scalalogging.LazyLogging
 import org.cafienne.actormodel.identity.{ConsentGroupMembership, Origin, UserIdentity}
+import org.cafienne.actormodel.{ActorMetadata, ActorType}
 import org.cafienne.persistence.querydb.query.cmmn.authorization.CaseMembership
 import org.cafienne.persistence.querydb.query.cmmn.implementations.basequeries.{IdentifierFilterQuery, TaskAccessHelper, TenantRegistrationQueries}
 import org.cafienne.persistence.querydb.record._
@@ -89,15 +90,37 @@ class BaseQueryImpl(val queryDB: QueryDB) extends TenantRegistrationQueries with
         groupMembership.joinFull(tenantRoleBasedMembership.joinFull(userIdBasedMembership.joinFull(userRoleBasedMembership))))
 
 //    println("CASE MEMBERSHIP QUERY:\n\n" + query.result.statements.mkString("\n")+"\n\n")
-    val records = db.run(query.distinct.result)
+    val result = for {
+      records <- db.run(query.distinct.result)
+      chain <- {
+        val query = for {
+          root <- TableQuery[CaseIdentifierView].filter(_.id === caseInstanceId).map(_.rootCaseId)
+          ids <- TableQuery[CaseIdentifierView].filter(_.rootCaseId === root)
+        } yield ids
 
-    records.map(x => {
-      if (x.isEmpty) {
+        val metadata: Future[ActorMetadata] = db.run(query.result).map(records => {
+          def constructMetadata(caseRecord: CaseIdentifierRecord, siblings: Seq[CaseIdentifierRecord]): ActorMetadata = {
+            val parent: ActorMetadata = siblings.find(record => record.id == caseRecord.parentCaseId).map(constructMetadata(_, siblings)).orNull
+            ActorMetadata(ActorType.Case, caseRecord.id, parent)
+          }
+          records.find(_.id == caseInstanceId).map(constructMetadata(_, records)).fold({
+            throw exception("Cannot find metadata chain")
+          })(metadata => metadata)
+        })
+        metadata
+      }
+    } yield (records, chain)
+
+    val metadata: Future[ActorMetadata] = result.map(_._2)
+    val membershipRecords = result.map(_._1)
+
+    membershipRecords.flatMap(records => {
+      if (records.isEmpty) {
 //        println(" Failing because there records are not found")
         fail
       }
 
-      val originRecords = x.map(_._1) //filter(_.isDefined).map(_.get)
+      val originRecords = records.map(_._1) //filter(_.isDefined).map(_.get)
       if (originRecords.headOption.isEmpty) {
 //        println(" Failing because head option is empty")
         fail // Case does not exist
@@ -122,7 +145,7 @@ class BaseQueryImpl(val queryDB: QueryDB) extends TenantRegistrationQueries with
 
 
 
-      val membershipRecords: Seq[(Option[(String, Boolean, String)], Option[(Option[String], Option[(Option[String], Option[String])])])] = x.map(_._2).filter(_.isDefined).map(_.get)
+      val membershipRecords: Seq[(Option[(String, Boolean, String)], Option[(Option[String], Option[(Option[String], Option[String])])])] = records.map(_._2).filter(_.isDefined).map(_.get)
       val userAndRoleRecords = membershipRecords.map(_._2).filter(_.isDefined).map(_.get)
       val userBasedMembership: Set[(Option[String], Option[String])] = userAndRoleRecords.map(_._2).filter(_.isDefined).map(_.get).toSet
       val userIdBasedMembership: Set[String] = userBasedMembership.filter(_._1.isDefined).map(_._1.get)
@@ -149,8 +172,8 @@ class BaseQueryImpl(val queryDB: QueryDB) extends TenantRegistrationQueries with
         fail
       }
 
-      new CaseMembership(id = user.id, origin = origin, tenantRoles = userTenantRoles, groups = groupBasedMembership, caseInstanceId = caseId, tenant = tenantId)
-
+      // In the end, because we're in "flatMap" we can map the metadata future into a CaseMembership instance
+      metadata.map(metadata => CaseMembership(id = user.id, origin = origin, tenantRoles = userTenantRoles, groups = groupBasedMembership, tenant = tenantId, caseIdentifier = metadata))
     })
   }
 
