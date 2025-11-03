@@ -21,7 +21,7 @@ import org.cafienne.actormodel.message.event.CaseSystemEvent;
 import org.cafienne.actormodel.message.event.ModelEvent;
 import org.cafienne.infrastructure.enginedeveloper.EngineDeveloperConsole;
 
-public class RecoveryTransaction extends MessageTransaction<ModelEvent> {
+public class RecoveryTransaction extends UserMessageTransaction<ModelEvent> {
     RecoveryTransaction(ModelActor actor, Reception reception, ModelEvent event) {
         super(actor, reception, event);
     }
@@ -61,7 +61,7 @@ public class RecoveryTransaction extends MessageTransaction<ModelEvent> {
         //  Such has been implemented for TenantActor and ProcessTaskActor, and partly for Case.
         //  Enabling the logging will showcase where this pattern has not been completely done.
         if (EngineDeveloperConsole.enabled()) {
-            EngineDeveloperConsole.debugIndentedConsoleLogging("!!! Recovering " + actor + " generates event of type " + event.getClass().getSimpleName());
+            EngineDeveloperConsole.debugIndentedConsoleLogging("!!! Recovering " + actor + " on event of type " + message.getClass().getSimpleName() +" generates event of type " + event.getClass().getSimpleName());
         }
     }
 }

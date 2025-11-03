@@ -1,7 +1,7 @@
 package org.cafienne.persistence.querydb.materializer.cases
 
-import org.cafienne.cmmn.actorapi.event.plan.PlanItemTransitioned
-import org.cafienne.cmmn.instance.{PlanItemType, State, Transition}
+import org.cafienne.model.cmmn.actorapi.event.plan.PlanItemTransitioned
+import org.cafienne.model.cmmn.instance.{PlanItemType, State, Transition}
 import org.cafienne.persistence.querydb.materializer.TestQueryDB
 
 import java.time.Instant

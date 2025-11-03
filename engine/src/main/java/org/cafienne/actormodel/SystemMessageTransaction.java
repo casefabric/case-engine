@@ -21,21 +21,20 @@ import org.apache.pekko.persistence.JournalProtocol;
 import org.apache.pekko.persistence.RecoveryCompleted;
 import org.apache.pekko.persistence.SnapshotOffer;
 import org.apache.pekko.persistence.SnapshotProtocol;
+import org.cafienne.actormodel.identity.UserIdentity;
 import org.cafienne.actormodel.message.event.ModelEvent;
 import org.cafienne.infrastructure.enginedeveloper.EngineDeveloperConsole;
 import org.cafienne.infrastructure.serialization.DeserializationFailure;
 
-public class SystemMessageTransaction extends MessageTransaction<ModelEvent> {
-    private final Object msg;
+public class SystemMessageTransaction extends MessageTransaction<Object> {
 
-    SystemMessageTransaction(ModelActor actor, Reception reception, Object msg) {
-        super(actor, reception, null);
-        this.msg = msg;
+    SystemMessageTransaction(ModelActor actor, Reception reception, Object message) {
+        super(actor, reception, message);
     }
 
     @Override
     void perform() {
-        switch (msg) {
+        switch (message) {
             // Step 1. All looks good, just open the front door
             case RecoveryCompleted recoveryCompleted -> {
                 if (actor.getLogger().isDebugEnabled()) {
@@ -66,7 +65,7 @@ public class SystemMessageTransaction extends MessageTransaction<ModelEvent> {
 
     private void handleUnknownMessage() {
         if (actor.recoveryRunning()) {
-            actor.getLogger().warn("{} received unknown message of type {} during recovery: {}", actor, msg.getClass().getName(), msg);
+            actor.getLogger().warn("{} received unknown message of type {} during recovery: {}", actor, message.getClass().getName(), message);
         } else {
             actor.getLogger().warn("{} received a message it cannot handle, of type {} from {}", actor, message.getClass().getName(), actor.sender());
         }
@@ -74,13 +73,21 @@ public class SystemMessageTransaction extends MessageTransaction<ModelEvent> {
 
     @Override
     void addEvent(ModelEvent event) {
-        // Recovery is still running.
-
         // NOTE: ModelActors should not generate events during recovery.
         //  Such has been implemented for TenantActor and ProcessTaskActor, and partly for Case.
         //  Enabling the logging will showcase where this pattern has not been completely done.
         if (EngineDeveloperConsole.enabled()) {
-            EngineDeveloperConsole.debugIndentedConsoleLogging("!!! Recovering " + actor + " generates event of type " + event.getClass().getSimpleName());
+            EngineDeveloperConsole.debugIndentedConsoleLogging("!!! System Message Transaction on " + actor + " generates event of type " + event.getClass().getSimpleName());
         }
+    }
+
+    @Override
+    public String getCorrelationId() {
+        return "";
+    }
+
+    @Override
+    public UserIdentity getUser() {
+        return null;
     }
 }

@@ -17,8 +17,8 @@
 
 package org.cafienne.persistence.querydb.query.result
 
-import org.cafienne.cmmn.actorapi.command.team.CaseTeam
 import org.cafienne.infrastructure.serialization.Fields
+import org.cafienne.model.cmmn.actorapi.command.team.CaseTeam
 import org.cafienne.util.json.{CafienneJson, Value}
 
 final case class CaseTeamResponse(team: CaseTeam, caseRoles: Seq[String] = Seq(),

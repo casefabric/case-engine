@@ -17,9 +17,9 @@
 
 package org.cafienne.persistence.querydb.materializer.cases.file;
 
-import org.cafienne.cmmn.actorapi.event.file.CaseFileItemChildRemoved;
-import org.cafienne.cmmn.actorapi.event.file.CaseFileItemTransitioned;
-import org.cafienne.cmmn.instance.Path;
+import org.cafienne.model.cmmn.actorapi.event.file.CaseFileItemChildRemoved;
+import org.cafienne.model.cmmn.actorapi.event.file.CaseFileItemTransitioned;
+import org.cafienne.model.cmmn.instance.Path;
 import org.cafienne.util.json.ValueMap;
 
 import java.util.ArrayList;

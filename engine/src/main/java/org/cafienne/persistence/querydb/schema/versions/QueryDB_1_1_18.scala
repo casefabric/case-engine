@@ -18,7 +18,7 @@
 package org.cafienne.persistence.querydb.schema.versions
 
 import org.cafienne.persistence.infrastructure.jdbc.schema.QueryDBSchemaVersion
-import org.cafienne.persistence.querydb.schema.table.TenantTables
+import org.cafienne.persistence.querydb.schema.table.userregistration.TenantTables
 import slick.basic.DatabaseConfig
 import slick.jdbc.JdbcProfile
 import slick.migration.api.TableMigration

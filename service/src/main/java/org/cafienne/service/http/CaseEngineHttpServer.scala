@@ -24,7 +24,6 @@ import org.apache.pekko.http.scaladsl.server.Directives.concat
 import org.apache.pekko.http.scaladsl.server.Route
 import org.cafienne.service.http.anonymous.AnonymousRequestRoutes
 import org.cafienne.service.http.cases.CasesRoutes
-import org.cafienne.service.http.consentgroup.route.ConsentGroupRoutes
 import org.cafienne.service.http.debug.DebugRoute
 import org.cafienne.service.http.identifiers.route.IdentifierRoutes
 import org.cafienne.service.http.platform.{CaseEngineHealthRoute, PlatformRoutes}
@@ -32,7 +31,8 @@ import org.cafienne.service.http.repository.RepositoryRoute
 import org.cafienne.service.http.storage.StorageRoutes
 import org.cafienne.service.http.swagger.SwaggerHttpServiceRoute
 import org.cafienne.service.http.tasks.TaskRoutes
-import org.cafienne.service.http.tenant.route.TenantRoutes
+import org.cafienne.service.http.userregistration.consentgroup.route.ConsentGroupRoutes
+import org.cafienne.service.http.userregistration.tenant.route.TenantRoutes
 import org.cafienne.service.infrastructure.configuration.OIDCConfiguration
 import org.cafienne.service.infrastructure.route.CaseServiceRoute
 import org.cafienne.system.CaseSystem

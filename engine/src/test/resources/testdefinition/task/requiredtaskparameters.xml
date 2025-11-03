@@ -18,7 +18,7 @@
                     </extensionElements>
                 </outputs>
                 <extensionElements mustUnderstand="false">
-                    <cafienne:implementation xmlns:cafienne="org.cafienne" class="org.cafienne.cmmn.definition.task.WorkflowTaskDefinition" name="simplehumantask" description="" humanTaskRef="task/simplehumantask.humantask">
+                    <cafienne:implementation xmlns:cafienne="org.cafienne" class="org.cafienne.model.cmmn.definition.task.WorkflowTaskDefinition" name="simplehumantask" description="" humanTaskRef="task/simplehumantask.humantask">
                         <input id="_Hun3_Input" name="Input"/>
                         <output id="_SkQG_Result" name="Result"/>
                         <task-model/>
@@ -40,7 +40,7 @@
                     </extensionElements>
                 </outputs>
                 <extensionElements mustUnderstand="false">
-                    <cafienne:implementation xmlns:cafienne="org.cafienne" class="org.cafienne.cmmn.definition.task.WorkflowTaskDefinition" name="simplehumantask" description="" humanTaskRef="task/simplehumantask.humantask">
+                    <cafienne:implementation xmlns:cafienne="org.cafienne" class="org.cafienne.model.cmmn.definition.task.WorkflowTaskDefinition" name="simplehumantask" description="" humanTaskRef="task/simplehumantask.humantask">
                         <input id="_Hun3_Input" name="Input"/>
                         <output id="_SkQG_Result" name="Result"/>
                         <task-model/>
@@ -58,7 +58,7 @@
             <humanTask id="pid_cm_csNY8_49" name="TaskWithOutputNotRequired" isBlocking="true">
                 <outputs id="_VsVwA" name="Result"/>
                 <extensionElements mustUnderstand="false">
-                    <cafienne:implementation xmlns:cafienne="org.cafienne" class="org.cafienne.cmmn.definition.task.WorkflowTaskDefinition" name="simplehumantask" description="" humanTaskRef="task/simplehumantask.humantask">
+                    <cafienne:implementation xmlns:cafienne="org.cafienne" class="org.cafienne.model.cmmn.definition.task.WorkflowTaskDefinition" name="simplehumantask" description="" humanTaskRef="task/simplehumantask.humantask">
                         <input id="_Hun3_Input" name="Input"/>
                         <output id="_SkQG_Result" name="Result"/>
                         <task-model/>
@@ -76,7 +76,7 @@
             <humanTask id="pid_cm_csa4I_58" name="TaskWithOutputNotRequiredAndBinding" isBlocking="true">
                 <outputs id="_75v4Z" name="Result" bindingRef="cfi_csNY8_0"/>
                 <extensionElements mustUnderstand="false">
-                    <cafienne:implementation xmlns:cafienne="org.cafienne" class="org.cafienne.cmmn.definition.task.WorkflowTaskDefinition" name="simplehumantask" description="" humanTaskRef="task/simplehumantask.humantask">
+                    <cafienne:implementation xmlns:cafienne="org.cafienne" class="org.cafienne.model.cmmn.definition.task.WorkflowTaskDefinition" name="simplehumantask" description="" humanTaskRef="task/simplehumantask.humantask">
                         <input id="_Hun3_Input" name="Input"/>
                         <output id="_SkQG_Result" name="Result"/>
                         <task-model/>

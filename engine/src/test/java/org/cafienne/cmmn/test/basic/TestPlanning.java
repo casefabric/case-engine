@@ -5,24 +5,24 @@
  * License, v. 2.0. If a copy of the MPL was not distributed with this
  * file, You can obtain one at http://mozilla.org/MPL/2.0/.
  */
-package org.cafienne.cmmn.test.basic;
+package org.cafienne.model.cmmn.test.basic;
 
-import org.cafienne.cmmn.actorapi.command.StartCase;
-import org.cafienne.cmmn.actorapi.command.plan.AddDiscretionaryItem;
-import org.cafienne.cmmn.actorapi.command.plan.GetDiscretionaryItems;
-import org.cafienne.cmmn.actorapi.command.plan.MakeCaseTransition;
-import org.cafienne.cmmn.actorapi.command.plan.MakePlanItemTransition;
-import org.cafienne.cmmn.definition.CaseDefinition;
-import org.cafienne.cmmn.instance.PlanItemType;
-import org.cafienne.cmmn.instance.State;
-import org.cafienne.cmmn.instance.Transition;
-import org.cafienne.cmmn.test.TestScript;
-import org.cafienne.cmmn.test.assertions.DiscretionaryItemAssertion;
-import org.cafienne.cmmn.test.assertions.PlanningTableAssertion;
-import org.cafienne.cmmn.test.assertions.StageAssertion;
+import org.cafienne.model.cmmn.actorapi.command.StartCase;
+import org.cafienne.model.cmmn.actorapi.command.plan.AddDiscretionaryItem;
+import org.cafienne.model.cmmn.actorapi.command.plan.GetDiscretionaryItems;
+import org.cafienne.model.cmmn.actorapi.command.plan.MakeCaseTransition;
+import org.cafienne.model.cmmn.actorapi.command.plan.MakePlanItemTransition;
+import org.cafienne.model.cmmn.definition.CaseDefinition;
+import org.cafienne.model.cmmn.instance.PlanItemType;
+import org.cafienne.model.cmmn.instance.State;
+import org.cafienne.model.cmmn.instance.Transition;
+import org.cafienne.model.cmmn.test.TestScript;
+import org.cafienne.model.cmmn.test.assertions.DiscretionaryItemAssertion;
+import org.cafienne.model.cmmn.test.assertions.PlanningTableAssertion;
+import org.cafienne.model.cmmn.test.assertions.StageAssertion;
 import org.junit.Test;
 
-import static org.cafienne.cmmn.test.TestScript.*;
+import static org.cafienne.model.cmmn.test.TestScript.*;
 
 public class TestPlanning {
     private final CaseDefinition definitions = loadCaseDefinition("testdefinition/planning.xml");

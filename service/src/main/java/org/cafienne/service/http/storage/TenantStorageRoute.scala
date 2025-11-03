@@ -25,11 +25,10 @@ import io.swagger.v3.oas.annotations.{Operation, Parameter}
 import jakarta.ws.rs.{DELETE, Path, Produces}
 import org.apache.pekko.http.scaladsl.model.StatusCodes
 import org.apache.pekko.http.scaladsl.server.Route
-import org.cafienne.actormodel.ActorType
+import org.cafienne.actormodel.{ActorMetadata, ActorType}
 import org.cafienne.service.http.CaseEngineHttpServer
-import org.cafienne.service.http.tenant.route.TenantRoute
-import org.cafienne.storage.StorageUser
-import org.cafienne.storage.actormodel.ActorMetadata
+import org.cafienne.service.http.userregistration.tenant.route.TenantRoute
+import org.cafienne.service.storage.StorageUser
 
 import scala.util.{Failure, Success}
 
@@ -68,7 +67,7 @@ class TenantStorageRoute(override val httpService: CaseEngineHttpServer) extends
           onComplete(tenantQueries.getTenantGroupsUsage(user, user.tenant)) {
             case Success(usageResult) =>
               usageResult.size match {
-                case 0 => initiateDataRemoval(ActorMetadata(user = StorageUser(user.id, user.tenant), actorType = ActorType.Tenant, actorId = user.tenant))
+                case 0 => initiateDataRemoval(StorageUser(user.id, user.tenant), ActorMetadata(actorType = ActorType.Tenant, actorId = user.tenant))
                 case _ =>
 //                  val json = Value.convert(usageResult)
 //                  println("Found groups in use somewhere else: " + json)

@@ -44,7 +44,7 @@
                     </extensionElements>
                 </outputs>
                 <extensionElements mustUnderstand="false">
-                    <cafienne:implementation xmlns:cafienne="org.cafienne" class="org.cafienne.cmmn.definition.task.WorkflowTaskDefinition" name="humanTaskTest" description="" humanTaskRef="humanTaskTest.humantask" validatorRef="humantaskvalidator.process">
+                    <cafienne:implementation xmlns:cafienne="org.cafienne" class="org.cafienne.model.cmmn.definition.task.WorkflowTaskDefinition" name="humanTaskTest" description="" humanTaskRef="humanTaskTest.humantask" validatorRef="humantaskvalidator.process">
                         <input id="_ydL3_Owner" name="Owner"/>
                         <input id="_67M8_Content" name="Content"/>
                         <output id="_DtOu_Decision" name="Decision"/>
@@ -74,7 +74,7 @@
                     </extensionElements>
                 </outputs>
                 <extensionElements mustUnderstand="false">
-                    <cafienne:implementation xmlns:cafienne="org.cafienne" class="org.cafienne.cmmn.definition.task.WorkflowTaskDefinition" name="humanTaskTest" description="" humanTaskRef="humanTaskTest.humantask">
+                    <cafienne:implementation xmlns:cafienne="org.cafienne" class="org.cafienne.model.cmmn.definition.task.WorkflowTaskDefinition" name="humanTaskTest" description="" humanTaskRef="humanTaskTest.humantask">
                         <input id="_ydL3_Owner" name="Owner"/>
                         <input id="_67M8_Content" name="Content"/>
                         <output id="_DtOu_Decision" name="Decision"/>

@@ -18,10 +18,10 @@
 package org.cafienne.persistence.querydb.materializer.cases
 
 import com.typesafe.scalalogging.LazyLogging
-import org.cafienne.cmmn.actorapi.event.definition.CaseDefinitionEvent
-import org.cafienne.cmmn.actorapi.event.migration.CaseDefinitionMigrated
-import org.cafienne.cmmn.actorapi.event.{CaseDefinitionApplied, CaseEvent, CaseModified}
-import org.cafienne.cmmn.instance.State
+import org.cafienne.model.cmmn.actorapi.event.definition.CaseDefinitionEvent
+import org.cafienne.model.cmmn.actorapi.event.migration.CaseDefinitionMigrated
+import org.cafienne.model.cmmn.actorapi.event.{CaseDefinitionApplied, CaseEvent, CaseModified}
+import org.cafienne.model.cmmn.instance.State
 import org.cafienne.persistence.querydb.materializer.cases.file.CaseFileProjection
 import org.cafienne.persistence.querydb.record.{CaseDefinitionRecord, CaseRecord, CaseRoleRecord}
 

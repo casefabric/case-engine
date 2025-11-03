@@ -18,7 +18,8 @@
 package org.cafienne.persistence.querydb.schema.versions
 
 import org.cafienne.persistence.infrastructure.jdbc.schema.QueryDBSchemaVersion
-import org.cafienne.persistence.querydb.schema.table.{CaseTables, ConsentGroupTables, TaskTables}
+import org.cafienne.persistence.querydb.schema.table.userregistration.ConsentGroupTables
+import org.cafienne.persistence.querydb.schema.table.{CaseTables, TaskTables}
 import slick.basic.DatabaseConfig
 import slick.jdbc.JdbcProfile
 import slick.migration.api.{SqlMigration, TableMigration}

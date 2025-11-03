@@ -27,17 +27,17 @@ import org.cafienne.actormodel.exception.InvalidCommandException;
 import org.cafienne.actormodel.identity.UserIdentity;
 import org.cafienne.actormodel.message.response.ModelResponse;
 import org.cafienne.infrastructure.serialization.Fields;
+import org.cafienne.util.Guid;
 import org.cafienne.util.json.JSONParseFailure;
 import org.cafienne.util.json.JSONReader;
 import org.cafienne.util.json.Value;
 import org.cafienne.util.json.ValueMap;
-import org.cafienne.util.Guid;
 
 import java.io.IOException;
 import java.io.StringWriter;
 
 public abstract class BaseModelCommand<T extends ModelActor, U extends UserIdentity> implements ModelCommand {
-    private final ValueMap json;
+    protected final ValueMap json;
     public final String correlationId;
     public final String actorId;
     private ActorRef sender;
@@ -72,13 +72,8 @@ public abstract class BaseModelCommand<T extends ModelActor, U extends UserIdent
         this.json = json;
         this.correlationId = json.readString(Fields.correlationId);
         this.actorId = json.readString(Fields.actorId);
-        this.user = readUser(json.with(Fields.user));
+        this.user = actorType().readUser(json.with(Fields.user));
     }
-
-    /**
-     * Model actor specific command to is responsible for deserializing user to appropriate type.
-     */
-    protected abstract U readUser(ValueMap json);
 
     /**
      * Through this method, the command is made aware of the actor that is handling it.

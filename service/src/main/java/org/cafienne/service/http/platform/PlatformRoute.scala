@@ -28,9 +28,9 @@ import org.apache.pekko.http.scaladsl.model.StatusCodes
 import org.apache.pekko.http.scaladsl.server.Route
 import org.cafienne.actormodel.identity.PlatformOwner
 import org.cafienne.service.http.CaseEngineHttpServer
-import org.cafienne.service.http.tenant.model.TenantAPI._
+import org.cafienne.service.http.userregistration.tenant.model.TenantAPI.{PlatformUserFormat, TenantFormat}
 import org.cafienne.service.infrastructure.route.CommandRoute
-import org.cafienne.tenant.actorapi.command.platform.{CreateTenant, DisableTenant, EnableTenant, PlatformTenantCommand}
+import org.cafienne.usermanagement.tenant.actorapi.command.platform.{CreateTenant, DisableTenant, EnableTenant, PlatformTenantCommand}
 
 @SecurityRequirement(name = "oauth2", scopes = Array("openid"))
 @Path("/platform")

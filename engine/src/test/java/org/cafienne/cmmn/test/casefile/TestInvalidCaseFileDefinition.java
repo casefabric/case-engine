@@ -5,11 +5,11 @@
  * License, v. 2.0. If a copy of the MPL was not distributed with this
  * file, You can obtain one at http://mozilla.org/MPL/2.0/.
  */
-package org.cafienne.cmmn.test.casefile;
+package org.cafienne.model.cmmn.test.casefile;
 
-import org.cafienne.cmmn.definition.InvalidDefinitionException;
-import org.cafienne.cmmn.repository.MissingDefinitionException;
-import org.cafienne.cmmn.test.TestScript;
+import org.cafienne.model.cmmn.definition.InvalidDefinitionException;
+import org.cafienne.model.cmmn.repository.MissingDefinitionException;
+import org.cafienne.model.cmmn.test.TestScript;
 import org.junit.Test;
 
 public class TestInvalidCaseFileDefinition {

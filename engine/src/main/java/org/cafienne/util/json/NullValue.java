@@ -18,8 +18,8 @@
 package org.cafienne.util.json;
 
 import com.fasterxml.jackson.core.JsonGenerator;
-import org.cafienne.cmmn.definition.casefile.PropertyDefinition;
-import org.cafienne.cmmn.expression.spel.SpelReadable;
+import org.cafienne.model.cmmn.definition.casefile.PropertyDefinition;
+import org.cafienne.model.cmmn.expression.spel.SpelReadable;
 
 import java.io.IOException;
 import java.util.Collection;
@@ -53,6 +53,11 @@ class NullValue extends PrimitiveValue<Object> implements SpelReadable, List<Obj
     @Override
     public boolean isSupersetOf(Value<?> otherValue) {
         return otherValue == null || otherValue.value == null;
+    }
+
+    @Override
+    public boolean isNull() {
+        return true;
     }
 
     @Override

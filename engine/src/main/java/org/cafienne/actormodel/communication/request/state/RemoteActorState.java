@@ -1,5 +1,7 @@
 package org.cafienne.actormodel.communication.request.state;
 
+import org.cafienne.actormodel.ActorMetadata;
+import org.cafienne.actormodel.ActorType;
 import org.cafienne.actormodel.ModelActor;
 import org.cafienne.actormodel.communication.request.event.ActorRequestCreated;
 import org.cafienne.actormodel.communication.request.event.ActorRequestDelivered;
@@ -19,11 +21,15 @@ import java.util.Map;
 public abstract class RemoteActorState<LocalActor extends ModelActor> {
     public final LocalActor actor;
     public final String targetActorId;
+    public final ActorMetadata target;
+    public final ActorMetadata source;
     private final Map<String, Request> requests = new HashMap<>();
 
-    protected RemoteActorState(LocalActor actor, String targetActorId) {
+    protected RemoteActorState(LocalActor actor, ActorMetadata target) {
         this.actor = actor;
-        this.targetActorId = targetActorId;
+        this.target = target;
+        this.targetActorId = target.actorId();
+        this.source = actor.metadata();
         this.actor.register(this);
     }
 

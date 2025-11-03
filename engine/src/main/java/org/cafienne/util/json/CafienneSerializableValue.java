@@ -18,8 +18,8 @@
 package org.cafienne.util.json;
 
 import com.fasterxml.jackson.core.JsonGenerator;
-import org.cafienne.cmmn.definition.casefile.PropertyDefinition;
 import org.cafienne.infrastructure.serialization.CafienneSerializable;
+import org.cafienne.model.cmmn.definition.casefile.PropertyDefinition;
 
 import java.io.IOException;
 

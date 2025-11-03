@@ -20,11 +20,12 @@ package org.cafienne.util.json;
 import com.fasterxml.jackson.core.JsonGenerator;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
-import org.cafienne.cmmn.definition.CMMNElementDefinition;
-import org.cafienne.cmmn.expression.spel.SpelReadable;
-import org.cafienne.cmmn.instance.Path;
-import org.cafienne.cmmn.instance.casefile.CaseFileItem;
+import org.cafienne.actormodel.ActorMetadata;
 import org.cafienne.infrastructure.serialization.*;
+import org.cafienne.model.cmmn.definition.CMMNElementDefinition;
+import org.cafienne.model.cmmn.expression.spel.SpelReadable;
+import org.cafienne.model.cmmn.instance.Path;
+import org.cafienne.model.cmmn.instance.casefile.CaseFileItem;
 
 import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;
@@ -414,8 +415,19 @@ public class ValueMap extends Value<Map<String, Value<?>>> implements SpelReadab
         return CafienneSerializer.deserialize(readMap(fieldName));
     }
 
-    public Path readPath(Object fieldName, String ...value) {
+    public Path readPath(Object fieldName, String... value) {
         return new Path(readString(fieldName, value));
+    }
+
+    public ActorMetadata readMetadata(Object fieldName) {
+        Value<?> value = get(fieldName);
+        // Compatibility check: if value is a json object, then pick the path property inside that object
+        String path = value.isNull() ? null : value.isPrimitive() ? value.toString() : value.asMap().readString(Fields.path);
+        if (path == null) {
+            return null;
+        } else {
+            return ActorMetadata.parsePath(path);
+        }
     }
 
     public <T> T readObject(Object fieldName, ValueMapParser<T> parser) {

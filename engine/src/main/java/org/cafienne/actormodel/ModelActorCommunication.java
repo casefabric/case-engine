@@ -32,7 +32,5 @@ public class ModelActorCommunication {
     void recoveryCompleted() {
         incomingRequests.recoveryCompleted();
         remoteActors.forEach((string, state) -> state.recoveryCompleted());
-
-
     }
 }

@@ -28,14 +28,14 @@ import org.apache.pekko.http.scaladsl.model._
 import org.apache.pekko.http.scaladsl.server._
 import org.cafienne.actormodel.exception.{AuthorizationException, MissingTenantException}
 import org.cafienne.actormodel.identity.PlatformUser
-import org.cafienne.cmmn.definition.{DefinitionsDocument, InvalidDefinitionException}
-import org.cafienne.cmmn.repository.{MissingDefinitionException, WriteDefinitionException}
-import org.cafienne.util.json.ValueMap
+import org.cafienne.model.cmmn.definition.{DefinitionsDocument, InvalidDefinitionException}
+import org.cafienne.model.cmmn.repository.{MissingDefinitionException, WriteDefinitionException}
 import org.cafienne.service.http.CaseEngineHttpServer
 import org.cafienne.service.http.cases.CaseAPIFormat.CaseDefinitionFormat
 import org.cafienne.service.http.repository.RepositoryAPIFormat.ModelListResponseFormat
 import org.cafienne.service.infrastructure.payload.HttpXmlReader._
 import org.cafienne.service.infrastructure.route.{AuthenticatedRoute, TenantValidator}
+import org.cafienne.util.json.ValueMap
 import org.w3c.dom.Document
 
 import scala.concurrent.ExecutionContext

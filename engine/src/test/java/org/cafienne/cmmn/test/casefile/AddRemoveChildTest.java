@@ -1,18 +1,18 @@
-package org.cafienne.cmmn.test.casefile;
+package org.cafienne.model.cmmn.test.casefile;
 
-import org.cafienne.cmmn.actorapi.command.StartCase;
-import org.cafienne.cmmn.actorapi.command.casefile.CreateCaseFileItem;
-import org.cafienne.cmmn.actorapi.command.casefile.DeleteCaseFileItem;
-import org.cafienne.cmmn.definition.CaseDefinition;
-import org.cafienne.cmmn.instance.Path;
-import org.cafienne.cmmn.instance.State;
-import org.cafienne.cmmn.test.TestScript;
+import org.cafienne.model.cmmn.actorapi.command.StartCase;
+import org.cafienne.model.cmmn.actorapi.command.casefile.CreateCaseFileItem;
+import org.cafienne.model.cmmn.actorapi.command.casefile.DeleteCaseFileItem;
+import org.cafienne.model.cmmn.definition.CaseDefinition;
+import org.cafienne.model.cmmn.instance.Path;
+import org.cafienne.model.cmmn.instance.State;
+import org.cafienne.model.cmmn.test.TestScript;
 import org.cafienne.util.json.Value;
 import org.cafienne.util.json.ValueMap;
 import org.cafienne.util.Guid;
 import org.junit.Test;
 
-import static org.cafienne.cmmn.test.TestScript.*;
+import static org.cafienne.model.cmmn.test.TestScript.*;
 
 public class AddRemoveChildTest {
     // This tests a set of basic case file types and properties

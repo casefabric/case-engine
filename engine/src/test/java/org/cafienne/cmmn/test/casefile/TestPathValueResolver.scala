@@ -1,7 +1,7 @@
-package org.cafienne.cmmn.test.casefile
+package org.cafienne.model.cmmn.test.casefile
 
-import org.cafienne.cmmn.instance.Path
-import org.cafienne.cmmn.instance.casefile.InvalidPathException
+import org.cafienne.model.cmmn.instance.Path
+import org.cafienne.model.cmmn.instance.casefile.InvalidPathException
 import org.cafienne.util.json.{JSONReader, Value}
 import org.junit.Test
 

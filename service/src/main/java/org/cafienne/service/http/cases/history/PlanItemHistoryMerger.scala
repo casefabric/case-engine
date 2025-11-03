@@ -18,9 +18,9 @@
 package org.cafienne.service.http.cases.history
 
 import com.typesafe.scalalogging.LazyLogging
-import org.cafienne.cmmn.actorapi.event.migration.PlanItemMigrated
-import org.cafienne.cmmn.actorapi.event.plan._
 import org.cafienne.infrastructure.cqrs.ModelEventEnvelope
+import org.cafienne.model.cmmn.actorapi.event.migration.PlanItemMigrated
+import org.cafienne.model.cmmn.actorapi.event.plan._
 import org.cafienne.persistence.querydb.record.PlanItemHistoryRecord
 
 object PlanItemHistoryMerger extends LazyLogging {

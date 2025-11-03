@@ -1,6 +1,7 @@
 package org.cafienne.actormodel.communication.reply.command;
 
 import com.fasterxml.jackson.core.JsonGenerator;
+import org.cafienne.actormodel.ActorMetadata;
 import org.cafienne.actormodel.ModelActor;
 import org.cafienne.actormodel.communication.CaseSystemCommunicationCommand;
 import org.cafienne.actormodel.communication.reply.event.ActorRequestExecuted;
@@ -22,16 +23,16 @@ import java.io.IOException;
  */
 @Manifest
 public class RunActorRequest extends CaseSystemCommunicationCommand {
-    public final String sourceActorId;
+    public final ActorMetadata source;
 
-    public RunActorRequest(ActorRequestStored event) {
-        super(event.request.command);
-        this.sourceActorId = event.sourceActorId;
+    public RunActorRequest(ActorMetadata target, ActorRequestStored event) {
+        super(target, event.request.command);
+        this.source = event.source;
     }
 
     public RunActorRequest(ValueMap json) {
         super(json);
-        this.sourceActorId = json.readString(Fields.sourceActorId);
+        this.source = json.readMetadata(Fields.source);
     }
 
     @Override
@@ -49,7 +50,7 @@ public class RunActorRequest extends CaseSystemCommunicationCommand {
     @Override
     public void process(ModelActor modelActor) {
         command.processCommand(actor);
-        actor.addEvent(new ActorRequestExecuted(command, sourceActorId));
+        actor.addEvent(new ActorRequestExecuted(command, source));
     }
 
     @Override
@@ -67,6 +68,6 @@ public class RunActorRequest extends CaseSystemCommunicationCommand {
     @Override
     public void write(JsonGenerator generator) throws IOException {
         super.writeActorCommand(generator);
-        writeField(generator, Fields.sourceActorId, sourceActorId);
+        writeField(generator, Fields.source, source);
     }
 }

@@ -17,8 +17,8 @@
 
 package org.cafienne.persistence.querydb.query.result
 
-import org.cafienne.util.json.{CafienneJson, Value, ValueMap}
 import org.cafienne.persistence.querydb.record._
+import org.cafienne.util.json.{CafienneJson, Value, ValueMap}
 
 final case class FullCase(caseInstance: CaseRecord, file: Option[CaseFileRecord], team: CaseTeamResponse, planitems: Seq[PlanItemRecord], identifiers: Seq[CaseBusinessIdentifierRecord]) extends CafienneJson {
   override def toValue: Value[_] = caseInstance.toValue.merge(new ValueMap("team", team, "file", file.getOrElse(new ValueMap()), "planitems", planitems, "identifiers", identifiers))

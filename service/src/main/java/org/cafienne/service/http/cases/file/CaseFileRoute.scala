@@ -25,15 +25,15 @@ import io.swagger.v3.oas.annotations.security.SecurityRequirement
 import io.swagger.v3.oas.annotations.{Operation, Parameter}
 import jakarta.ws.rs._
 import org.apache.pekko.http.scaladsl.server.Route
-import org.cafienne.cmmn.actorapi.command.casefile.{CreateCaseFileItem, DeleteCaseFileItem, ReplaceCaseFileItem, UpdateCaseFileItem}
-import org.cafienne.cmmn.instance
-import org.cafienne.util.json.Value
+import org.cafienne.model.cmmn.actorapi.command.casefile.{CreateCaseFileItem, DeleteCaseFileItem, ReplaceCaseFileItem, UpdateCaseFileItem}
+import org.cafienne.model.cmmn.instance
 import org.cafienne.persistence.infrastructure.lastmodified.Headers
 import org.cafienne.service.http.CaseEngineHttpServer
 import org.cafienne.service.http.cases.CasesRoute
 import org.cafienne.service.http.cases.file.CaseFileAPIFormat.CaseFileJsonExampleFormat
 import org.cafienne.service.infrastructure.authentication.AuthenticatedUser
 import org.cafienne.service.infrastructure.payload.HttpJsonReader._
+import org.cafienne.util.json.Value
 
 @SecurityRequirement(name = "oauth2", scopes = Array("openid"))
 @Path("/cases")
@@ -182,7 +182,7 @@ class CaseFileRoute(override val httpService: CaseEngineHttpServer) extends Case
     */
   private def withCaseFilePath(subRoute: instance.Path => Route): Route = {
     // Creating a "cafienne-path" will validate the syntax
-    import org.cafienne.cmmn.instance.Path
+    import org.cafienne.model.cmmn.instance.Path
     pathEndOrSingleSlash {
       subRoute(new Path(""))
     } ~ path(Remaining) { rawPath =>

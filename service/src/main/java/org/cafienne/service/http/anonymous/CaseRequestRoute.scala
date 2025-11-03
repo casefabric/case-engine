@@ -25,11 +25,11 @@ import io.swagger.v3.oas.annotations.security.SecurityRequirement
 import jakarta.ws.rs._
 import org.apache.pekko.http.scaladsl.model.StatusCodes
 import org.apache.pekko.http.scaladsl.server.Route
-import org.cafienne.cmmn.actorapi.command.StartCase
-import org.cafienne.cmmn.actorapi.response.CaseStartedResponse
-import org.cafienne.cmmn.definition.InvalidDefinitionException
-import org.cafienne.cmmn.repository.MissingDefinitionException
 import org.cafienne.infrastructure.config.api.AnonymousCaseDefinition
+import org.cafienne.model.cmmn.actorapi.command.StartCase
+import org.cafienne.model.cmmn.actorapi.response.CaseStartedResponse
+import org.cafienne.model.cmmn.definition.InvalidDefinitionException
+import org.cafienne.model.cmmn.repository.MissingDefinitionException
 import org.cafienne.persistence.infrastructure.lastmodified.Headers
 import org.cafienne.persistence.querydb.query.exception.SearchFailure
 import org.cafienne.service.http.CaseEngineHttpServer

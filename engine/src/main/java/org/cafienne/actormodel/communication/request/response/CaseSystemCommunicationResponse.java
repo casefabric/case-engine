@@ -1,6 +1,7 @@
 package org.cafienne.actormodel.communication.request.response;
 
 import com.fasterxml.jackson.core.JsonGenerator;
+import org.cafienne.actormodel.ActorMetadata;
 import org.cafienne.actormodel.ModelActor;
 import org.cafienne.actormodel.communication.CaseSystemCommunicationCommand;
 import org.cafienne.actormodel.communication.request.state.RemoteActorState;
@@ -19,8 +20,9 @@ import java.time.Instant;
  */
 public abstract class CaseSystemCommunicationResponse extends CaseSystemCommunicationCommand implements ModelResponse {
     private Instant lastModified;
-    protected CaseSystemCommunicationResponse(ModelCommand command) {
-        super(command);
+
+    protected CaseSystemCommunicationResponse(ActorMetadata target, ModelCommand command) {
+        super(target, command);
         this.lastModified = command.getActor() != null ? command.getActor().getLastModified() : null;
     }
 

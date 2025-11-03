@@ -114,6 +114,8 @@ public abstract class ModelActor extends AbstractPersistentActor {
         super.postStop();
     }
 
+    public abstract ActorMetadata metadata();
+
     abstract protected boolean supportsCommand(Object msg);
 
     abstract protected boolean supportsEvent(ModelEvent msg);
@@ -178,7 +180,7 @@ public abstract class ModelActor extends AbstractPersistentActor {
      * Returns the user context of the current command, event or response
      */
     public UserIdentity getCurrentUser() {
-        return transaction.getUser();
+        return getCurrentTransaction().getUser();
     }
 
     void setCurrentTransaction(MessageTransaction transaction) {
@@ -240,7 +242,7 @@ public abstract class ModelActor extends AbstractPersistentActor {
     void takeABreak(String msg) {
         getLogger().debug(msg);
 //        System.out.println(msg);
-        self().tell(PoisonPill.getInstance(), self());
+        context().stop(self());
     }
 
     protected void handleBootstrapMessage(BootstrapMessage message) {

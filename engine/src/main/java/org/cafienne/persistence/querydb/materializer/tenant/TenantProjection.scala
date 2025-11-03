@@ -18,8 +18,8 @@
 package org.cafienne.persistence.querydb.materializer.tenant
 
 import com.typesafe.scalalogging.LazyLogging
-import org.cafienne.persistence.querydb.record.TenantRecord
-import org.cafienne.tenant.actorapi.event.platform.{PlatformEvent, TenantCreated, TenantDisabled, TenantEnabled}
+import org.cafienne.persistence.querydb.record.userregistration.TenantRecord
+import org.cafienne.usermanagement.tenant.actorapi.event.platform.{PlatformEvent, TenantCreated, TenantDisabled, TenantEnabled}
 
 class TenantProjection(override val batch: TenantEventBatch) extends TenantEventMaterializer with LazyLogging {
   private val tenants = scala.collection.mutable.HashMap[String, TenantRecord]()

@@ -18,9 +18,9 @@
 package org.cafienne.persistence.querydb.materializer.cases.file
 
 import com.typesafe.scalalogging.LazyLogging
-import org.cafienne.cmmn.actorapi.event.file.{CaseFileItemChildRemoved, CaseFileItemTransitioned}
-import org.cafienne.cmmn.instance.Path
-import org.cafienne.cmmn.instance.casefile.CaseFileItemTransition
+import org.cafienne.model.cmmn.actorapi.event.file.{CaseFileItemChildRemoved, CaseFileItemTransitioned}
+import org.cafienne.model.cmmn.instance.Path
+import org.cafienne.model.cmmn.instance.casefile.CaseFileItemTransition
 import org.cafienne.util.json.{Value, ValueMap}
 
 object CaseFileMerger extends LazyLogging {

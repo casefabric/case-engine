@@ -25,14 +25,13 @@ import io.swagger.v3.oas.annotations.{Operation, Parameter}
 import jakarta.ws.rs.{DELETE, PUT, Path, Produces}
 import org.apache.pekko.http.scaladsl.model.StatusCodes
 import org.apache.pekko.http.scaladsl.server.{Directive, Route}
-import org.cafienne.actormodel.ActorType
+import org.cafienne.actormodel.{ActorMetadata, ActorType}
 import org.cafienne.persistence.querydb.query.cmmn.authorization.CaseOwnership
 import org.cafienne.persistence.querydb.query.exception.CaseSearchFailure
 import org.cafienne.service.http.CaseEngineHttpServer
 import org.cafienne.service.http.cases.CasesRoute
-import org.cafienne.service.http.tenant.route.TenantRoute
-import org.cafienne.storage.StorageUser
-import org.cafienne.storage.actormodel.ActorMetadata
+import org.cafienne.service.http.userregistration.tenant.route.TenantRoute
+import org.cafienne.service.storage.StorageUser
 
 import scala.util.{Failure, Success}
 
@@ -94,7 +93,7 @@ class CaseStorageRoute(override val httpService: CaseEngineHttpServer) extends C
   @Produces(Array("application/json"))
   def archiveCaseInstance: Route = put {
     caseOwner("archive") { owner =>
-      initiateDataArchival(ActorMetadata(user = StorageUser(owner.id, owner.tenant), actorType = ActorType.Case, actorId = owner.caseInstanceId))
+      initiateDataArchival(StorageUser(owner.id, owner.tenant), ActorMetadata(actorType = ActorType.Case, actorId = owner.caseInstanceId))
     }
   }
 
@@ -121,7 +120,7 @@ class CaseStorageRoute(override val httpService: CaseEngineHttpServer) extends C
   @Produces(Array("application/json"))
   def restoreCaseInstance: Route = put {
     caseInstanceSubRoute("restore") { (user, caseInstanceId) =>
-      restoreActorData(ActorMetadata(user = StorageUser(user.id, ""), actorType = ActorType.Case, actorId = caseInstanceId))
+      restoreActorData(StorageUser(user.id, ""), ActorMetadata(actorType = ActorType.Case, actorId = caseInstanceId))
     }
   }
 
@@ -148,7 +147,7 @@ class CaseStorageRoute(override val httpService: CaseEngineHttpServer) extends C
   @Produces(Array("application/json"))
   def deleteCaseInstance: Route = delete {
     caseOwner { owner =>
-      initiateDataRemoval(ActorMetadata(user = StorageUser(owner.id, owner.tenant), actorType = ActorType.Case, actorId = owner.caseInstanceId))
+      initiateDataRemoval(StorageUser(owner.id, owner.tenant), ActorMetadata(actorType = ActorType.Case, actorId = owner.caseInstanceId))
     }
   }
 }

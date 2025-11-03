@@ -41,7 +41,7 @@ and Send response]]>
                 <inputs id="inTP_cm_cs2F1_174_1" name="Greeting" bindingRef="cfi_csVQy_0"/>
                 <outputs id="outTP_cm_cs2F1_174_1" name="Response" bindingRef="cfi_csVQy_1"/>
                 <extensionElements mustUnderstand="false">
-                    <cafienne:implementation name="SendResponse" xmlns:cafienne="org.cafienne" class="org.cafienne.cmmn.definition.task.WorkflowTaskDefinition" humanTaskRef="sendresponse.humantask">
+                    <cafienne:implementation name="SendResponse" xmlns:cafienne="org.cafienne" class="org.cafienne.model.cmmn.definition.task.WorkflowTaskDefinition" humanTaskRef="sendresponse.humantask">
                         <documentation textFormat="text/plain">
                             <text>
                                 <![CDATA[Sends a response back to the initiator of the hello world case]]>
@@ -133,7 +133,7 @@ and Send response]]>
             <humanTask id="pid_cm_cs3hg_196" name="Read response" isBlocking="true">
                 <inputs id="inTP_cm_cs3hg_196_0" name="Response" bindingRef="cfi_csVQy_1"/>
                 <extensionElements mustUnderstand="false">
-                    <cafienne:implementation name="undefined" xmlns:cafienne="org.cafienne" class="org.cafienne.cmmn.definition.task.WorkflowTaskDefinition" humanTaskRef="readresponse.humantask">
+                    <cafienne:implementation name="undefined" xmlns:cafienne="org.cafienne" class="org.cafienne.model.cmmn.definition.task.WorkflowTaskDefinition" humanTaskRef="readresponse.humantask">
                         <documentation textFormat="text/plain">
                             <text>
                                 <![CDATA[undefined]]>

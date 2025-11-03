@@ -17,8 +17,9 @@
 
 package org.cafienne.infrastructure.cqrs.batch.public_events
 
-import org.cafienne.cmmn.instance.Path
 import org.cafienne.infrastructure.serialization.{Fields, Manifest}
+import org.cafienne.model.cmmn.actorapi.event.plan.task.humantask
+import org.cafienne.model.cmmn.instance.Path
 import org.cafienne.util.json.{Value, ValueMap}
 
 @Manifest
@@ -29,7 +30,7 @@ case class HumanTaskTerminated(taskId: String, path: Path, taskName: String, cas
 
 object HumanTaskTerminated {
   def from(batch: PublicCaseEventBatch): Seq[PublicEventWrapper] = batch
-    .filterMap(classOf[org.cafienne.humantask.actorapi.event.HumanTaskTerminated])
+    .filterMap(classOf[humantask.HumanTaskTerminated])
     .map(event => PublicEventWrapper(batch.timestamp, batch.getSequenceNr(event), HumanTaskTerminated(event.getTaskId, event.path, event.getTaskName, event.getCaseInstanceId)))
 
   def deserialize(json: ValueMap): HumanTaskTerminated = HumanTaskTerminated(

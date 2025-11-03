@@ -18,10 +18,10 @@
 package org.cafienne.persistence.querydb.materializer.tenant
 
 import org.cafienne.actormodel.identity.TenantUser
-import org.cafienne.cmmn.actorapi.command.platform.NewUserInformation
 import org.cafienne.infrastructure.cqrs.offset.OffsetRecord
+import org.cafienne.model.cmmn.actorapi.command.platform.NewUserInformation
 import org.cafienne.persistence.querydb.materializer.QueryDBTransaction
-import org.cafienne.persistence.querydb.record.{TenantRecord, UserRoleKey, UserRoleRecord}
+import org.cafienne.persistence.querydb.record.userregistration.{TenantRecord, UserRoleKey, UserRoleRecord}
 
 trait TenantStorageTransaction extends QueryDBTransaction {
   def upsert(record: TenantRecord): Unit

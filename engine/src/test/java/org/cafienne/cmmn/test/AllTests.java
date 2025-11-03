@@ -5,16 +5,16 @@
  * License, v. 2.0. If a copy of the MPL was not distributed with this
  * file, You can obtain one at http://mozilla.org/MPL/2.0/.
  */
-package org.cafienne.cmmn.test;
+package org.cafienne.model.cmmn.test;
 
-import org.cafienne.cmmn.instance.TestValueClasses;
-import org.cafienne.cmmn.test.basic.BasicTests;
-import org.cafienne.cmmn.test.casefile.CaseFileTests;
-import org.cafienne.cmmn.test.expression.ExpressionTests;
-import org.cafienne.cmmn.test.plan.CasePlanTests;
-import org.cafienne.cmmn.test.sentry.SentryNetworkTests;
-import org.cafienne.cmmn.test.task.TaskTests;
-import org.cafienne.cmmn.test.team.TeamTests;
+import org.cafienne.model.cmmn.instance.TestValueClasses;
+import org.cafienne.model.cmmn.test.basic.BasicTests;
+import org.cafienne.model.cmmn.test.casefile.CaseFileTests;
+import org.cafienne.model.cmmn.test.expression.ExpressionTests;
+import org.cafienne.model.cmmn.test.plan.CasePlanTests;
+import org.cafienne.model.cmmn.test.sentry.SentryNetworkTests;
+import org.cafienne.model.cmmn.test.task.TaskTests;
+import org.cafienne.model.cmmn.test.team.TeamTests;
 import org.junit.runner.RunWith;
 import org.junit.runners.Suite;
 import org.junit.runners.Suite.SuiteClasses;

@@ -18,7 +18,7 @@
 package org.cafienne.persistence.querydb.materializer.consentgroup
 
 import org.cafienne.persistence.querydb.materializer.QueryDBTransaction
-import org.cafienne.persistence.querydb.record.{ConsentGroupMemberRecord, ConsentGroupRecord}
+import org.cafienne.persistence.querydb.record.userregistration.{ConsentGroupMemberRecord, ConsentGroupRecord}
 
 trait ConsentGroupStorageTransaction extends QueryDBTransaction {
   def upsert(record: ConsentGroupRecord): Unit

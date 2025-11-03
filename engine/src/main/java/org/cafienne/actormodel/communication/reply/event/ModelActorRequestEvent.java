@@ -1,6 +1,7 @@
 package org.cafienne.actormodel.communication.reply.event;
 
 import com.fasterxml.jackson.core.JsonGenerator;
+import org.cafienne.actormodel.ActorMetadata;
 import org.cafienne.actormodel.ModelActor;
 import org.cafienne.actormodel.communication.CaseSystemCommunicationEvent;
 import org.cafienne.actormodel.message.command.ModelCommand;
@@ -10,16 +11,16 @@ import org.cafienne.util.json.ValueMap;
 import java.io.IOException;
 
 public abstract class ModelActorRequestEvent extends CaseSystemCommunicationEvent {
-    public final String sourceActorId;
+    public final ActorMetadata source;
 
-    protected ModelActorRequestEvent(ModelCommand command, String sourceActorId) {
+    protected ModelActorRequestEvent(ModelCommand command, ActorMetadata source) {
         super(command.getActor(), command.getCorrelationId());
-        this.sourceActorId = sourceActorId;
+        this.source = source;
     }
 
     protected ModelActorRequestEvent(ValueMap json) {
         super(json);
-        this.sourceActorId = json.readString(Fields.sourceActorId);
+        this.source = json.readMetadata(Fields.source);
     }
 
     @Override
@@ -34,6 +35,6 @@ public abstract class ModelActorRequestEvent extends CaseSystemCommunicationEven
 
     public void writeIncomingRequestEvent(JsonGenerator generator) throws IOException {
         super.writeActorRequestEvent(generator);
-        writeField(generator, Fields.sourceActorId, sourceActorId);
+        writeField(generator, Fields.source, source);
     }
 }
