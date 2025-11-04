@@ -18,8 +18,9 @@
 package org.cafienne.model.processtask.instance;
 
 import org.cafienne.actormodel.ModelActor;
-import org.cafienne.actormodel.communication.request.response.ActorRequestFailure;
-import org.cafienne.actormodel.communication.request.state.RemoteActorState;
+import org.cafienne.actormodel.communication.receiver.reply.ActorRequestFailure;
+import org.cafienne.actormodel.communication.sender.event.ActorRequestNotDelivered;
+import org.cafienne.actormodel.communication.sender.state.RemoteActorState;
 import org.cafienne.actormodel.message.command.ModelCommand;
 import org.cafienne.actormodel.message.event.ModelEvent;
 import org.cafienne.model.cmmn.actorapi.command.plan.task.CompleteTask;
@@ -189,6 +190,11 @@ public class ProcessTaskActor extends ModelActor {
         public void handleFailure(ActorRequestFailure failure) {
             actor.addDebugInfo(() -> "Could not complete process task " + actor.getId() + " " + actor.name + " in parent, due to:", failure.toJson());
             logger.error("Could not complete process task {} {} in parent, due to:\n{}", actor.getId(), actor.name, failure);
+        }
+
+        @Override
+        public void handleNotDelivered(ActorRequestNotDelivered notDelivered) {
+            actor.addDebugInfo(() -> "Could not complete process task " + actor.metadata + " in parent, due to:" + notDelivered.errorMessage);
         }
     }
 }

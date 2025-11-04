@@ -118,6 +118,8 @@ public enum Fields {
     elementId,
     source,
     target,
+    sender,
+    receiver,
     script,
     waitTime,
     assignee,

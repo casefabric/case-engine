@@ -19,7 +19,7 @@ package org.cafienne.actormodel;
 
 import org.apache.pekko.actor.ActorRef;
 import org.cafienne.actormodel.communication.CaseSystemCommunicationMessage;
-import org.cafienne.actormodel.communication.request.command.RequestModelActor;
+import org.cafienne.actormodel.communication.sender.command.RequestModelActor;
 import org.cafienne.actormodel.exception.InvalidCommandException;
 import org.cafienne.actormodel.message.command.ModelCommand;
 import org.cafienne.actormodel.message.command.TerminateModelActor;

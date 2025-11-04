@@ -1,10 +1,10 @@
-package org.cafienne.actormodel.communication.reply.event;
+package org.cafienne.actormodel.communication.receiver.event;
 
 import com.fasterxml.jackson.core.JsonGenerator;
 import org.cafienne.actormodel.ModelActor;
 import org.cafienne.actormodel.communication.CaseSystemCommitEvent;
-import org.cafienne.actormodel.communication.reply.command.RunActorRequest;
-import org.cafienne.actormodel.communication.request.command.RequestModelActor;
+import org.cafienne.actormodel.communication.receiver.command.RunActorRequest;
+import org.cafienne.actormodel.communication.sender.command.RequestModelActor;
 import org.cafienne.infrastructure.serialization.Fields;
 import org.cafienne.infrastructure.serialization.Manifest;
 import org.cafienne.util.json.ValueMap;
@@ -23,7 +23,7 @@ public class ActorRequestStored extends ModelActorRequestEvent implements CaseSy
     public final RequestModelActor request;
 
     public ActorRequestStored(RequestModelActor request) {
-        super(request, request.source);
+        super(request, request.sender);
         this.request = request;
     }
 
@@ -43,7 +43,7 @@ public class ActorRequestStored extends ModelActorRequestEvent implements CaseSy
     @Override
     public void afterPersist(ModelActor actor) {
         // After event is persisted we send it to ourselves, to trigger the actual command handling.
-        actor.self().tell(new RunActorRequest(actor.metadata(), this), actor.sender());
+        actor.self().tell(new RunActorRequest(actor, actor.metadata, this), actor.sender());
     }
 
     @Override
