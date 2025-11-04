@@ -18,6 +18,7 @@
 package org.cafienne.model.processtask.actorapi.command;
 
 import com.fasterxml.jackson.core.JsonGenerator;
+import org.cafienne.actormodel.ActorMetadata;
 import org.cafienne.actormodel.identity.CaseUserIdentity;
 import org.cafienne.actormodel.message.command.BootstrapMessage;
 import org.cafienne.infrastructure.serialization.Fields;
@@ -31,20 +32,16 @@ import java.io.IOException;
 
 @Manifest
 public class StartProcess extends ProcessCommand implements BootstrapMessage {
-    private final String parentActorId;
-    private final String rootActorId;
     private final String tenant;
     private final String name;
     private final ValueMap inputParameters;
     private final ProcessDefinition definition;
     private final boolean debugMode;
 
-    public StartProcess(CaseUserIdentity user, String tenant, String id, String name, ProcessDefinition definition, ValueMap inputParameters, String parentActorId, String rootActorId, boolean debugMode) {
+    public StartProcess(CaseUserIdentity user, String tenant, ActorMetadata id, String name, ProcessDefinition definition, ValueMap inputParameters, boolean debugMode) {
         super(user, id);
         this.name = name;
         this.tenant = tenant;
-        this.parentActorId = parentActorId;
-        this.rootActorId = rootActorId;
         this.inputParameters = inputParameters;
         this.definition = definition;
         this.debugMode = debugMode;
@@ -54,8 +51,6 @@ public class StartProcess extends ProcessCommand implements BootstrapMessage {
         super(json);
         this.name = json.readString(Fields.name);
         this.tenant = json.readString(Fields.tenant);
-        this.parentActorId = json.readString(Fields.parentActorId);
-        this.rootActorId = json.readString(Fields.rootActorId);
         this.inputParameters = json.readMap(Fields.inputParameters);
         this.definition = json.readDefinition(Fields.processDefinition, ProcessDefinition.class);
         this.debugMode = json.readBoolean(Fields.debugMode);
@@ -64,14 +59,6 @@ public class StartProcess extends ProcessCommand implements BootstrapMessage {
     @Override
     public String tenant() {
         return tenant;
-    }
-
-    public String getParentActorId() {
-        return parentActorId;
-    }
-
-    public String getRootActorId() {
-        return rootActorId;
     }
 
     public String getName() {
@@ -101,8 +88,6 @@ public class StartProcess extends ProcessCommand implements BootstrapMessage {
         writeField(generator, Fields.name, name);
         writeField(generator, Fields.tenant, tenant);
         writeField(generator, Fields.inputParameters, inputParameters);
-        writeField(generator, Fields.parentActorId, parentActorId);
-        writeField(generator, Fields.rootActorId, rootActorId);
         writeField(generator, Fields.debugMode, debugMode);
         writeField(generator, Fields.processDefinition, definition);
     }
