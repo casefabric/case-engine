@@ -1,9 +1,9 @@
-package org.cafienne.actormodel.communication.reply.state;
+package org.cafienne.actormodel.communication.receiver.state;
 
 import org.cafienne.actormodel.ModelActor;
-import org.cafienne.actormodel.communication.reply.event.ActorRequestStored;
-import org.cafienne.actormodel.communication.reply.event.ModelActorRequestEvent;
-import org.cafienne.actormodel.communication.request.command.RequestModelActor;
+import org.cafienne.actormodel.communication.receiver.event.ActorRequestStored;
+import org.cafienne.actormodel.communication.receiver.event.ModelActorRequestEvent;
+import org.cafienne.actormodel.communication.sender.command.RequestModelActor;
 
 import java.util.HashMap;
 import java.util.Map;

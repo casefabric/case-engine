@@ -43,7 +43,7 @@ public class CaseTask extends Task<CaseTaskDefinition> {
 
     @Override
     protected ActorMetadata target() {
-        return new ActorMetadata(ActorType.Case, getId(), getCaseInstance().metadata());
+        return new ActorMetadata(ActorType.Case, getId(), getCaseInstance().metadata);
     }
 
     @Override

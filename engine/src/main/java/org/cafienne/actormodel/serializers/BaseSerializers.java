@@ -17,15 +17,7 @@
 
 package org.cafienne.actormodel.serializers;
 
-import org.cafienne.actormodel.communication.reply.command.RunActorRequest;
-import org.cafienne.actormodel.communication.reply.event.ActorRequestExecuted;
-import org.cafienne.actormodel.communication.reply.event.ActorRequestFailed;
-import org.cafienne.actormodel.communication.reply.event.ActorRequestStored;
-import org.cafienne.actormodel.communication.request.command.RequestModelActor;
-import org.cafienne.actormodel.communication.request.event.ActorRequestCreated;
-import org.cafienne.actormodel.communication.request.event.ActorRequestDelivered;
-import org.cafienne.actormodel.communication.request.response.ActorRequestDeliveryReceipt;
-import org.cafienne.actormodel.communication.request.response.ActorRequestFailure;
+import org.cafienne.actormodel.communication.serializers.CommunicationSerializers;
 import org.cafienne.actormodel.message.event.DebugEvent;
 import org.cafienne.actormodel.message.event.SentryEvent;
 import org.cafienne.actormodel.message.response.*;
@@ -35,21 +27,9 @@ import org.cafienne.model.cmmn.actorapi.event.DebugEnabled;
 
 public class BaseSerializers {
     public static void register() {
-        registerBaseCommands();
         registerBaseEvents();
         registerBaseResponses();
-    }
-
-    private static void registerBaseCommands() {
-        CafienneSerializer.addManifestWrapper(RequestModelActor.class, RequestModelActor::new);
-        CafienneSerializer.addManifestWrapper(RunActorRequest.class, RunActorRequest::new);
-        CafienneSerializer.addManifestWrapper(ActorRequestCreated.class, ActorRequestCreated::new);
-        CafienneSerializer.addManifestWrapper(ActorRequestDelivered.class, ActorRequestDelivered::new);
-        CafienneSerializer.addManifestWrapper(ActorRequestDeliveryReceipt.class, ActorRequestDeliveryReceipt::new);
-        CafienneSerializer.addManifestWrapper(ActorRequestStored.class, ActorRequestStored::new);
-        CafienneSerializer.addManifestWrapper(ActorRequestFailure.class, ActorRequestFailure::new);
-        CafienneSerializer.addManifestWrapper(ActorRequestExecuted.class, ActorRequestExecuted::new);
-        CafienneSerializer.addManifestWrapper(ActorRequestFailed.class, ActorRequestFailed::new);
+        CommunicationSerializers.register();
     }
 
     private static void registerBaseEvents() {

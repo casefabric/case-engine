@@ -1,12 +1,14 @@
-package org.cafienne.actormodel.communication.request.state;
+package org.cafienne.actormodel.communication.sender.state;
 
 import org.cafienne.actormodel.ActorMetadata;
 import org.cafienne.actormodel.ModelActor;
-import org.cafienne.actormodel.communication.request.event.ActorRequestCreated;
-import org.cafienne.actormodel.communication.request.event.ActorRequestDelivered;
-import org.cafienne.actormodel.communication.request.event.ModelActorReplyEvent;
-import org.cafienne.actormodel.communication.request.response.ActorRequestDeliveryReceipt;
-import org.cafienne.actormodel.communication.request.response.ActorRequestFailure;
+import org.cafienne.actormodel.communication.receiver.reply.ActorRequestDeliveryReceipt;
+import org.cafienne.actormodel.communication.receiver.reply.ActorRequestFailure;
+import org.cafienne.actormodel.communication.sender.command.ActorRequestDeliveryFailure;
+import org.cafienne.actormodel.communication.sender.event.ActorRequestCreated;
+import org.cafienne.actormodel.communication.sender.event.ActorRequestDelivered;
+import org.cafienne.actormodel.communication.sender.event.ActorRequestNotDelivered;
+import org.cafienne.actormodel.communication.sender.event.ModelActorReplyEvent;
 import org.cafienne.actormodel.message.command.ModelCommand;
 
 import java.util.HashMap;
@@ -19,16 +21,12 @@ import java.util.Map;
  */
 public abstract class RemoteActorState<LocalActor extends ModelActor> {
     public final LocalActor actor;
-    public final String targetActorId;
-    public final ActorMetadata target;
-    public final ActorMetadata source;
+    public final ActorMetadata receiver;
     private final Map<String, Request> requests = new HashMap<>();
 
-    protected RemoteActorState(LocalActor actor, ActorMetadata target) {
+    protected RemoteActorState(LocalActor actor, ActorMetadata receiver) {
         this.actor = actor;
-        this.target = target;
-        this.targetActorId = target.actorId();
-        this.source = actor.metadata();
+        this.receiver = receiver;
         this.actor.register(this);
     }
 
@@ -46,17 +44,25 @@ public abstract class RemoteActorState<LocalActor extends ModelActor> {
     }
 
     /**
-     * Hook that can be invoked in subclasses of State after request has been acknowledged by the target actor
+     * Hook that can be invoked in subclasses of State after request has been acknowledged by the receiving actor
      * to add additional events (e.g. a non-blocking Task can complete itself).
      */
     public void handleReceipt(ActorRequestDeliveryReceipt receipt) {
         // Hook that can be invoked in State class
     }
 
+    public abstract void handleNotDelivered(ActorRequestNotDelivered notDelivered);
+
     public abstract void handleFailure(ActorRequestFailure failure);
 
     public String getDescription() {
-        return this.getClass().getSimpleName() + "[" + targetActorId + "]";
+        return this.getClass().getSimpleName() + "[" + receiver.actorId() + "]";
+    }
+
+    public final void updateState(ActorRequestCreated event) {
+        Request request = new Request(this);
+        requests.put(event.getCorrelationId(), request);
+        request.created(event);
     }
 
     public final void updateState(ModelActorReplyEvent event) {
@@ -68,6 +74,9 @@ public abstract class RemoteActorState<LocalActor extends ModelActor> {
         requests.values().forEach(Request::recoveryCompleted);
     }
 
-    protected void requestDeliveryFailed(Request request) {
+    final void requestDeliveryFailed(Request request, String reason) {
+        // Also do logging
+        ActorRequestDeliveryFailure failure = new ActorRequestDeliveryFailure(actor, receiver, request.getCommand(), reason);
+        actor.self().tell(failure, actor.self());
     }
 }

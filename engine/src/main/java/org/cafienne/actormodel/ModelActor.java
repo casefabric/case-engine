@@ -22,8 +22,8 @@ import org.apache.pekko.persistence.AbstractPersistentActor;
 import org.apache.pekko.persistence.JournalProtocol;
 import org.apache.pekko.persistence.SnapshotOffer;
 import org.apache.pekko.persistence.SnapshotProtocol;
-import org.cafienne.actormodel.communication.reply.state.IncomingRequestState;
-import org.cafienne.actormodel.communication.request.state.RemoteActorState;
+import org.cafienne.actormodel.communication.receiver.state.IncomingRequestState;
+import org.cafienne.actormodel.communication.sender.state.RemoteActorState;
 import org.cafienne.actormodel.debug.DebugInfoAppender;
 import org.cafienne.actormodel.exception.CommandException;
 import org.cafienne.actormodel.identity.UserIdentity;
@@ -429,8 +429,8 @@ public abstract class ModelActor extends AbstractPersistentActor {
         actorCommunication.register(remoteActorState);
     }
 
-    public RemoteActorState<?> getRemoteActorState(String actorId) {
-        return actorCommunication.getRemoteActorState(actorId);
+    public RemoteActorState<?> getRemoteActorState(ActorMetadata remoteActorMetadata) {
+        return actorCommunication.getRemoteActorState(remoteActorMetadata);
     }
 
     public IncomingRequestState getIncomingRequestState() {
