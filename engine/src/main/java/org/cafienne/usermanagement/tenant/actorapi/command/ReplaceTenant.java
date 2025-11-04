@@ -18,6 +18,7 @@
 package org.cafienne.usermanagement.tenant.actorapi.command;
 
 import com.fasterxml.jackson.core.JsonGenerator;
+import org.cafienne.actormodel.ActorMetadata;
 import org.cafienne.actormodel.identity.TenantUser;
 import org.cafienne.infrastructure.serialization.Fields;
 import org.cafienne.infrastructure.serialization.Manifest;
@@ -31,7 +32,7 @@ import java.util.List;
 public class ReplaceTenant extends TenantCommand {
     private final List<TenantUser> users;
 
-    public ReplaceTenant(TenantUser tenantOwner, String tenant, List<TenantUser> users) {
+    public ReplaceTenant(TenantUser tenantOwner, ActorMetadata tenant, List<TenantUser> users) {
         super(tenantOwner, tenant);
         this.users = users;
         super.validateUserList(users);
