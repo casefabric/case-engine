@@ -18,6 +18,7 @@
 package org.cafienne.usermanagement.tenant.actorapi.command;
 
 import com.fasterxml.jackson.core.JsonGenerator;
+import org.cafienne.actormodel.ActorMetadata;
 import org.cafienne.actormodel.identity.TenantUser;
 import org.cafienne.infrastructure.serialization.Manifest;
 import org.cafienne.usermanagement.tenant.TenantActor;
@@ -28,7 +29,7 @@ import java.io.IOException;
 
 @Manifest
 public class GetTenantOwners extends TenantCommand {
-    public GetTenantOwners(TenantUser tenantOwner, String tenant) {
+    public GetTenantOwners(TenantUser tenantOwner, ActorMetadata tenant) {
         super(tenantOwner, tenant);
     }
 
