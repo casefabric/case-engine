@@ -17,6 +17,7 @@
 
 package org.cafienne.model.processtask.actorapi.command;
 
+import org.cafienne.actormodel.ActorMetadata;
 import org.cafienne.actormodel.identity.CaseUserIdentity;
 import org.cafienne.infrastructure.serialization.Manifest;
 import org.cafienne.model.processtask.actorapi.event.ProcessTerminated;
@@ -26,7 +27,7 @@ import org.cafienne.util.json.ValueMap;
 
 @Manifest
 public class TerminateProcess extends ProcessCommand {
-    public TerminateProcess(CaseUserIdentity user, String id) {
+    public TerminateProcess(CaseUserIdentity user, ActorMetadata id) {
         super(user, id);
     }
 

@@ -18,6 +18,7 @@
 package org.cafienne.model.processtask.actorapi.command;
 
 import com.fasterxml.jackson.core.JsonGenerator;
+import org.cafienne.actormodel.ActorMetadata;
 import org.cafienne.actormodel.identity.CaseUserIdentity;
 import org.cafienne.infrastructure.serialization.Fields;
 import org.cafienne.infrastructure.serialization.Manifest;
@@ -34,13 +35,13 @@ public class MigrateProcessDefinition extends ProcessCommand {
     private final ProcessDefinition newDefinition;
 
     /**
-     * Migrate the definition of a case.
+     * Migrate the definition of a process.
      *
-     * @param caseInstanceId The instance identifier of the case
-     * @param newDefinition  The case definition (according to the CMMN xsd) to be updated to
+     * @param identifier The instance identifier of the process
+     * @param newDefinition  The process definition (according to the CMMN xsd) to be updated to
      */
-    public MigrateProcessDefinition(CaseUserIdentity user, String caseInstanceId, ProcessDefinition newDefinition) {
-        super(user, caseInstanceId);
+    public MigrateProcessDefinition(CaseUserIdentity user, ActorMetadata identifier, ProcessDefinition newDefinition) {
+        super(user, identifier);
         this.newDefinition = newDefinition;
     }
 
@@ -55,7 +56,7 @@ public class MigrateProcessDefinition extends ProcessCommand {
 
     @Override
     public String toString() {
-        return "Migrate Case Definition '" + newDefinition.getName() + "'";
+        return "Migrate Process Definition '" + newDefinition.getName() + "'";
     }
 
     @Override

@@ -33,8 +33,6 @@ import java.io.IOException;
 
 @Manifest
 public class ProcessStarted extends BaseProcessEvent implements BootstrapMessage {
-    public final String parentActorId;
-    public final String rootActorId;
     public final String name;
     public final ValueMap inputParameters;
     public transient ProcessDefinition definition;
@@ -46,8 +44,6 @@ public class ProcessStarted extends BaseProcessEvent implements BootstrapMessage
         this.debugMode = command.debugMode();
         this.definition = command.getDefinition();
         this.name = command.getName();
-        this.parentActorId = command.getParentActorId();
-        this.rootActorId = command.getRootActorId();
         this.inputParameters = command.getInputParameters();
         this.engineVersion = actor.caseSystem.version();
     }
@@ -56,8 +52,6 @@ public class ProcessStarted extends BaseProcessEvent implements BootstrapMessage
         super(json);
         this.engineVersion = json.readObject(Fields.engineVersion, EngineVersion::new);
         this.name = json.readString(Fields.name);
-        this.parentActorId = json.readString(Fields.parentActorId);
-        this.rootActorId = json.readString(Fields.rootActorId);
         this.inputParameters = json.readMap(Fields.input);
         this.definition = json.readDefinition(Fields.processDefinition, ProcessDefinition.class);
         this.debugMode = json.readBoolean(Fields.debugMode);
@@ -83,8 +77,6 @@ public class ProcessStarted extends BaseProcessEvent implements BootstrapMessage
         super.write(generator);
         writeField(generator, Fields.input, inputParameters);
         writeField(generator, Fields.name, name);
-        writeField(generator, Fields.parentActorId, parentActorId);
-        writeField(generator, Fields.rootActorId, rootActorId);
         writeField(generator, Fields.debugMode, debugMode);
         writeField(generator, Fields.processDefinition, definition);
         writeField(generator, Fields.engineVersion, engineVersion.json());
