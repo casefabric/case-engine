@@ -33,7 +33,7 @@ public class SetConsentGroupMember extends ConsentGroupCommand {
     private final ConsentGroupMember newMemberInfo;
 
     public SetConsentGroupMember(ConsentGroupUser groupOwner, ConsentGroupMember newMemberInfo) {
-        super(groupOwner, groupOwner.groupId());
+        super(groupOwner, groupOwner.group());
         this.newMemberInfo = newMemberInfo;
     }
 
