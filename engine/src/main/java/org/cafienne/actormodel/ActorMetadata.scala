@@ -36,7 +36,19 @@ case class ActorMetadata(actorType: ActorType, actorId: String, parent: ActorMet
 
   val isRoot: Boolean = !hasParent
 
-  override def toString: String = s"$actorType[$actorId]"
+  def root: ActorMetadata = {
+    if (hasParent) {
+      parent.root
+    } else {
+      this
+    }
+  }
+
+  val parentId: String = if (hasParent) parent.actorId else ""
+
+  override def toString: String = path
+
+  lazy val description: String = s"$actorType[$actorId]"
 
   def processMember(processId: String): ActorMetadata = member(processId, ActorType.Process)
 
