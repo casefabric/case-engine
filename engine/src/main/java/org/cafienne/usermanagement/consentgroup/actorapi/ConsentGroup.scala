@@ -17,12 +17,15 @@
 
 package org.cafienne.usermanagement.consentgroup.actorapi
 
+import org.cafienne.actormodel.{ActorMetadata, ActorType}
 import org.cafienne.infrastructure.serialization.Fields
 import org.cafienne.util.json.{CafienneJson, Value, ValueMap}
 
 import scala.jdk.CollectionConverters.CollectionHasAsScala
 
 case class ConsentGroup(id: String, tenant: String, members: Seq[ConsentGroupMember]) extends CafienneJson {
+
+  val identifier = ActorMetadata(ActorType.Group, id)
 
   override def toValue: Value[_] = {
     new ValueMap(Fields.groupId, id, Fields.tenant, tenant, Fields.members, Value.convert(members.map(_.toValue)))
