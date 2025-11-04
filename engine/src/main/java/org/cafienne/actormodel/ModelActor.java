@@ -18,7 +18,6 @@
 package org.cafienne.actormodel;
 
 import org.apache.pekko.actor.ActorRef;
-import org.apache.pekko.actor.PoisonPill;
 import org.apache.pekko.persistence.AbstractPersistentActor;
 import org.apache.pekko.persistence.JournalProtocol;
 import org.apache.pekko.persistence.SnapshotOffer;
