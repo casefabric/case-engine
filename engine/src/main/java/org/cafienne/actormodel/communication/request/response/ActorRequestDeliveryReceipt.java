@@ -1,6 +1,7 @@
 package org.cafienne.actormodel.communication.request.response;
 
 import org.cafienne.actormodel.ActorMetadata;
+import org.cafienne.actormodel.ModelActor;
 import org.cafienne.actormodel.communication.request.state.RemoteActorState;
 import org.cafienne.actormodel.message.command.ModelCommand;
 import org.cafienne.infrastructure.serialization.Manifest;
@@ -8,8 +9,8 @@ import org.cafienne.util.json.ValueMap;
 
 @Manifest
 public class ActorRequestDeliveryReceipt extends CaseSystemCommunicationResponse {
-    public ActorRequestDeliveryReceipt(ActorMetadata target, ModelCommand command) {
-        super(target, command);
+    public ActorRequestDeliveryReceipt(ModelActor sender, ActorMetadata target, ModelCommand command) {
+        super(sender, target, command);
     }
 
     public ActorRequestDeliveryReceipt(ValueMap json) {

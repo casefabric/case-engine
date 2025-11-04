@@ -40,7 +40,7 @@ public abstract class BaseModelEvent<M extends ModelActor, U extends UserIdentit
 
     protected BaseModelEvent(M actor) {
         this.json = new ValueMap();
-        this.actor = actor.metadata();
+        this.actor = actor.metadata;
         this.actorId = actor.getId();
         this.tenant = actor.getTenant();
         this.timestamp = actor.getTransactionTimestamp();

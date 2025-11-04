@@ -54,7 +54,7 @@ public class Request {
 
     @Override
     public String toString() {
-        return state.actor + ": " + creationEvent.command.getCommandDescription();
+        return creationEvent.command.getCommandDescription() + " from " + state.actor;
     }
 
     final void recoveryCompleted() {
