@@ -22,6 +22,7 @@ import com.fasterxml.jackson.core.JsonGenerator;
 import com.fasterxml.jackson.core.util.DefaultPrettyPrinter;
 import org.apache.pekko.actor.ActorPath;
 import org.apache.pekko.actor.ActorRef;
+import org.cafienne.actormodel.ActorMetadata;
 import org.cafienne.actormodel.ModelActor;
 import org.cafienne.actormodel.exception.InvalidCommandException;
 import org.cafienne.actormodel.identity.UserIdentity;
@@ -40,17 +41,26 @@ public abstract class BaseModelCommand<T extends ModelActor, U extends UserIdent
     protected final ValueMap json;
     public final String correlationId;
     public final String actorId;
+    public final ActorMetadata target;
     private ActorRef sender;
     protected transient T actor;
     private ModelResponse response;
+    private static final String metadataField = "command-metadata";
 
     /**
      * Store the user that issued the Command.
      */
     private final U user;
 
-    protected BaseModelCommand(U user, String actorId) {
+    @Override
+    public ActorMetadata target() {
+        return target;
+    }
+
+    protected BaseModelCommand(U user, ActorMetadata target) {
         this.json = new ValueMap();
+        this.target = target;
+        this.actorId = target.actorId();
         // First, validate actor id
         if (actorId == null) {
             throw new InvalidCommandException("Actor id cannot be null");
@@ -65,14 +75,15 @@ public abstract class BaseModelCommand<T extends ModelActor, U extends UserIdent
         }
         this.correlationId = new Guid().toString();
         this.user = user;
-        this.actorId = actorId;
     }
 
     protected BaseModelCommand(ValueMap json) {
         this.json = json;
-        this.correlationId = json.readString(Fields.correlationId);
-        this.actorId = json.readString(Fields.actorId);
-        this.user = actorType().readUser(json.with(Fields.user));
+        ValueMap metadata = json.readMap(metadataField);
+        this.correlationId = metadata.readString(Fields.correlationId);
+        this.target = metadata.readMetadata(Fields.target);
+        this.actorId = metadata.readString(Fields.actorId);
+        this.user = actorType().readUser(metadata.with(Fields.user));
     }
 
     /**
@@ -170,9 +181,13 @@ public abstract class BaseModelCommand<T extends ModelActor, U extends UserIdent
 
     protected void writeModelCommand(JsonGenerator generator) throws IOException {
         writeField(generator, Fields.type, this.getCommandDescription());
+        generator.writeObjectFieldStart(metadataField);
+        writeField(generator, Fields.type, this.getCommandDescription());
         writeField(generator, Fields.correlationId, this.getCorrelationId());
         writeField(generator, Fields.actorId, this.getActorId());
+        writeField(generator, Fields.target, this.target);
         writeField(generator, Fields.user, user);
+        generator.writeEndObject();
     }
 
     public ValueMap rawJson() {
