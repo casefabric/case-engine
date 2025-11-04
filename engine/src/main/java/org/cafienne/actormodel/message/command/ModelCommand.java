@@ -17,6 +17,7 @@
 
 package org.cafienne.actormodel.message.command;
 
+import org.cafienne.actormodel.ActorMetadata;
 import org.cafienne.actormodel.ModelActor;
 import org.cafienne.actormodel.message.UserMessage;
 import org.cafienne.actormodel.message.response.ModelResponse;
@@ -26,6 +27,11 @@ public interface ModelCommand extends UserMessage {
      * Return the actor handling this command. May return null if setActor() is not yet invoked.
      */
     ModelActor getActor();
+
+    /**
+     * Returns the identifier of the ModelActor to which this command is sent
+     */
+    ActorMetadata target();
 
     /**
      * Through this method, the command is made aware of the actor that is handling it.

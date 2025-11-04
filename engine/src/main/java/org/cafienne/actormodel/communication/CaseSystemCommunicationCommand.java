@@ -18,7 +18,7 @@ public abstract class CaseSystemCommunicationCommand extends BaseModelCommand<Mo
     public final ModelCommand command;
 
     protected CaseSystemCommunicationCommand(ActorMetadata target, ModelCommand command) {
-        super(command.getUser(), command.actorId());
+        super(command.getUser(), command.target());
         this.target = target;
         this.command = this.deserializedModelCommand = command;
     }

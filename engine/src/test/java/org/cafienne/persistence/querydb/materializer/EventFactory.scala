@@ -1,5 +1,6 @@
 package org.cafienne.persistence.querydb.materializer
 
+import org.cafienne.actormodel.{ActorMetadata, ActorType}
 import org.cafienne.actormodel.identity.TenantUser
 import org.cafienne.model.cmmn.actorapi.event._
 import org.cafienne.model.cmmn.actorapi.event.file.{CaseFileItemCreated, CaseFileItemTransitioned}
@@ -95,6 +96,7 @@ class EventFactory(caseSystem: CaseSystem, actorId: String, caseDefinition: Case
 
   private def getModelEvent(user: TenantUser) : ValueMap = {
     new ValueMap(
+      Fields.actor, ActorMetadata(ActorType.Case, actorId),
       Fields.actorId, actorId
       ,Fields.user, user
     )

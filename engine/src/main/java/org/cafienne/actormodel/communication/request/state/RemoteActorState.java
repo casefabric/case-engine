@@ -1,7 +1,6 @@
 package org.cafienne.actormodel.communication.request.state;
 
 import org.cafienne.actormodel.ActorMetadata;
-import org.cafienne.actormodel.ActorType;
 import org.cafienne.actormodel.ModelActor;
 import org.cafienne.actormodel.communication.request.event.ActorRequestCreated;
 import org.cafienne.actormodel.communication.request.event.ActorRequestDelivered;

@@ -17,8 +17,6 @@
 
 package org.cafienne.model.cmmn.instance;
 
-import org.cafienne.actormodel.ActorMetadata;
-import org.cafienne.actormodel.ActorType;
 import org.cafienne.actormodel.communication.request.response.ActorRequestDeliveryReceipt;
 import org.cafienne.actormodel.communication.request.response.ActorRequestFailure;
 import org.cafienne.actormodel.communication.request.state.RemoteActorState;
@@ -27,8 +25,6 @@ import org.cafienne.model.cmmn.actorapi.event.plan.task.TaskCommandRejected;
 import org.cafienne.model.cmmn.actorapi.event.plan.task.TaskImplementationNotStarted;
 import org.cafienne.model.cmmn.actorapi.event.plan.task.TaskImplementationReactivated;
 import org.cafienne.model.cmmn.actorapi.event.plan.task.TaskImplementationStarted;
-import org.cafienne.model.cmmn.instance.task.cmmn.CaseTask;
-import org.cafienne.model.cmmn.instance.task.process.ProcessTask;
 
 public class TaskImplementationActorState extends RemoteActorState<Case> {
     private final Task<?> task;
