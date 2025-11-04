@@ -429,8 +429,8 @@ public abstract class ModelActor extends AbstractPersistentActor {
         actorCommunication.register(remoteActorState);
     }
 
-    public RemoteActorState<?> getRemoteActorState(String actorId) {
-        return actorCommunication.getRemoteActorState(actorId);
+    public RemoteActorState<?> getRemoteActorState(ActorMetadata remoteActorMetadata) {
+        return actorCommunication.getRemoteActorState(remoteActorMetadata);
     }
 
     public IncomingRequestState getIncomingRequestState() {

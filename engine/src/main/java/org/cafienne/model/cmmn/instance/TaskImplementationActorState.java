@@ -62,7 +62,7 @@ public class TaskImplementationActorState extends RemoteActorState<Case> {
     @Override
     protected void requestDeliveryFailed(Request request) {
         task.addDebugInfo(() -> "Task " + task + " reports failure on sending implementation request " + request);
-        task.getCaseInstance().self().tell(new ActorRequestFailure(task.getCaseInstance().metadata(), request.getCommand(), new Exception("Could not deliver command to implementation")), task.getCaseInstance().self());
+        task.getCaseInstance().self().tell(new ActorRequestFailure(task.getCaseInstance(), task.getCaseInstance().metadata, request.getCommand(), new Exception("Could not deliver command to implementation")), task.getCaseInstance().self());
     }
 
     void updateState(TaskImplementationStarted event) {
