@@ -14,7 +14,7 @@ public class ActorRequestCreated extends ModelActorReplyEvent {
     public final ModelCommand command;
 
     public ActorRequestCreated(RemoteActorState<?> state, ModelCommand command) {
-        super(state.actor, command.getCorrelationId(), state.targetActorId);
+        super(state.actor, command.getCorrelationId(), state.target);
         this.command = command;
     }
 

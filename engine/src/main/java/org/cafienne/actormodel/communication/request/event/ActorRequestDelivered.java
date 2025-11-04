@@ -18,7 +18,7 @@ public class ActorRequestDelivered extends ModelActorReplyEvent implements CaseS
     //  generated and in that scenario also no additional CaseModified will be generated.
 
     public ActorRequestDelivered(RemoteActorState<?> state, ActorRequestDeliveryReceipt receipt) {
-        super(state.actor, receipt.getCorrelationId(), state.targetActorId);
+        super(state.actor, receipt.getCorrelationId(), state.target);
     }
 
     public ActorRequestDelivered(ValueMap json) {

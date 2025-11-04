@@ -2,6 +2,7 @@ package org.cafienne.actormodel.communication.request.response;
 
 import com.fasterxml.jackson.core.JsonGenerator;
 import org.cafienne.actormodel.ActorMetadata;
+import org.cafienne.actormodel.ModelActor;
 import org.cafienne.actormodel.communication.request.state.RemoteActorState;
 import org.cafienne.actormodel.exception.SerializedException;
 import org.cafienne.actormodel.message.command.ModelCommand;
@@ -18,8 +19,8 @@ public class ActorRequestFailure extends CaseSystemCommunicationResponse {
     public final SerializedException serializedException;
     public final ValueMap exceptionAsJSON;
 
-    public ActorRequestFailure(ActorMetadata target, ModelCommand command, Throwable failure) {
-        super(target, command);
+    public ActorRequestFailure(ModelActor sender, ActorMetadata target, ModelCommand command, Throwable failure) {
+        super(sender, target, command);
         this.exception = failure;
         this.exceptionAsJSON = Value.convertThrowable(failure);
         this.serializedException = new SerializedException(failure);
