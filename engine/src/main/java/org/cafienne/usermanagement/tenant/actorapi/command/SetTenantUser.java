@@ -18,6 +18,7 @@
 package org.cafienne.usermanagement.tenant.actorapi.command;
 
 import com.fasterxml.jackson.core.JsonGenerator;
+import org.cafienne.actormodel.ActorMetadata;
 import org.cafienne.actormodel.exception.InvalidCommandException;
 import org.cafienne.actormodel.identity.TenantUser;
 import org.cafienne.infrastructure.serialization.Fields;
@@ -31,7 +32,7 @@ import java.io.IOException;
 public class SetTenantUser extends TenantCommand {
     public final TenantUser newUser;
 
-    public SetTenantUser(TenantUser tenantOwner, String tenant, TenantUser newUser) {
+    public SetTenantUser(TenantUser tenantOwner, ActorMetadata tenant, TenantUser newUser) {
         super(tenantOwner, tenant);
         this.newUser = newUser;
     }
