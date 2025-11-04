@@ -32,7 +32,7 @@ abstract class CollectiveCommand extends ConsentGroupCommand {
     protected final ConsentGroup newGroupInfo;
 
     protected CollectiveCommand(ConsentGroupUser user, ConsentGroup newGroupInfo) {
-        super(user, newGroupInfo.id());
+        super(user, newGroupInfo.identifier());
         this.newGroupInfo = newGroupInfo;
         validateMemberList();
     }

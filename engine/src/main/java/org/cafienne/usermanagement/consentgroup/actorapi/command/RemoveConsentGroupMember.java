@@ -32,7 +32,7 @@ public class RemoveConsentGroupMember extends ConsentGroupCommand {
     public final String userId;
 
     public RemoveConsentGroupMember(ConsentGroupUser groupOwner, String userId) {
-        super(groupOwner, groupOwner.groupId());
+        super(groupOwner, groupOwner.group());
         this.userId = userId;
     }
 

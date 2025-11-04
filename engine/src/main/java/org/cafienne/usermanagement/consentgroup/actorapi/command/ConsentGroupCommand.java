@@ -18,7 +18,6 @@
 package org.cafienne.usermanagement.consentgroup.actorapi.command;
 
 import org.cafienne.actormodel.ActorMetadata;
-import org.cafienne.actormodel.ActorType;
 import org.cafienne.actormodel.exception.AuthorizationException;
 import org.cafienne.actormodel.exception.InvalidCommandException;
 import org.cafienne.actormodel.identity.ConsentGroupUser;
@@ -39,8 +38,8 @@ public abstract class ConsentGroupCommand extends BaseModelCommand<ConsentGroupA
      * @param groupOwner The user that issues this command.
      * @param groupId    The id of the consent group
      */
-    protected ConsentGroupCommand(ConsentGroupUser groupOwner, String groupId) {
-        super(groupOwner, new ActorMetadata(ActorType.Group, groupId, null));
+    protected ConsentGroupCommand(ConsentGroupUser groupOwner, ActorMetadata groupId) {
+        super(groupOwner, groupId);
     }
 
     protected ConsentGroupCommand(ValueMap json) {
