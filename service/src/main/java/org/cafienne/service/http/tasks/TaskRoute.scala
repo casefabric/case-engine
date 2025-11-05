@@ -36,11 +36,10 @@ trait TaskRoute extends CasesRoute with CaseTeamValidator {
   def askTaskWithAssignee(user: UserIdentity, taskId: String, assignee: String, createTaskCommand: CreateTaskCommandWithAssignee): Route = {
     onComplete(authorizationQueries.getCaseMembershipForTask(taskId, user)) {
       case Success(caseMember) =>
-        val caseInstanceId = caseMember.caseInstanceId
         onComplete(getUserOrigin(assignee, caseMember.tenant)) {
           case Success(assigneeIdentity) =>
 //            println(s"Found origin $origin for assignee $assignee")
-            askModelActor(createTaskCommand.apply(caseInstanceId, caseMember, assigneeIdentity))
+            askModelActor(createTaskCommand.apply(caseMember, assigneeIdentity))
           case Failure(t: Throwable) =>
             logger.warn(s"An error happened while retrieving user information on user '$assignee'", t)
             complete(StatusCodes.InternalServerError, s"An internal error happened while retrieving user information on user '$assignee'")
@@ -54,7 +53,7 @@ trait TaskRoute extends CasesRoute with CaseTeamValidator {
 
   def askTask(user: UserIdentity, taskId: String, createTaskCommand: CreateTaskCommand): Route = {
     onComplete(authorizationQueries.getCaseMembershipForTask(taskId, user)) {
-      case Success(caseMember) => askModelActor(createTaskCommand.apply(caseMember.caseInstanceId, caseMember))
+      case Success(caseMember) => askModelActor(createTaskCommand.apply(caseMember))
       case Failure(error) => error match {
         case t: TaskSearchFailure => complete(StatusCodes.NotFound, t.getLocalizedMessage)
         case _ => throw error
@@ -63,10 +62,10 @@ trait TaskRoute extends CasesRoute with CaseTeamValidator {
   }
 
   trait CreateTaskCommandWithAssignee {
-    def apply(caseInstanceId: String, user: CaseMembership, member: CaseUserIdentity): HumanTaskCommand
+    def apply(user: CaseMembership, member: CaseUserIdentity): HumanTaskCommand
   }
 
   trait CreateTaskCommand {
-    def apply(caseInstanceId: String, user: CaseMembership): HumanTaskCommand
+    def apply(user: CaseMembership): HumanTaskCommand
   }
 }

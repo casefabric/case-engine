@@ -7,6 +7,7 @@
  */
 package org.cafienne.model.cmmn.test.basic;
 
+import org.cafienne.actormodel.ActorMetadata;
 import org.cafienne.model.cmmn.actorapi.command.StartCase;
 import org.cafienne.model.cmmn.actorapi.command.plan.AddDiscretionaryItem;
 import org.cafienne.model.cmmn.actorapi.command.plan.GetDiscretionaryItems;
@@ -27,7 +28,8 @@ public class TestSentry {
 
     @Test
     public void testSentry() {
-        String caseInstanceId = "sentry";
+        ActorMetadata caseInstanceId = createIdentifier("sentry");
+
         TestScript testCase = new TestScript(caseInstanceId);
 
         StartCase startCase = createCaseCommand(testUser, caseInstanceId, definitions);
@@ -74,7 +76,7 @@ public class TestSentry {
 
     @Test
     public void testSentryOnDiscretionary() {
-        String caseInstanceId = "sentryOnDiscretionary";
+        ActorMetadata caseInstanceId = createIdentifier("sentryOnDiscretionary");
         TestScript testCase = new TestScript(caseInstanceId);
 
         StartCase startCase = createCaseCommand(testUser, caseInstanceId, definitions);

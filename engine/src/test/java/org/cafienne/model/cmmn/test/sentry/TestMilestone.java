@@ -7,6 +7,7 @@
  */
 package org.cafienne.model.cmmn.test.sentry;
 
+import org.cafienne.actormodel.ActorMetadata;
 import org.cafienne.model.cmmn.actorapi.command.StartCase;
 import org.cafienne.model.cmmn.definition.CaseDefinition;
 import org.cafienne.model.cmmn.instance.State;
@@ -18,7 +19,7 @@ import static org.cafienne.model.cmmn.test.TestScript.*;
 public class TestMilestone {
 
     private final String testName = "roles";
-    private final String caseInstanceId = testName;
+    private final ActorMetadata caseInstanceId = createIdentifier(testName);
     private final CaseDefinition definitions = loadCaseDefinition("testdefinition/milestonetransitions.xml");
 
     @Test

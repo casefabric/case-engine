@@ -18,6 +18,7 @@
 package org.cafienne.model.cmmn.actorapi.command.plan;
 
 import com.fasterxml.jackson.core.JsonGenerator;
+import org.cafienne.actormodel.ActorMetadata;
 import org.cafienne.actormodel.exception.InvalidCommandException;
 import org.cafienne.actormodel.identity.CaseUserIdentity;
 import org.cafienne.infrastructure.serialization.Fields;
@@ -40,7 +41,7 @@ public class MakeCaseTransition extends CaseCommand {
      * @param caseInstanceId The id of the case in which to perform this command.
      * @param transition     The transition to be executed on the case
      */
-    public MakeCaseTransition(CaseUserIdentity user, String caseInstanceId, Transition transition) {
+    public MakeCaseTransition(CaseUserIdentity user, ActorMetadata caseInstanceId, Transition transition) {
         super(user, caseInstanceId);
         this.transition = transition;
     }

@@ -7,6 +7,7 @@
  */
 package org.cafienne.model.cmmn.test.casefile;
 
+import org.cafienne.actormodel.ActorMetadata;
 import org.cafienne.model.cmmn.actorapi.command.StartCase;
 import org.cafienne.model.cmmn.actorapi.command.casefile.CreateCaseFileItem;
 import org.cafienne.model.cmmn.actorapi.command.casefile.ReplaceCaseFileItem;
@@ -22,7 +23,6 @@ import org.cafienne.model.cmmn.test.assertions.TaskAssertion;
 import org.cafienne.util.json.StringValue;
 import org.cafienne.util.json.ValueList;
 import org.cafienne.util.json.ValueMap;
-import org.cafienne.util.Guid;
 import org.junit.Test;
 
 import static org.cafienne.model.cmmn.test.TestScript.*;
@@ -54,7 +54,8 @@ public class TestCaseFileTransition {
     public void testRepetitiveTaskIfExpressionAndTransition() {
 
         String caseName = "casefile";
-        String caseInstanceId = new Guid().toString();
+        ActorMetadata caseInstanceId = createIdentifier();
+
         TestScript testCase = new TestScript(caseName);
 
         ValueMap content = new ValueMap();

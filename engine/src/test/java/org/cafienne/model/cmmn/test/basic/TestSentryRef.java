@@ -7,12 +7,14 @@
  */
 package org.cafienne.model.cmmn.test.basic;
 
+import org.cafienne.actormodel.ActorMetadata;
 import org.cafienne.model.cmmn.actorapi.command.StartCase;
 import org.cafienne.model.cmmn.actorapi.command.plan.MakePlanItemTransition;
 import org.cafienne.model.cmmn.definition.CaseDefinition;
 import org.cafienne.model.cmmn.instance.State;
 import org.cafienne.model.cmmn.instance.Transition;
 import org.cafienne.model.cmmn.test.TestScript;
+import org.cafienne.model.cmmn.test.assertions.CaseAssertion;
 import org.cafienne.model.cmmn.test.assertions.PlanItemAssertion;
 import org.junit.Test;
 
@@ -23,11 +25,11 @@ public class TestSentryRef {
 
     @Test
     public void testSentryRef() {
-        String caseInstanceId = "SentryRefTest";
+        ActorMetadata caseInstanceId = createIdentifier("SentryRefTest");
         TestScript testCase = new TestScript("sentryRef");
 
         StartCase startCase = createCaseCommand(testUser, caseInstanceId, definitions);
-        testCase.addStep(startCase, action -> action.print());
+        testCase.addStep(startCase, CaseAssertion::print);
 
         MakePlanItemTransition completeTask1 = new MakePlanItemTransition(testUser, caseInstanceId, "Task_1", Transition.Complete);
         testCase.addStep(completeTask1, casePlan -> {

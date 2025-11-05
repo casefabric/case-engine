@@ -17,6 +17,7 @@
 
 package org.cafienne.model.cmmn.actorapi.command.team.setmember;
 
+import org.cafienne.actormodel.ActorMetadata;
 import org.cafienne.actormodel.identity.CaseUserIdentity;
 import org.cafienne.infrastructure.serialization.Manifest;
 import org.cafienne.model.cmmn.actorapi.command.team.CaseTeamGroup;
@@ -28,7 +29,7 @@ import org.cafienne.util.json.ValueMap;
  */
 @Manifest
 public class SetCaseTeamGroup extends SetCaseTeamMemberCommand<CaseTeamGroup> {
-    public SetCaseTeamGroup(CaseUserIdentity user, String caseInstanceId, CaseTeamGroup newMember) {
+    public SetCaseTeamGroup(CaseUserIdentity user, ActorMetadata caseInstanceId, CaseTeamGroup newMember) {
         super(user, caseInstanceId, newMember);
     }
 

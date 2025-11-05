@@ -17,6 +17,7 @@
 
 package org.cafienne.model.cmmn.actorapi.command.plan.task.humantask;
 
+import org.cafienne.actormodel.ActorMetadata;
 import org.cafienne.actormodel.identity.CaseUserIdentity;
 import org.cafienne.model.cmmn.instance.task.humantask.HumanTask;
 import org.cafienne.util.json.ValueMap;
@@ -26,7 +27,7 @@ import org.cafienne.util.json.ValueMap;
  * Examples: assign, claim, delegate, revoke, etc.
  */
 public abstract class TaskManagementCommand extends HumanTaskCommand {
-    protected TaskManagementCommand(CaseUserIdentity user, String caseInstanceId, String taskId) {
+    protected TaskManagementCommand(CaseUserIdentity user, ActorMetadata caseInstanceId, String taskId) {
         super(user, caseInstanceId, taskId);
     }
 

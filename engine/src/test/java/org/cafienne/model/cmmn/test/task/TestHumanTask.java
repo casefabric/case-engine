@@ -1,5 +1,6 @@
 package org.cafienne.model.cmmn.test.task;
 
+import org.cafienne.actormodel.ActorMetadata;
 import org.cafienne.model.cmmn.actorapi.command.StartCase;
 import org.cafienne.model.cmmn.actorapi.command.plan.task.humantask.*;
 import org.cafienne.model.cmmn.actorapi.command.team.CaseTeam;
@@ -21,7 +22,7 @@ import static org.cafienne.model.cmmn.test.TestScript.*;
 public class TestHumanTask {
     @Test
     public void testHumanTask() {
-        String caseInstanceId = "HumanTaskTest";
+        ActorMetadata caseInstanceId = createIdentifier("HumanTaskTest");
         TestScript testCase = new TestScript("HumanTaskTest");
 
         CaseDefinition xml = loadCaseDefinition("testdefinition/task/testhumantask.xml");

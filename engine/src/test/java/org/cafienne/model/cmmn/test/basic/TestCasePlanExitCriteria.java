@@ -7,6 +7,7 @@
  */
 package org.cafienne.model.cmmn.test.basic;
 
+import org.cafienne.actormodel.ActorMetadata;
 import org.cafienne.model.cmmn.actorapi.command.StartCase;
 import org.cafienne.model.cmmn.actorapi.command.plan.MakePlanItemTransition;
 import org.cafienne.model.cmmn.definition.CaseDefinition;
@@ -32,7 +33,8 @@ public class TestCasePlanExitCriteria {
 
     @Test
     public void testCasePlanExitCompletion() {
-        String caseInstanceId = "CasePlanExitCriteria-CompletionTest";
+
+        ActorMetadata caseInstanceId = createIdentifier("CasePlanExitCriteria-CompletionTest");
         TestScript testCase = new TestScript(caseInstanceId);
         StartCase startCase = createCaseCommand(testUser, caseInstanceId, definitions);
         testCase.addStep(startCase, casePlan -> {
@@ -62,7 +64,7 @@ public class TestCasePlanExitCriteria {
 
     @Test
     public void testCasePlanExitTermination() {
-        String caseInstanceId = "CasePlanExitCriteria-TerminationTest";
+        ActorMetadata caseInstanceId = createIdentifier("CasePlanExitCriteria-TerminationTest");
         TestScript testCase = new TestScript(caseInstanceId);
 
         StartCase startCase = createCaseCommand(testUser, caseInstanceId, definitions);

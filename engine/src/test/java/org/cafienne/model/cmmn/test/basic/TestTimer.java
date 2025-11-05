@@ -7,6 +7,7 @@
  */
 package org.cafienne.model.cmmn.test.basic;
 
+import org.cafienne.actormodel.ActorMetadata;
 import org.cafienne.model.cmmn.actorapi.command.StartCase;
 import org.cafienne.model.cmmn.definition.CaseDefinition;
 import org.cafienne.model.cmmn.instance.State;
@@ -22,7 +23,7 @@ public class TestTimer {
 
     @Test
     public void testTimer() {
-        String caseInstanceId = "Timer";
+        ActorMetadata caseInstanceId = createIdentifier("Timer");
         TestScript testCase = new TestScript(caseInstanceId);
 
         // Case contains a timer that runs after 3 seconds; it then starts a task.

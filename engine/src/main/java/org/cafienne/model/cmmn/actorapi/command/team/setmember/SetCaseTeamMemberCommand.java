@@ -18,6 +18,7 @@
 package org.cafienne.model.cmmn.actorapi.command.team.setmember;
 
 import com.fasterxml.jackson.core.JsonGenerator;
+import org.cafienne.actormodel.ActorMetadata;
 import org.cafienne.actormodel.identity.CaseUserIdentity;
 import org.cafienne.infrastructure.serialization.Fields;
 import org.cafienne.model.cmmn.actorapi.command.team.CaseTeamCommand;
@@ -36,7 +37,7 @@ import java.io.IOException;
 abstract class SetCaseTeamMemberCommand<M extends CaseTeamMember> extends CaseTeamCommand {
     protected final M newMember;
 
-    protected SetCaseTeamMemberCommand(CaseUserIdentity user, String caseInstanceId, M newMember) {
+    protected SetCaseTeamMemberCommand(CaseUserIdentity user, ActorMetadata caseInstanceId, M newMember) {
         super(user, caseInstanceId);
         this.newMember = newMember;
     }

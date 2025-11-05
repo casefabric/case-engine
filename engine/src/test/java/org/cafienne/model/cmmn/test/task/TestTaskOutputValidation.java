@@ -3,6 +3,7 @@ package org.cafienne.model.cmmn.test.task;
 import com.github.tomakehurst.wiremock.http.Request;
 import com.github.tomakehurst.wiremock.junit.WireMockRule;
 import com.github.tomakehurst.wiremock.matching.MatchResult;
+import org.cafienne.actormodel.ActorMetadata;
 import org.cafienne.actormodel.exception.InvalidCommandException;
 import org.cafienne.model.cmmn.actorapi.command.StartCase;
 import org.cafienne.model.cmmn.actorapi.command.team.CaseTeam;
@@ -51,7 +52,7 @@ public class TestTaskOutputValidation {
     public void testTaskOutputValidation() {
         startWireMocks();
 
-        String caseInstanceId = "OutputValidationTest";
+        ActorMetadata caseInstanceId = createIdentifier("OutputValidationTest");
         TestScript testCase = new TestScript(caseInstanceId);
 
         CaseDefinition xml = loadCaseDefinition("testdefinition/task/taskoutputvalidation.xml");

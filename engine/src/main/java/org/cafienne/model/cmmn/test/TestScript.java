@@ -18,6 +18,8 @@
 package org.cafienne.model.cmmn.test;
 
 import org.apache.pekko.actor.ActorSystem;
+import org.cafienne.actormodel.ActorMetadata;
+import org.cafienne.actormodel.ActorType;
 import org.cafienne.actormodel.message.response.CommandFailure;
 import org.cafienne.actormodel.message.response.ModelResponse;
 import org.cafienne.infrastructure.config.util.SystemConfig;
@@ -34,6 +36,7 @@ import org.cafienne.model.cmmn.repository.MissingDefinitionException;
 import org.cafienne.model.cmmn.test.assertions.CaseAssertion;
 import org.cafienne.model.cmmn.test.assertions.FailureAssertion;
 import org.cafienne.system.CaseSystem;
+import org.cafienne.util.Guid;
 import org.cafienne.util.json.ValueMap;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -173,6 +176,13 @@ public class TestScript {
     }
 
     /**
+     * Create a new {@link TestScript} with the specified name
+     */
+    public TestScript(ActorMetadata testName) {
+        this(testName.actorId(), CaseSystem.apply(ActorSystem.create(testName.actorId())));
+    }
+
+    /**
      * Create a new {@link TestScript} with the specified name and the case system
      */
     public TestScript(String testName, CaseSystem caseSystem) {
@@ -185,35 +195,43 @@ public class TestScript {
         logger.info("Ready to receive responses from the case system for test '" + testName + "'");
     }
 
-    public static StartCase createCaseCommand(TestUser user, String caseInstanceId, CaseDefinition definitions) {
+    public static ActorMetadata createIdentifier() {
+        return createIdentifier(new Guid().toString());
+    }
+
+    public static ActorMetadata createIdentifier(String caseInstanceId) {
+        return new ActorMetadata(ActorType.Case, caseInstanceId, null);
+    }
+
+    public static StartCase createCaseCommand(TestUser user, ActorMetadata caseInstanceId, CaseDefinition definitions) {
         return createCaseCommand(user, caseInstanceId, definitions, new ValueMap());
     }
 
-    public static StartCase createCaseCommand(TestUser user, String caseInstanceId, CaseDefinition definitions, ValueMap inputs) {
+    public static StartCase createCaseCommand(TestUser user, ActorMetadata caseInstanceId, CaseDefinition definitions, ValueMap inputs) {
         return createCaseCommand(user, caseInstanceId, definitions, inputs, createCaseTeam(createOwner(user)));
     }
 
-    public static StartCase createCaseCommand(TestUser user, String caseInstanceId, CaseDefinition definitions, CaseTeam team) {
+    public static StartCase createCaseCommand(TestUser user, ActorMetadata caseInstanceId, CaseDefinition definitions, CaseTeam team) {
         return createCaseCommand(user, caseInstanceId, definitions, new ValueMap(), team);
     }
 
-    public static StartCase createCaseCommand(TestUser user, String caseInstanceId, CaseDefinition definitions, ValueMap inputs, CaseTeam team) {
+    public static StartCase createCaseCommand(TestUser user, ActorMetadata caseInstanceId, CaseDefinition definitions, ValueMap inputs, CaseTeam team) {
         return createCaseCommand(defaultTenant, user, caseInstanceId, definitions, inputs, team);
     }
 
-    public static StartCase createCaseCommand(String tenant, TestUser user, String caseInstanceId, CaseDefinition definitions, ValueMap inputs, CaseTeam team) {
+    public static StartCase createCaseCommand(String tenant, TestUser user, ActorMetadata caseInstanceId, CaseDefinition definitions, ValueMap inputs, CaseTeam team) {
         return new StartCase(tenant, user, caseInstanceId, definitions, inputs, team, false);
     }
 
-    public static PingCommand createPingCommand(TestUser user, String caseInstanceId, long waitTimeInMillis) {
+    public static PingCommand createPingCommand(TestUser user, ActorMetadata caseInstanceId, long waitTimeInMillis) {
         return new PingCommand(defaultTenant, user, caseInstanceId, waitTimeInMillis);
     }
 
-    public static ForceRecoveryCommand createRecoveryCommand(TestUser user, String caseInstanceId) {
+    public static ForceRecoveryCommand createRecoveryCommand(TestUser user, ActorMetadata caseInstanceId) {
         return new ForceRecoveryCommand(defaultTenant, user, caseInstanceId);
     }
 
-    public static ForceTermination createTerminationCommand(TestUser user, String caseInstanceId) {
+    public static ForceTermination createTerminationCommand(TestUser user, ActorMetadata caseInstanceId) {
         return new ForceTermination(defaultTenant, user, caseInstanceId);
     }
 

@@ -25,6 +25,7 @@ import io.swagger.v3.oas.annotations.security.SecurityRequirement
 import jakarta.ws.rs._
 import org.apache.pekko.http.scaladsl.model.StatusCodes
 import org.apache.pekko.http.scaladsl.server.Route
+import org.cafienne.actormodel.{ActorMetadata, ActorType}
 import org.cafienne.infrastructure.config.api.AnonymousCaseDefinition
 import org.cafienne.model.cmmn.actorapi.command.StartCase
 import org.cafienne.model.cmmn.actorapi.response.CaseStartedResponse
@@ -74,7 +75,8 @@ class CaseRequestRoute(override val httpService: CaseEngineHttpServer) extends A
               val newCaseId = payload.caseInstanceId.getOrElse(new Guid().toString)
                 validateTenantAndTeam(definitionConfig.team, definitionConfig.tenant, team => {
                   val debugMode = payload.debug.getOrElse(caseSystem.config.actor.debugEnabled)
-                  val command = new StartCase(definitionConfig.tenant, definitionConfig.user, newCaseId, definitionConfig.definition, payload.inputs, team, debugMode)
+                  val identifier = ActorMetadata(ActorType.Case, newCaseId)
+                  val command = new StartCase(definitionConfig.tenant, definitionConfig.user, identifier, definitionConfig.definition, payload.inputs, team, debugMode)
                   sendCommand(command, classOf[CaseStartedResponse], (response: CaseStartedResponse) => {
                     writeLastModifiedHeader(response, Headers.CASE_LAST_MODIFIED) {
                       complete(StatusCodes.OK, s"""{\n  "caseInstanceId": "${response.getActorId}"\n}""")

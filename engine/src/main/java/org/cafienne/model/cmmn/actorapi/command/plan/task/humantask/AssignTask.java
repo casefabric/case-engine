@@ -18,6 +18,7 @@
 package org.cafienne.model.cmmn.actorapi.command.plan.task.humantask;
 
 import com.fasterxml.jackson.core.JsonGenerator;
+import org.cafienne.actormodel.ActorMetadata;
 import org.cafienne.actormodel.identity.CaseUserIdentity;
 import org.cafienne.infrastructure.serialization.Fields;
 import org.cafienne.infrastructure.serialization.Manifest;
@@ -33,7 +34,7 @@ import java.io.IOException;
 public class AssignTask extends TaskManagementCommand {
     protected final CaseUserIdentity assignee;
 
-    public AssignTask(CaseUserIdentity user, String caseInstanceId, String taskId, CaseUserIdentity assignee) {
+    public AssignTask(CaseUserIdentity user, ActorMetadata caseInstanceId, String taskId, CaseUserIdentity assignee) {
         super(user, caseInstanceId, taskId);
         this.assignee = assignee;
     }

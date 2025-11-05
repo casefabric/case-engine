@@ -1,5 +1,6 @@
 package org.cafienne.model.cmmn.test.casefile;
 
+import org.cafienne.actormodel.ActorMetadata;
 import org.cafienne.model.cmmn.actorapi.command.StartCase;
 import org.cafienne.model.cmmn.actorapi.command.casefile.CreateCaseFileItem;
 import org.cafienne.model.cmmn.actorapi.command.casefile.ReplaceCaseFileItem;
@@ -8,11 +9,11 @@ import org.cafienne.model.cmmn.actorapi.event.file.CaseFileItemTransitioned;
 import org.cafienne.model.cmmn.definition.CaseDefinition;
 import org.cafienne.model.cmmn.instance.Path;
 import org.cafienne.model.cmmn.test.TestScript;
+import org.cafienne.model.cmmn.test.assertions.CaseAssertion;
 import org.cafienne.model.cmmn.test.assertions.file.CaseFileAssertion;
 import org.cafienne.util.json.Value;
 import org.cafienne.util.json.ValueList;
 import org.cafienne.util.json.ValueMap;
-import org.cafienne.util.Guid;
 import org.junit.Test;
 
 import static org.cafienne.model.cmmn.test.TestScript.*;
@@ -26,14 +27,12 @@ public class TestNewCaseFile {
     @Test
     public void testCreateAndModifyFullCaseFile() {
 
-        String caseInstanceId = new Guid().toString();
+        ActorMetadata caseInstanceId = createIdentifier();
         TestScript testCase = new TestScript(caseName);
 
         StartCase startCase = createCaseCommand(testUser, caseInstanceId, definitions);
 
-        testCase.addStep(startCase, casePlan -> {
-            casePlan.print();
-        });
+        testCase.addStep(startCase, CaseAssertion::print);
 
         ValueMap caseFileItem = new ValueMap("RootProperty1", "string", "RootProperty2", true, "ChildItem", createFamily(), "ChildArray", new ValueList(createChildItem(), createChildItem()));
         testCase.addStep(new CreateCaseFileItem(testUser, caseInstanceId, caseFileItem, rootPath), result -> {

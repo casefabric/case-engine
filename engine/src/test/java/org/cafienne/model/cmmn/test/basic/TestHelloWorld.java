@@ -1,5 +1,6 @@
 package org.cafienne.model.cmmn.test.basic;
 
+import org.cafienne.actormodel.ActorMetadata;
 import org.cafienne.model.cmmn.actorapi.command.StartCase;
 import org.cafienne.model.cmmn.definition.CaseDefinition;
 import org.cafienne.model.cmmn.instance.State;
@@ -18,7 +19,7 @@ public class TestHelloWorld {
 
     @Test
     public void testHelloWorld() {
-        String caseInstanceId = "HelloWorldTest";
+        ActorMetadata caseInstanceId = createIdentifier("HelloWorldTest");
         TestScript testCase = new TestScript("hello-world");
         ValueMap greeting = new ValueMap("Greeting", new ValueMap("Message", "hello", "To", testUser.id(), "From", testUser.id()));
 
@@ -44,7 +45,7 @@ public class TestHelloWorld {
 
     @Test
     public void testHelloWorldWithoutAssignee() {
-        String caseInstanceId = "HelloWorldTest";
+        ActorMetadata caseInstanceId = createIdentifier("HelloWorldTest");
         TestScript testCase = new TestScript("hello-world");
         ValueMap greeting = new ValueMap("Greeting", new ValueMap("Message", "hello", "To", "", "From", testUser.id()));
 

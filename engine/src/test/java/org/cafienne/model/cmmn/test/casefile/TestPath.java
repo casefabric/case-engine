@@ -1,19 +1,19 @@
 package org.cafienne.model.cmmn.test.casefile;
 
+import org.cafienne.actormodel.ActorMetadata;
 import org.cafienne.model.cmmn.actorapi.command.casefile.UpdateCaseFileItem;
 import org.cafienne.model.cmmn.definition.CaseDefinition;
 import org.cafienne.model.cmmn.instance.Path;
 import org.cafienne.model.cmmn.instance.casefile.InvalidPathException;
 import org.cafienne.model.cmmn.test.TestScript;
 import org.cafienne.util.json.ValueMap;
-import org.cafienne.util.Guid;
 import org.junit.Test;
 
 import static org.cafienne.model.cmmn.test.TestScript.*;
 
 public class TestPath {
     private final String caseName = "CaseFileTest";
-    private final String caseInstanceId = new Guid().toString();
+    private final ActorMetadata caseInstanceId = createIdentifier();
     private final CaseDefinition definitions = loadCaseDefinition("testdefinition/casefile/casefiletest.xml");
     private final TestScript testCase = new TestScript(caseName);
     private final ValueMap rootValue = new ValueMap("aaa", new ValueMap("aaa1", "true", "child_of_aaa", new ValueMap("child_of_aaa_1", "true")));

@@ -17,6 +17,7 @@
 
 package org.cafienne.model.cmmn.actorapi.command.plan.task.humantask;
 
+import org.cafienne.actormodel.ActorMetadata;
 import org.cafienne.actormodel.identity.CaseUserIdentity;
 import org.cafienne.infrastructure.serialization.Manifest;
 import org.cafienne.model.cmmn.instance.task.humantask.WorkflowTask;
@@ -27,7 +28,7 @@ import org.cafienne.util.json.ValueMap;
  */
 @Manifest
 public class SaveTaskOutput extends TaskOutputCommand {
-	public SaveTaskOutput(CaseUserIdentity user, String caseInstanceId, String taskId, ValueMap taskOutput) {
+	public SaveTaskOutput(CaseUserIdentity user, ActorMetadata caseInstanceId, String taskId, ValueMap taskOutput) {
 		super(user, caseInstanceId, taskId, taskOutput);
 	}
 

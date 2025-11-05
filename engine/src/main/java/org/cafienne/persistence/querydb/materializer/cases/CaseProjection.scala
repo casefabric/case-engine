@@ -48,8 +48,8 @@ class CaseProjection(override val batch: CaseEventBatch, caseFileProjection: Cas
     this.caseInstance = Some(CaseRecord(
       id = event.getCaseInstanceId,
       tenant = event.tenant,
-      rootCaseId = event.getRootCaseId,
-      parentCaseId = event.getParentCaseId,
+      rootCaseId = event.rootActorId,
+      parentCaseId = event.parentActorId,
       caseName = event.getCaseName,
       state = State.Active.toString, // Will always be overridden from CaseModified event
       failures = 0,

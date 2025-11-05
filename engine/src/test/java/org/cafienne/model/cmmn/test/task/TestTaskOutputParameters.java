@@ -1,5 +1,6 @@
 package org.cafienne.model.cmmn.test.task;
 
+import org.cafienne.actormodel.ActorMetadata;
 import org.cafienne.model.cmmn.actorapi.command.StartCase;
 import org.cafienne.model.cmmn.actorapi.event.plan.PlanItemTransitioned;
 import org.cafienne.model.cmmn.definition.CaseDefinition;
@@ -25,7 +26,7 @@ public class TestTaskOutputParameters {
 
     @Test
     public void testTaskOutputParameters() {
-        String caseInstanceId = "testTaskOutputParameters";
+        ActorMetadata caseInstanceId = createIdentifier("testTaskOutputParameters");
         TestScript testCase = new TestScript(caseInstanceId);
 
         StartCase startCase = createCaseCommand(testUser, caseInstanceId, definitions, inputs);
@@ -51,7 +52,7 @@ public class TestTaskOutputParameters {
     @Test
     public void testTaskOutputParametersWithCaseFileBinding() {
         // This case tests the validation of a task that has output and binding into the case file
-        String caseInstanceId = "testTaskOutputParametersWithCaseFileBinding";
+        ActorMetadata caseInstanceId = createIdentifier("testTaskOutputParametersWithCaseFileBinding");
         TestScript testCase = new TestScript(caseInstanceId);
 
         StartCase startCase = createCaseCommand(testUser, caseInstanceId, definitions, inputs);
@@ -83,7 +84,7 @@ public class TestTaskOutputParameters {
     @Test
     public void testTaskWithoutRequiredOutput() {
         // Test the one that task can be completed without output (below the same is tested with invalid output)
-        String caseInstanceId = "testTaskWithoutRequiredOutput";
+        ActorMetadata caseInstanceId = createIdentifier("testTaskWithoutRequiredOutput");
         TestScript testCase = new TestScript(caseInstanceId);
 
         StartCase startCase = createCaseCommand(testUser, caseInstanceId, definitions, inputs);
@@ -100,7 +101,7 @@ public class TestTaskOutputParameters {
     @Test
     public void testTaskWithoutRequiredOutput2() {
         // Test the one that task can be completed with invalid output
-        String caseInstanceId = "testTaskWithoutRequiredOutput2";
+        ActorMetadata caseInstanceId = createIdentifier("testTaskWithoutRequiredOutput2");
         TestScript testCase = new TestScript(caseInstanceId);
 
         StartCase startCase = createCaseCommand(testUser, caseInstanceId, definitions, inputs);
@@ -118,7 +119,7 @@ public class TestTaskOutputParameters {
     @Test
     public void testTaskWithoutRequiredOutputButWithCaseFileBinding() {
         // Here we test a task that does not check for a mandatory output parameter, but it has a spel expression in the binding, which fails on invalid output.
-        String caseInstanceId = "testTaskWithoutRequiredOutputButWithCaseFileBinding";
+        ActorMetadata caseInstanceId = createIdentifier("testTaskWithoutRequiredOutputButWithCaseFileBinding");
         TestScript testCase = new TestScript(caseInstanceId);
 
         StartCase startCase = createCaseCommand(testUser, caseInstanceId, definitions, inputs);
