@@ -35,17 +35,13 @@ import java.time.Instant;
 @Manifest
 public class CaseDefinitionApplied extends CaseDefinitionEvent implements BootstrapMessage {
     public final EngineVersion engineVersion;
-    private final String parentCaseId;
-    private final String rootCaseId;
     public final Instant createdOn;
     public final String createdBy;
 
-    public CaseDefinitionApplied(Case caseInstance, String rootCaseId, String parentCaseId, CaseDefinition definition) {
+    public CaseDefinitionApplied(Case caseInstance, CaseDefinition definition) {
         super(caseInstance, definition);
         this.createdOn = caseInstance.getTransactionTimestamp();
         this.createdBy = caseInstance.getCurrentUser().id();
-        this.rootCaseId = rootCaseId;
-        this.parentCaseId = parentCaseId;
         // Whenever a new case is started, a case definition is applied.
         //  So, at that moment we also store the engine version.
         //  TODO: perhaps better to distinguish CaseStarted or CaseCreated from CaseDefinitionApplied
@@ -57,31 +53,7 @@ public class CaseDefinitionApplied extends CaseDefinitionEvent implements Bootst
         super(json);
         this.createdOn = json.readInstant(Fields.createdOn);
         this.createdBy = json.readString(Fields.createdBy);
-        this.rootCaseId = json.readString(Fields.rootActorId);
-        this.parentCaseId = json.readString(Fields.parentActorId);
         this.engineVersion = json.readObject(Fields.engineVersion, EngineVersion::new);
-    }
-
-    /**
-     * Returns the identifier of the outer-most parent that started this case. E.g., if this event happened in a sub case,
-     * then this will return the id of it's top most ancestor case starting it, and for which the subcase is a blocking task.
-     * So, non-blocking sub case tasks are stand alone, and will not return the identifier of the parent case that started it.
-     * Furthermore, if this case is itself a root-case, then root case id and case instance id will be the same.
-     *
-     * @return
-     */
-    public String getRootCaseId() {
-        return rootCaseId;
-    }
-
-    /**
-     * Returns the identifier of the case that started the subcase causing this event to happen, or null if there was no parent.
-     * Note, this will also return the parent case id if this subcase was started in non-blocking mode (as opposed to getRootCaseId behavior)
-     *
-     * @return
-     */
-    public String getParentCaseId() {
-        return parentCaseId;
     }
 
     @Override
@@ -108,8 +80,9 @@ public class CaseDefinitionApplied extends CaseDefinitionEvent implements Bootst
         super.writeCaseDefinitionEvent(generator);
         writeField(generator, Fields.createdOn, createdOn);
         writeField(generator, Fields.createdBy, createdBy);
-        writeField(generator, Fields.rootActorId, rootCaseId);
-        writeField(generator, Fields.parentActorId, parentCaseId);
+        // Keep writing root and parent for compatibility
+        writeField(generator, Fields.rootActorId, rootActorId());
+        writeField(generator, Fields.parentActorId, parentActorId());
         writeField(generator, Fields.engineVersion, engineVersion.json());
     }
 }

@@ -7,6 +7,7 @@
  */
 package org.cafienne.model.cmmn.test.casefile;
 
+import org.cafienne.actormodel.ActorMetadata;
 import org.cafienne.model.cmmn.actorapi.command.StartCase;
 import org.cafienne.model.cmmn.actorapi.command.casefile.CreateCaseFileItem;
 import org.cafienne.model.cmmn.definition.CaseDefinition;
@@ -37,7 +38,7 @@ public class TestRepetitiveFileItems {
     @Test
     public void testRepetitiveFileItems() {
         // startCase
-        String caseInstanceId = "CaseFileDefinitionTest";
+        ActorMetadata caseInstanceId = createIdentifier("CaseFileDefinitionTest");
 
         StartCase startCase = createCaseCommand(testUser, caseInstanceId, definitions);
         testCase.addStep(startCase, casePlan -> {
@@ -183,7 +184,7 @@ public class TestRepetitiveFileItems {
     @Test
     public void testRepetitiveFileItems23() {
         // startCase
-        String caseInstanceId = "CaseFileDefinitionTest23";
+        ActorMetadata caseInstanceId = createIdentifier("CaseFileDefinitionTest23");
 
         StartCase startCase = createCaseCommand(testUser, caseInstanceId, definitions);
         testCase.addStep(startCase, casePlan -> {

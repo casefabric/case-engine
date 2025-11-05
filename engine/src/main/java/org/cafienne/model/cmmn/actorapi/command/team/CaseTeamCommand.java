@@ -17,6 +17,7 @@
 
 package org.cafienne.model.cmmn.actorapi.command.team;
 
+import org.cafienne.actormodel.ActorMetadata;
 import org.cafienne.actormodel.exception.AuthorizationException;
 import org.cafienne.actormodel.exception.InvalidCommandException;
 import org.cafienne.actormodel.identity.CaseUserIdentity;
@@ -29,7 +30,7 @@ import org.cafienne.util.json.ValueMap;
  * Generic abstraction for commands relating to CaseTeam.
  */
 public abstract class CaseTeamCommand extends CaseCommand {
-    protected CaseTeamCommand(CaseUserIdentity user, String caseInstanceId) {
+    protected CaseTeamCommand(CaseUserIdentity user, ActorMetadata caseInstanceId) {
         super(user, caseInstanceId);
     }
 

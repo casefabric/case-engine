@@ -17,6 +17,7 @@
 
 package org.cafienne.model.cmmn.test.assertions;
 
+import org.cafienne.actormodel.ActorMetadata;
 import org.cafienne.actormodel.message.event.ModelEvent;
 import org.cafienne.model.cmmn.actorapi.event.CaseModified;
 import org.cafienne.model.cmmn.actorapi.event.file.CaseFileItemTransitioned;
@@ -183,6 +184,16 @@ public class PublishedEventsAssertion<E extends ModelEvent> {
      */
     public PublishedEventsAssertion<E> filter(String caseInstanceId) {
         return new PublishedEventsAssertion<>(events.stream().filter(e -> e.getActorId().equals(caseInstanceId)).collect(Collectors.toList()));
+    }
+
+    /**
+     * Returns a new set of events, filtered on the case instance id.
+     *
+     * @param caseInstanceId
+     * @return
+     */
+    public PublishedEventsAssertion<E> filter(ActorMetadata caseInstanceId) {
+        return filter(caseInstanceId.actorId());
     }
 
     /**

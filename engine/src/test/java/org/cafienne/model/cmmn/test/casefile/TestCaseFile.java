@@ -1,12 +1,12 @@
 package org.cafienne.model.cmmn.test.casefile;
 
+import org.cafienne.actormodel.ActorMetadata;
 import org.cafienne.model.cmmn.actorapi.command.StartCase;
 import org.cafienne.model.cmmn.definition.CaseDefinition;
 import org.cafienne.model.cmmn.instance.State;
 import org.cafienne.model.cmmn.instance.Transition;
 import org.cafienne.model.cmmn.test.TestScript;
 import org.cafienne.util.json.ValueMap;
-import org.cafienne.util.Guid;
 import org.junit.Test;
 
 import static org.cafienne.model.cmmn.test.TestScript.*;
@@ -19,7 +19,7 @@ public class TestCaseFile {
     @Test
     public void testPropertyAccessingFromSentry() {
 
-        String caseInstanceId = new Guid().toString();
+        ActorMetadata caseInstanceId = createIdentifier();
         TestScript testCase = new TestScript(caseName);
 
         ValueMap valueAaa = new ValueMap();
@@ -51,7 +51,7 @@ public class TestCaseFile {
     @Test
     public void testInsufficientInputParameterValuesForSentryEvaluation() {
 
-        String caseInstanceId = new Guid().toString();
+        ActorMetadata caseInstanceId = createIdentifier();
         TestScript testCase = new TestScript(caseName);
 
         ValueMap rootValue = new ValueMap();

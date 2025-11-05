@@ -18,6 +18,7 @@
 package org.cafienne.model.cmmn.actorapi.command.plan.task.humantask;
 
 import com.fasterxml.jackson.core.JsonGenerator;
+import org.cafienne.actormodel.ActorMetadata;
 import org.cafienne.actormodel.identity.CaseUserIdentity;
 import org.cafienne.infrastructure.serialization.Fields;
 import org.cafienne.infrastructure.serialization.Manifest;
@@ -32,7 +33,7 @@ import java.io.IOException;
 public class DelegateTask extends TaskManagementCommand {
     private final CaseUserIdentity delegate;
 
-    public DelegateTask(CaseUserIdentity user, String caseInstanceId, String taskId, CaseUserIdentity delegate) {
+    public DelegateTask(CaseUserIdentity user, ActorMetadata caseInstanceId, String taskId, CaseUserIdentity delegate) {
         super(user, caseInstanceId, taskId);
         this.delegate = delegate;
     }

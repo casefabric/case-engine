@@ -39,8 +39,8 @@ object CaseStarted {
     .map(event => {
       val caseInstanceId = event.getCaseInstanceId
       val caseName = event.getCaseName
-      val parentCaseId = event.getParentCaseId
-      val rootCaseId = event.getRootCaseId
+      val parentCaseId = event.parentActorId
+      val rootCaseId = event.rootActorId
       val caseFile = readCaseFile(batch.filterMap(classOf[CaseFileItemTransitioned]))
       PublicEventWrapper(batch.timestamp, batch.getSequenceNr(event), CaseStarted(caseInstanceId = caseInstanceId, caseName = caseName, parentCaseId = parentCaseId, rootCaseId = rootCaseId, caseFile = caseFile))
     })
