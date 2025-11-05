@@ -18,6 +18,7 @@
 package org.cafienne.model.cmmn.test;
 
 import com.fasterxml.jackson.core.JsonGenerator;
+import org.cafienne.actormodel.ActorMetadata;
 import org.cafienne.actormodel.identity.CaseUserIdentity;
 import org.cafienne.infrastructure.serialization.CafienneSerializer;
 import org.cafienne.infrastructure.serialization.Fields;
@@ -40,7 +41,7 @@ public class PingCommand extends TestScriptCommand {
 
     private final long waitTime;
 
-    public PingCommand(String tenant, CaseUserIdentity user, String caseInstanceId, long waitTimeInMillis) {
+    public PingCommand(String tenant, CaseUserIdentity user, ActorMetadata caseInstanceId, long waitTimeInMillis) {
         super(tenant, user, caseInstanceId);
         this.waitTime = waitTimeInMillis;
     }

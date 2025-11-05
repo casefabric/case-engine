@@ -6,6 +6,7 @@ import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ArrayNode;
 import com.fasterxml.jackson.databind.node.ObjectNode;
+import org.cafienne.actormodel.ActorMetadata;
 import org.cafienne.model.cmmn.actorapi.command.StartCase;
 import org.cafienne.model.cmmn.definition.CaseDefinition;
 import org.cafienne.model.cmmn.instance.Path;
@@ -26,7 +27,7 @@ public class TestPDFReport {
 
     @Test
     public void testReportGeneration() throws IOException {
-        String caseInstanceId = "PDFReport";
+        ActorMetadata caseInstanceId  = createIdentifier("PDFReport");
         TestScript testCase = new TestScript("PDFReport");
 
         String reportXml = new String(getFileContent("testdefinition/task/report/CustomersReport.jrxml"), "UTF-8");

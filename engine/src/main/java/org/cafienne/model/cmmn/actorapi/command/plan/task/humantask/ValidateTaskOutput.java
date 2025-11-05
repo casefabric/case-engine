@@ -17,6 +17,7 @@
 
 package org.cafienne.model.cmmn.actorapi.command.plan.task.humantask;
 
+import org.cafienne.actormodel.ActorMetadata;
 import org.cafienne.actormodel.identity.CaseUserIdentity;
 import org.cafienne.actormodel.message.response.CommandFailure;
 import org.cafienne.infrastructure.serialization.Manifest;
@@ -30,7 +31,7 @@ import org.cafienne.util.json.ValueMap;
  */
 @Manifest
 public class ValidateTaskOutput extends TaskOutputCommand {
-	public ValidateTaskOutput(CaseUserIdentity user, String caseInstanceId, String taskId, ValueMap taskOutput) {
+	public ValidateTaskOutput(CaseUserIdentity user, ActorMetadata caseInstanceId, String taskId, ValueMap taskOutput) {
 		super(user, caseInstanceId, taskId, taskOutput);
 	}
 

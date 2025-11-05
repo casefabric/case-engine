@@ -18,6 +18,7 @@
 package org.cafienne.model.cmmn.actorapi.command.team;
 
 import com.fasterxml.jackson.core.JsonGenerator;
+import org.cafienne.actormodel.ActorMetadata;
 import org.cafienne.actormodel.exception.InvalidCommandException;
 import org.cafienne.actormodel.identity.CaseUserIdentity;
 import org.cafienne.infrastructure.serialization.Fields;
@@ -31,7 +32,7 @@ import java.io.IOException;
 public class DeprecatedUpsert extends CaseTeamCommand {
     private final UpsertMemberData memberData;
 
-    public DeprecatedUpsert(CaseUserIdentity user, String caseInstanceId, UpsertMemberData member) {
+    public DeprecatedUpsert(CaseUserIdentity user, ActorMetadata caseInstanceId, UpsertMemberData member) {
         super(user, caseInstanceId);
         this.memberData = member;
     }

@@ -18,6 +18,7 @@
 package org.cafienne.model.cmmn.actorapi.command.plan;
 
 import com.fasterxml.jackson.core.JsonGenerator;
+import org.cafienne.actormodel.ActorMetadata;
 import org.cafienne.actormodel.exception.CommandException;
 import org.cafienne.actormodel.exception.InvalidCommandException;
 import org.cafienne.actormodel.identity.CaseUserIdentity;
@@ -53,7 +54,7 @@ public class MakePlanItemTransition extends CaseCommand {
      *                       invoked on the new plan item.
      * @param transition     The transition to make on the plan item(s)
      */
-    public MakePlanItemTransition(CaseUserIdentity user, String caseInstanceId, String identifier, Transition transition) {
+    public MakePlanItemTransition(CaseUserIdentity user, ActorMetadata caseInstanceId, String identifier, Transition transition) {
         super(user, caseInstanceId);
         this.identifier = identifier;
         this.transition = transition;

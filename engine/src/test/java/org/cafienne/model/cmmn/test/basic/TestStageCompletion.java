@@ -7,6 +7,7 @@
  */
 package org.cafienne.model.cmmn.test.basic;
 
+import org.cafienne.actormodel.ActorMetadata;
 import org.cafienne.model.cmmn.actorapi.command.StartCase;
 import org.cafienne.model.cmmn.actorapi.command.plan.MakePlanItemTransition;
 import org.cafienne.model.cmmn.definition.CaseDefinition;
@@ -22,7 +23,7 @@ public class TestStageCompletion {
 
     @Test
     public void testStage1Completion() {
-        String caseInstanceId = "Stage1_CompletionTest";
+        ActorMetadata caseInstanceId = createIdentifier("Stage1_CompletionTest");
         TestScript testCase = new TestScript(caseInstanceId);
 
         // Case contains a stage with a required Task1; completing the stage can only be done if Task1 is in semi-terminal state.
@@ -67,7 +68,7 @@ public class TestStageCompletion {
 
     @Test
     public void testStage2Completion() {
-        final String caseInstanceId = "Stage2_CompletionTest";
+        ActorMetadata caseInstanceId = createIdentifier("Stage2_CompletionTest");
         final String mainStageName = "Stage2";
         final TestScript testCase = new TestScript(caseInstanceId);
 
@@ -105,7 +106,7 @@ public class TestStageCompletion {
 
     @Test
     public void testStage3Completion() {
-        final String caseInstanceId = "Stage3_CompletionTest";
+        ActorMetadata caseInstanceId = createIdentifier("Stage3_CompletionTest");
         final String mainStageName = "Stage3";
         final TestScript testCase = new TestScript(caseInstanceId);
 
