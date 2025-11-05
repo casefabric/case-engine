@@ -18,6 +18,7 @@
 package org.cafienne.model.cmmn.test;
 
 import com.fasterxml.jackson.core.JsonGenerator;
+import org.cafienne.actormodel.ActorMetadata;
 import org.cafienne.actormodel.identity.CaseUserIdentity;
 import org.cafienne.infrastructure.serialization.CafienneSerializer;
 import org.cafienne.infrastructure.serialization.Manifest;
@@ -35,7 +36,7 @@ public class ForceTermination extends TestScriptCommand {
         CafienneSerializer.addManifestWrapper(ForceTermination.class, ForceTermination::new);
     }
 
-    public ForceTermination(String tenant, CaseUserIdentity user, String caseInstanceId) {
+    public ForceTermination(String tenant, CaseUserIdentity user, ActorMetadata caseInstanceId) {
         super(tenant, user, caseInstanceId);
     }
 
@@ -45,7 +46,7 @@ public class ForceTermination extends TestScriptCommand {
 
     @Override
     public void beforeSendCommand(TestScript testScript) {
-        testScript.getCaseSystem().engine().terminate(getActorMetadata());
+        testScript.getCaseSystem().engine().terminate(target);
     }
 
     @Override

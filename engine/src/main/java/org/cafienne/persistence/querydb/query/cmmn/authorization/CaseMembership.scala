@@ -17,6 +17,9 @@
 
 package org.cafienne.persistence.querydb.query.cmmn.authorization
 
+import org.cafienne.actormodel.{ActorMetadata, ActorType}
 import org.cafienne.actormodel.identity.{CaseUserIdentity, ConsentGroupMembership, Origin}
 
-class CaseMembership(override val id: String, override val origin: Origin, override val tenantRoles: Set[String], override val groups: Seq[ConsentGroupMembership], val caseInstanceId: String, val tenant: String) extends CaseUserIdentity
+class CaseMembership(override val id: String, override val origin: Origin, override val tenantRoles: Set[String], override val groups: Seq[ConsentGroupMembership], val caseInstanceId: String, val tenant: String) extends CaseUserIdentity {
+  val caseIdentifier = ActorMetadata(ActorType.Case, caseInstanceId)
+}

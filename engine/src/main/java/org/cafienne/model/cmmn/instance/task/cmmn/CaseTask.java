@@ -34,12 +34,10 @@ import org.slf4j.LoggerFactory;
 
 public class CaseTask extends Task<CaseTaskDefinition> {
     private final static Logger logger = LoggerFactory.getLogger(CaseTask.class);
-    private final String subCaseId;
     private final Case mainCase;
 
     public CaseTask(String id, int index, ItemDefinition itemDefinition, CaseTaskDefinition definition, Stage<?> stage) {
         super(id, index, itemDefinition, definition, stage);
-        subCaseId = getId(); // Our planitem id will also be the id of the subcase.
         mainCase = getCaseInstance();
     }
 
@@ -52,11 +50,9 @@ public class CaseTask extends Task<CaseTaskDefinition> {
     protected void startImplementation(ValueMap inputParameters) {
         // Only instantiate the subcase if our plan item has been started, not when it is being resumed
         CaseDefinition subCaseDefinition = getDefinition().getImplementationDefinition();
-        String parentCaseId = mainCase.getId();
-        String rootCaseId = mainCase.getRootCaseId();
         CaseTeam caseTeam = mainCase.getCaseTeam().createSubCaseTeam(subCaseDefinition);
 
-        StartCase command = new StartCase(getCaseInstance().getTenant(), getCaseInstance().getCurrentUser(), subCaseId, subCaseDefinition, inputParameters, caseTeam, getCaseInstance().debugMode(), parentCaseId, rootCaseId);
+        StartCase command = new StartCase(getCaseInstance().getTenant(), getCaseInstance().getCurrentUser(), target(), subCaseDefinition, inputParameters, caseTeam, getCaseInstance().debugMode());
         startTaskImplementation(command);
     }
 
@@ -93,7 +89,7 @@ public class CaseTask extends Task<CaseTaskDefinition> {
         String rootCaseId = mainCase.getRootCaseId();
         CaseTeam caseTeam = mainCase.getCaseTeam().createSubCaseTeam(subCaseDefinition);
 
-        ReactivateCase command = new ReactivateCase(getCaseInstance().getTenant(), getCaseInstance().getCurrentUser(), subCaseId, subCaseDefinition, inputParameters, caseTeam, getCaseInstance().debugMode(), parentCaseId, rootCaseId);
+        ReactivateCase command = new ReactivateCase(getCaseInstance().getTenant(), getCaseInstance().getCurrentUser(), target(), subCaseDefinition, inputParameters, caseTeam, getCaseInstance().debugMode());
         reactivateTaskImplementation(command);
     }
 
@@ -104,7 +100,7 @@ public class CaseTask extends Task<CaseTaskDefinition> {
      * @param transition
      */
     private void tell(Transition transition) {
-        tellTaskImplementation(new MakeCaseTransition(getCaseInstance().getCurrentUser(), subCaseId, transition));
+        tellTaskImplementation(new MakeCaseTransition(getCaseInstance().getCurrentUser(), target(), transition));
     }
 
     @Override
@@ -115,7 +111,7 @@ public class CaseTask extends Task<CaseTaskDefinition> {
         CaseDefinition newImplementation = newDefinition.getImplementationDefinition();
         CaseTeam newSubCaseTeam = mainCase.getCaseTeam().createSubCaseTeam(newImplementation);
 
-        giveNewDefinition(new MigrateCaseDefinition(getCaseInstance().getCurrentUser(), getId(), newImplementation, newSubCaseTeam));
+        giveNewDefinition(new MigrateCaseDefinition(getCaseInstance().getCurrentUser(), target(), newImplementation, newSubCaseTeam));
     }
 
     @Override
