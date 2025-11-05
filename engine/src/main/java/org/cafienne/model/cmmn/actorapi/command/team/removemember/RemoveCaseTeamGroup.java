@@ -17,6 +17,7 @@
 
 package org.cafienne.model.cmmn.actorapi.command.team.removemember;
 
+import org.cafienne.actormodel.ActorMetadata;
 import org.cafienne.actormodel.identity.CaseUserIdentity;
 import org.cafienne.infrastructure.serialization.Manifest;
 import org.cafienne.model.cmmn.actorapi.command.team.CaseTeamGroup;
@@ -29,7 +30,7 @@ import org.cafienne.util.json.ValueMap;
  */
 @Manifest
 public class RemoveCaseTeamGroup extends RemoveCaseTeamMemberCommand<CaseTeamGroup> {
-    public RemoveCaseTeamGroup(CaseUserIdentity user, String caseInstanceId, String groupId) {
+    public RemoveCaseTeamGroup(CaseUserIdentity user, ActorMetadata caseInstanceId, String groupId) {
         super(user, caseInstanceId, groupId);
     }
 

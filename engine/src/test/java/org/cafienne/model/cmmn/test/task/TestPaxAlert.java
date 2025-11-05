@@ -8,6 +8,7 @@
 package org.cafienne.model.cmmn.test.task;
 
 import com.github.tomakehurst.wiremock.junit.WireMockRule;
+import org.cafienne.actormodel.ActorMetadata;
 import org.cafienne.model.cmmn.actorapi.command.StartCase;
 import org.cafienne.model.cmmn.definition.CaseDefinition;
 import org.cafienne.model.cmmn.instance.State;
@@ -34,7 +35,7 @@ public class TestPaxAlert {
 
         startWireMocks();
 
-        String caseInstanceId = "PaxAlertTest";
+        ActorMetadata caseInstanceId = createIdentifier("PaxAlertTest");
         TestScript testCase = new TestScript("PaxAlertTest");
 
         // {"pde":

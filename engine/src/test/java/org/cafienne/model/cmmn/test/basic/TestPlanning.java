@@ -7,6 +7,7 @@
  */
 package org.cafienne.model.cmmn.test.basic;
 
+import org.cafienne.actormodel.ActorMetadata;
 import org.cafienne.model.cmmn.actorapi.command.StartCase;
 import org.cafienne.model.cmmn.actorapi.command.plan.AddDiscretionaryItem;
 import org.cafienne.model.cmmn.actorapi.command.plan.GetDiscretionaryItems;
@@ -30,7 +31,7 @@ public class TestPlanning {
     @Test
     public void testPlanning() {
         // This is a set of basic tests for events with some related sentries.
-        String caseInstanceId = "planning";
+        ActorMetadata caseInstanceId = createIdentifier("planning");
         TestScript testCase = new TestScript(caseInstanceId);
 
         StartCase startCase = createCaseCommand(testUser, caseInstanceId, definitions);

@@ -1,5 +1,6 @@
 package org.cafienne.model.cmmn.test.expression;
 
+import org.cafienne.actormodel.ActorMetadata;
 import org.cafienne.model.cmmn.actorapi.command.StartCase;
 import org.cafienne.model.cmmn.actorapi.command.plan.MakePlanItemTransition;
 import org.cafienne.model.cmmn.definition.CaseDefinition;
@@ -17,7 +18,7 @@ public class TestTimerExpression {
 
     @Test
     public void testTimerExpressionSuspendResumeWithTermination() {
-        String caseInstanceId = "Timer";
+        ActorMetadata caseInstanceId = createIdentifier("Timer");
         TestScript testCase = new TestScript(caseInstanceId);
         String period = "PT2S";
         ValueMap timerInput = new ValueMap("timer", new ValueMap("period", period));
@@ -50,7 +51,7 @@ public class TestTimerExpression {
 
     @Test
     public void testTimerExpressionSuspendResumeWithRecovery() {
-        String caseInstanceId = "Timer";
+        ActorMetadata caseInstanceId = createIdentifier("Timer");
         TestScript testCase = new TestScript(caseInstanceId);
         String period = "PT2S";
         ValueMap timerInput = new ValueMap("timer", new ValueMap("period", period));

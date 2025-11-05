@@ -7,6 +7,7 @@
  */
 package org.cafienne.model.cmmn.test.basic;
 
+import org.cafienne.actormodel.ActorMetadata;
 import org.cafienne.model.cmmn.actorapi.command.StartCase;
 import org.cafienne.model.cmmn.actorapi.command.plan.MakeCaseTransition;
 import org.cafienne.model.cmmn.actorapi.command.plan.MakePlanItemTransition;
@@ -25,7 +26,8 @@ public class TestSimple {
 
     @Test
     public void testSimple() {
-        String caseInstanceId = "Simple";
+        ActorMetadata caseInstanceId = createIdentifier("Simple");
+
         TestScript testCase = new TestScript(caseInstanceId);
 
         StartCase startCase = createCaseCommand(testUser, caseInstanceId, definitions);

@@ -1,5 +1,6 @@
 package org.cafienne.model.cmmn.test.plan;
 
+import org.cafienne.actormodel.ActorMetadata;
 import org.cafienne.model.cmmn.actorapi.command.StartCase;
 import org.cafienne.model.cmmn.definition.CaseDefinition;
 import org.cafienne.model.cmmn.test.TestScript;
@@ -14,7 +15,7 @@ public class TestImmediateMilestone {
 
     @Test
     public void testImmediateMilestone() {
-        String caseInstanceId = "MilestoneDependencyTest";
+        ActorMetadata caseInstanceId = createIdentifier("MilestoneDependencyTest");
         TestScript testCase = new TestScript("MilestoneDependencyTest");
         ValueMap greeting = new ValueMap();
 
