@@ -28,7 +28,7 @@ import scala.concurrent.ExecutionContext
 class RootArchiveNode(user: StorageUser, metadata: ActorMetadata, actor: RootArchiver) extends ArchiveNode(user, metadata, actor) with LazyLogging {
   override def hasCompleted: Boolean =
     // If we're root, we're also awaiting confirmation of actual storage of the archive
-    eventsOfType(classOf[ArchiveStored]).nonEmpty
+    super.hasCompleted && eventsOfType(classOf[ArchiveStored]).nonEmpty
 
   private var startedExporting = false
 
