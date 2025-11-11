@@ -33,6 +33,7 @@ import org.cafienne.service.http.cases.CasesRoute
 import org.cafienne.service.http.cases.file.CaseFileAPIFormat.CaseFileJsonExampleFormat
 import org.cafienne.service.infrastructure.authentication.AuthenticatedUser
 import org.cafienne.service.infrastructure.payload.HttpJsonReader._
+import org.cafienne.util.URLUtil
 import org.cafienne.util.json.Value
 
 @SecurityRequirement(name = "oauth2", scopes = Array("openid"))
@@ -189,8 +190,7 @@ class CaseFileRoute(override val httpService: CaseEngineHttpServer) extends Case
       // Take the "raw" remaining string, and decode it, and make it a Cafienne CaseFile Path
       // Note: taking "Segment" or "Segments" instead of "Remaining" fails and returns 405 on paths like "abc[0 ",
       //  when parsing it to a Cafienne path the error message is more clear.
-      import java.nio.charset.StandardCharsets
-      val decodedRawPath = java.net.URLDecoder.decode(rawPath, StandardCharsets.UTF_8.name)
+      val decodedRawPath = URLUtil.decode(rawPath)
       subRoute(new Path(decodedRawPath))
     }
   }

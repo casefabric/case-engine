@@ -19,10 +19,12 @@ package org.cafienne.system.router.singleton
 
 import com.typesafe.scalalogging.LazyLogging
 import org.apache.pekko.actor.{Actor, ActorRef, Props, Terminated}
+import org.cafienne.actormodel.ActorMetadata
 import org.cafienne.actormodel.message.command.{ModelCommand, TerminateModelActor}
 import org.cafienne.actormodel.message.response.ActorTerminated
 import org.cafienne.infrastructure.serialization.DeserializationFailure
 import org.cafienne.system.CaseSystem
+import org.cafienne.util.URLUtil
 
 import scala.collection.mutable
 
@@ -70,7 +72,7 @@ class LocalRouter(caseSystem: CaseSystem, actors: mutable.Map[String, ActorRef],
     */
   private def createActorRef(m: ModelCommand): ActorRef = {
     // Note: we create the ModelActor as a child to our context
-    val ref = context.actorOf(Props.create(m.actorType.actorClass, caseSystem), m.actorId)
+    val ref = context.actorOf(Props.create(m.actorType.actorClass, caseSystem), URLUtil.encode(m.target().path))
     // Also start watching the lifecycle of the model actor
     context.watch(ref)
     ref
@@ -91,6 +93,9 @@ class LocalRouter(caseSystem: CaseSystem, actors: mutable.Map[String, ActorRef],
   private def handleActorTerminated(actorTerminated: ActorTerminated): Unit = {
     // Note: this code is "idempotent", it is invoked both when receiving Terminated msg from underlying Pekko and when ActorTerminated is received from our infra.
     terminationRequests.remove(actorTerminated.actorId).foreach(requester => requester ! actorTerminated)
+    if (actors.remove(actorTerminated.actorId).isEmpty) {
+      logger.warn("Received a Termination message for actor " + actorTerminated.actorId + ", but it was not registered in the LocalRoutingService. Termination message is ignored")
+    }
   }
 
   /**
@@ -100,11 +105,9 @@ class LocalRouter(caseSystem: CaseSystem, actors: mutable.Map[String, ActorRef],
     * @return
     */
   private def removeActorRef(t: Terminated): Unit = {
-    val actorId = t.actor.path.name
+    val metadata = ActorMetadata(t.actor.path)
+    val actorId = metadata.actorId
     logger.whenDebugEnabled(logger.debug("ModelActor[" + actorId + "] has been terminated. Removing routing reference"))
-    handleActorTerminated(ActorTerminated(t.actor.path.name))
-    if (actors.remove(actorId).isEmpty) {
-      logger.warn("Received a Termination message for actor " + actorId + ", but it was not registered in the LocalRoutingService. Termination message is ignored")
-    }
+    handleActorTerminated(ActorTerminated(metadata.actorId))
   }
 }
