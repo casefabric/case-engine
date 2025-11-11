@@ -17,8 +17,10 @@
 
 package org.cafienne.actormodel
 
-import org.cafienne.model.cmmn.instance.Path
+import org.apache.pekko.actor.ActorPath
 import org.cafienne.infrastructure.serialization.JacksonSerializable
+import org.cafienne.model.cmmn.instance.Path
+import org.cafienne.util.URLUtil
 import org.cafienne.util.json._
 
 case class ActorMetadata(actorType: ActorType, actorId: String, parent: ActorMetadata = null) extends JacksonSerializable with CafienneJson {
@@ -60,6 +62,8 @@ case class ActorMetadata(actorType: ActorType, actorId: String, parent: ActorMet
 }
 
 object ActorMetadata {
+  def apply(path: ActorPath): ActorMetadata = ActorMetadata.parsePath(URLUtil.decode(path.name));
+
   def parsePath(path: String): ActorMetadata = {
     def parsePathElement(element: String): ActorMetadata = {
       val openingBracket = element.indexOf("[")
