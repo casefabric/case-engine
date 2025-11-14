@@ -72,7 +72,8 @@ class StorageCoordinator(val caseSystem: CaseSystem)
 
   def runStream(): Future[Done] = {
     implicit val mat: Materializer = Materializer(context)
-
+    // Storage events are removed when the storage actions completed (so .noOffset)
+    // When there are other storage events available, we should restart these storage actions.
     journal().currentEventsByTag(StorageEvent.TAG, Offset.noOffset).mapAsync(1)(consumeModelEvent).runWith(Sink.ignore)
   }
 
@@ -94,9 +95,14 @@ class StorageCoordinator(val caseSystem: CaseSystem)
             case _: RestoreStarted => restart(RestoreActorData)
             case other => logger.warn(s"Cannot recover a storage process, because of unrecognized initiation event of type ${other.getClass.getName}")
           }
+        } else {
+          logger.warn(s"Cannot recover a storage process, because the actor ${event.metadata} is not a root actor")
         }
       case EventEnvelope(_, _, _, _: StorageEvent) => // Other storage events can be safely ignored.
-      case other => logger.error(s"Encountered unexpected storage tag matching event of type ${other.getClass.getName}")
+      case EventEnvelope(offset, persistenceId, sequenceNr, event) =>
+        // Apparently other events also use the Storage tag. That's weird. Let's print it clearly in the error log
+        val eventClass = if (event == null) "null" else event.getClass.getName
+        logger.error(s"Encountered unexpected tag '${StorageEvent.TAG}' on event[offset=$offset|persistenceId=$persistenceId|sequenceNr=$sequenceNr|className=$eventClass]")
     }
     Future.successful(Done)
   }
