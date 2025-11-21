@@ -17,6 +17,7 @@
 
 package org.cafienne.actormodel.message.response
 
+import org.cafienne.actormodel.ActorMetadata
 import org.cafienne.infrastructure.serialization.JacksonSerializable
 
-case class ActorTerminated(actorId: String) extends JacksonSerializable
+case class ActorTerminated(metadata: ActorMetadata) extends JacksonSerializable
