@@ -8,7 +8,7 @@ class V1_1_13__AddTimerService(tablePrefix: String) extends ClassicEventDBSchema
 
   val description = "AddTimerService"
 
-  val scriptName = "V1_1_13__AddTimerService.sql"
+  override val scriptName = "V1_1_13__AddTimerService.sql"
 
   override def getChecksum: Integer = 235057769
 

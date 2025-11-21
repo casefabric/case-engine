@@ -6,7 +6,7 @@ class V1_1_13__AddTimerService(tablePrefix: String) extends ClassicEventDBSchema
 
   val version = "1.1.13"
 
-  val scriptName = "org.cafienne.persistence.schema.V1_1_13__AddTimerService"
+  override val scriptName = "org.cafienne.persistence.schema.V1_1_13__AddTimerService"
 
   val description = "AddTimerService"
 

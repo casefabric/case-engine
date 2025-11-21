@@ -17,13 +17,21 @@
 
 package org.cafienne.service.timerservice
 
+import org.cafienne.actormodel.ActorMetadata
 import org.cafienne.actormodel.identity.{CaseUserIdentity, Origin}
 
 import java.time.Instant
 
-case class Timer(caseInstanceId: String, timerId: String, moment: Instant, userId: String) {
+case class Timer(caseInstanceId: String, metadata: ActorMetadata, timerId: String, moment: Instant, userId: String) {
   lazy val user: CaseUserIdentity = CaseUserIdentity(userId, Origin.TimerService)
 
   override def toString: String = s"[$timerId - $moment]"
+}
+
+object Timer {
+  def apply(caseInstanceId: String, metadata: String, timerId: String, moment: Instant, userId: String): Timer = {
+    val actorMetadata = if (metadata == null || metadata.isBlank) null else ActorMetadata.parsePath(metadata)
+    new Timer(caseInstanceId, actorMetadata, timerId, moment, userId)
+  }
 }
 
