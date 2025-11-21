@@ -92,26 +92,10 @@ class BaseQueryImpl(val queryDB: QueryDB) extends TenantRegistrationQueries with
 //    println("CASE MEMBERSHIP QUERY:\n\n" + query.result.statements.mkString("\n")+"\n\n")
     val result = for {
       records <- db.run(query.distinct.result)
-      chain <- {
-        val query = for {
-          root <- TableQuery[CaseIdentifierView].filter(_.id === caseInstanceId).map(_.rootCaseId)
-          ids <- TableQuery[CaseIdentifierView].filter(_.rootCaseId === root)
-        } yield ids
-
-        val metadata: Future[ActorMetadata] = db.run(query.result).map(records => {
-          def constructMetadata(caseRecord: CaseIdentifierRecord, siblings: Seq[CaseIdentifierRecord]): ActorMetadata = {
-            val parent: ActorMetadata = siblings.find(record => record.id == caseRecord.parentCaseId).map(constructMetadata(_, siblings)).orNull
-            ActorMetadata(ActorType.Case, caseRecord.id, parent)
-          }
-          records.find(_.id == caseInstanceId).map(constructMetadata(_, records)).fold({
-            throw exception("Cannot find metadata chain")
-          })(metadata => metadata)
-        })
-        metadata
-      }
+      chain <- db.run(queryCaseChain(caseInstanceId).result)
     } yield (records, chain)
 
-    val metadata: Future[ActorMetadata] = result.map(_._2)
+    val metadata: Future[ActorMetadata] = result.map(_._2).map(createCaseMetadata(caseInstanceId, _)).map(_.getOrElse(throw exception(msg)))
     val membershipRecords = result.map(_._1)
 
     membershipRecords.flatMap(records => {
@@ -131,10 +115,7 @@ class BaseQueryImpl(val queryDB: QueryDB) extends TenantRegistrationQueries with
         fail // Again, case apparently does not exist (then why do we have a head in the first place ??? Perhaps it is filled with all NULL values???
       }
 
-      val caseId = originRecords.head._1.get._1
       val tenantId = originRecords.head._1.get._2
-//      println(" Case id: " + caseId)
-//      println(" Tenant id: " + tenantId)
       val origin = {
         if (originRecords.isEmpty) Origin.IDP // No platform registration for this user id
         else if (originRecords.head._1.get._3.isDefined) Origin.Tenant
@@ -225,5 +206,23 @@ class BaseQueryImpl(val queryDB: QueryDB) extends TenantRegistrationQueries with
       teamMemberShip <- membershipQuery(user, caseInstanceId)
       _ <- new BusinessIdentifierFilterParser(identifiers).asQuery(caseInstanceId)
     } yield teamMemberShip
+  }
+
+  def queryCaseChain(caseInstanceId: Rep[String]): Query[CaseIdentifierView, CaseIdentifierRecord, Seq] = {
+    val query = for {
+      root <- TableQuery[CaseIdentifierView].filter(_.id === caseInstanceId).map(_.rootCaseId)
+      ids <- TableQuery[CaseIdentifierView].filter(_.rootCaseId === root)
+    } yield ids
+    query
+  }
+
+  val noMetadata: Option[ActorMetadata] = None
+
+  def createCaseMetadata(caseId: String, siblings: Seq[CaseIdentifierRecord]): Option[ActorMetadata] = {
+    def asMetadata(caseRecord: CaseIdentifierRecord, siblings: Seq[CaseIdentifierRecord]): ActorMetadata = {
+      val parent: ActorMetadata = siblings.find(record => record.id == caseRecord.parentCaseId).map(asMetadata(_, siblings)).orNull
+      ActorMetadata(ActorType.Case, caseRecord.id, parent)
+    }
+    siblings.find(_.id == caseId).fold(noMetadata)(r => Some(asMetadata(r, siblings)))
   }
 }
