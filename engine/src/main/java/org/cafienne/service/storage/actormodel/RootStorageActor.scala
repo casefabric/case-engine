@@ -23,6 +23,7 @@ import org.apache.pekko.persistence.journal.Tagged
 import org.apache.pekko.persistence.{DeleteMessagesSuccess, RecoveryCompleted}
 import org.cafienne.actormodel.ActorMetadata
 import org.cafienne.actormodel.message.event.ModelEvent
+import org.cafienne.actormodel.message.response.ActorTerminated
 import org.cafienne.service.storage.actormodel.command.StorageCommand
 import org.cafienne.service.storage.actormodel.event.StorageRequestReceived
 import org.cafienne.service.storage.actormodel.message.StorageEvent
@@ -172,6 +173,7 @@ trait RootStorageActor[O <: OffspringNode] extends BaseStorageActor with LazyLog
     case request: StorageCommand => triggerStorageProcess(request, sender())
     case event: StorageEvent => storeEvent(event)
     case t: Terminated => removeActorRef(t)
+    case t: ActorTerminated => removeActorRef(t)
     case e: DeleteMessagesSuccess => afterMessagesDeleted(e) // Event journal no longer contains our persistence id
     case other => logger.warn(s"${this.getClass.getSimpleName} on $metadata received an unknown message of type ${other.getClass.getName}")
   }
