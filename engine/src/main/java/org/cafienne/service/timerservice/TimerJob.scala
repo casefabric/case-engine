@@ -19,7 +19,7 @@ package org.cafienne.service.timerservice
 
 import com.typesafe.scalalogging.LazyLogging
 import org.apache.pekko.actor.{Cancellable, Scheduler}
-import org.cafienne.actormodel.{ActorMetadata, ActorType}
+import org.cafienne.actormodel.ActorMetadata
 import org.cafienne.actormodel.message.response.{CommandFailure, ModelResponse}
 import org.cafienne.model.cmmn.actorapi.command.plan.eventlistener.RaiseEvent
 
@@ -28,7 +28,7 @@ import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.duration.{Duration, FiniteDuration}
 
 class TimerJob(val timerService: TimerService, val timer: Timer, val scheduler: Scheduler) extends Runnable with LazyLogging {
-  val caseIdentifier = ActorMetadata(ActorType.Case, timer.caseInstanceId)
+  val caseIdentifier: ActorMetadata = ActorMetadata.parsePath(timer.metadata)
   val command = new RaiseEvent(timer.user, caseIdentifier, timer.timerId)
   private val millis: Long = timer.moment.toEpochMilli
   private val delay: Long = millis - System.currentTimeMillis

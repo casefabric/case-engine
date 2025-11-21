@@ -5,7 +5,7 @@ import org.cafienne.persistence.eventdb.schema.ClassicEventDBSchemaScript
 class V1_1_16__CreateAkkaSchema(tablePrefix: String) extends ClassicEventDBSchemaScript {
   val version = "1.1.16"
 
-  val scriptName = "V1_1_16__CreateAkkaSchema.sql"
+  override val scriptName = "V1_1_16__CreateAkkaSchema.sql"
 
   val description = "CreateAkkaSchema"
 
