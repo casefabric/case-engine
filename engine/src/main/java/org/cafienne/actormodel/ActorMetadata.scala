@@ -65,6 +65,7 @@ object ActorMetadata {
   def apply(path: ActorPath): ActorMetadata = ActorMetadata.parsePath(URLUtil.decode(path.name));
 
   def parsePath(path: String): ActorMetadata = {
+    if (path == null) return null
     def parsePathElement(element: String): ActorMetadata = {
       val openingBracket = element.indexOf("[")
       val closingBracket = element.indexOf("]")
