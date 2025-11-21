@@ -19,4 +19,4 @@ package org.cafienne.service.timerservice.persistence.jdbc
 
 import java.time.Instant
 
-final case class TimerServiceRecord(timerId: String, caseInstanceId: String, moment: Instant, tenant: String, user: String)
+final case class TimerServiceRecord(timerId: String, caseInstanceId: String, metadata: String, moment: Instant, tenant: String, user: String)
