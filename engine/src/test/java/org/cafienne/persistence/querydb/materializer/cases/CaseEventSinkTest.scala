@@ -4,12 +4,15 @@ import org.apache.pekko.actor.{ActorRef, ActorSystem, Props}
 import org.apache.pekko.event.{Logging, LoggingAdapter}
 import org.apache.pekko.testkit.{TestKit, TestProbe}
 import org.cafienne.actormodel.identity.TenantUser
+import org.cafienne.actormodel.message.event.ActorModified
+import org.cafienne.identity.TestIdentityFactory
+import org.cafienne.infrastructure.config.TestConfig
 import org.cafienne.model.cmmn.actorapi.event.CaseEvent
 import org.cafienne.model.cmmn.definition.CaseDefinition
 import org.cafienne.model.cmmn.test.TestScript.loadCaseDefinition
-import org.cafienne.identity.TestIdentityFactory
-import org.cafienne.infrastructure.config.TestConfig
+import org.cafienne.persistence.infrastructure.lastmodified.notification.{LastModifiedPublisher, LastModifiedSubscriber}
 import org.cafienne.persistence.querydb.materializer.{EventFactory, TestQueryDB}
+import org.cafienne.persistence.querydb.schema.QueryDB
 import org.cafienne.system.CaseSystem
 import org.cafienne.util.Guid
 import org.scalatest.BeforeAndAfterAll
@@ -49,5 +52,11 @@ class CaseEventSinkTest
   val caseDefinition: CaseDefinition = loadCaseDefinition("testdefinition/helloworld.xml")
   val eventFactory = new EventFactory(caseSystem, caseInstanceId, caseDefinition, user)
 
-  new CaseEventSink(caseSystem, TestQueryDB).start()
+  new CaseEventSink(TestPublisher, caseSystem, TestQueryDB).start()
+}
+
+object TestPublisher extends LastModifiedPublisher with LastModifiedSubscriber {
+  override def publish(event: ActorModified[_, _]): Unit = {}
+  override def handleActorModified(event: ActorModified[_, _]): Unit = {}
+  override val queryDB: QueryDB = null
 }

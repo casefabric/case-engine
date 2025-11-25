@@ -19,13 +19,14 @@ package org.cafienne.persistence.querydb.materializer.consentgroup
 
 import com.typesafe.scalalogging.LazyLogging
 import org.apache.pekko.persistence.query.Offset
+import org.cafienne.persistence.infrastructure.lastmodified.notification.LastModifiedPublisher
 import org.cafienne.persistence.querydb.materializer.{QueryDBEventSink, QueryDBStorage}
 import org.cafienne.system.CaseSystem
 import org.cafienne.usermanagement.consentgroup.actorapi.event.ConsentGroupEvent
 
 import scala.concurrent.Future
 
-class ConsentGroupEventSink(val caseSystem: CaseSystem, storage: QueryDBStorage) extends QueryDBEventSink with LazyLogging {
+class ConsentGroupEventSink(val publisher: LastModifiedPublisher, val caseSystem: CaseSystem, storage: QueryDBStorage) extends QueryDBEventSink with LazyLogging {
   override val tag: String = ConsentGroupEvent.TAG
 
   override def getOffset: Future[Offset] = storage.getOffset(ConsentGroupEventSink.offsetName)

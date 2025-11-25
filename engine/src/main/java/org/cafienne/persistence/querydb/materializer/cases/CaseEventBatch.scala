@@ -75,7 +75,7 @@ class CaseEventBatch(val sink: CaseEventSink, override val persistenceId: String
 
     // Commit and then inform the last modified registration
     dBTransaction.commit()
-    CaseReader.lastModifiedRegistration.handle(caseModified)
+    sink.informReaders(caseModified)
   }
 
   private def updateUserIds(event: CaseAppliedPlatformUpdate, envelope: ModelEventEnvelope): Unit = {

@@ -19,13 +19,14 @@ package org.cafienne.persistence.querydb.materializer.tenant
 
 import com.typesafe.scalalogging.LazyLogging
 import org.apache.pekko.persistence.query.Offset
+import org.cafienne.persistence.infrastructure.lastmodified.notification.LastModifiedPublisher
 import org.cafienne.persistence.querydb.materializer.{QueryDBEventSink, QueryDBStorage}
 import org.cafienne.system.CaseSystem
 import org.cafienne.usermanagement.tenant.actorapi.event.TenantEvent
 
 import scala.concurrent.Future
 
-class TenantEventSink(val caseSystem: CaseSystem, storage: QueryDBStorage) extends QueryDBEventSink with LazyLogging {
+class TenantEventSink(val publisher: LastModifiedPublisher, val caseSystem: CaseSystem, storage: QueryDBStorage) extends QueryDBEventSink with LazyLogging {
   override val tag: String = TenantEvent.TAG
 
   override def getOffset: Future[Offset] = storage.getOffset(TenantEventSink.offsetName)

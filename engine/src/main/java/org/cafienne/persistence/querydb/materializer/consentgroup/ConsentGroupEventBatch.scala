@@ -56,6 +56,6 @@ class ConsentGroupEventBatch(val sink: ConsentGroupEventSink, override val persi
     // Commit and then inform the last modified registration
     dBTransaction.commit()
     memberProjection.affectedUserIds.foreach(sink.caseSystem.identityRegistration.clear)
-    ConsentGroupReader.lastModifiedRegistration.handle(event)
+    sink.informReaders(event)
   }
 }

@@ -22,6 +22,10 @@ import org.cafienne.infrastructure.config.persistence.PersistenceConfig
 import org.cafienne.persistence.flyway.DB
 import org.cafienne.persistence.querydb.materializer.cases.CaseEventSink
 import org.cafienne.persistence.querydb.materializer.consentgroup.ConsentGroupEventSink
+import org.cafienne.persistence.infrastructure.lastmodified.LastModifiedRegistration
+import org.cafienne.persistence.infrastructure.lastmodified.header.Headers
+import org.cafienne.persistence.infrastructure.lastmodified.notification.LastModifiedPublisher
+import org.cafienne.persistence.infrastructure.lastmodified.notification.singleton.InMemoryPublisher
 import org.cafienne.persistence.querydb.materializer.slick.QueryDBWriter
 import org.cafienne.persistence.querydb.materializer.tenant.TenantEventSink
 import org.cafienne.system.CaseSystem
@@ -31,12 +35,16 @@ import slick.jdbc.JdbcProfile
 class QueryDB(val config: PersistenceConfig, val dbConfig: DatabaseConfig[JdbcProfile]) extends DB with LazyLogging {
   override val databaseDescription: String = "QueryDB"
   override val schema: QueryDBSchema = new QueryDBSchema(config, dbConfig)
+  val publisher: LastModifiedPublisher = new InMemoryPublisher(this)
   val writer = new QueryDBWriter(this)
+  val caseLastModifiedRegistration = new LastModifiedRegistration(Headers.CASE_LAST_MODIFIED)
+  val tenantLastModifiedRegistration = new LastModifiedRegistration(Headers.TENANT_LAST_MODIFIED)
+  val groupLastModifiedRegistration = new LastModifiedRegistration(Headers.CONSENT_GROUP_LAST_MODIFIED)
 
   def startEventSinks(caseSystem: CaseSystem): Unit = {
-    new CaseEventSink(caseSystem, writer).start()
-    new TenantEventSink(caseSystem, writer).start()
-    new ConsentGroupEventSink(caseSystem, writer).start()
+    new CaseEventSink(publisher, caseSystem, writer).start()
+    new TenantEventSink(publisher, caseSystem, writer).start()
+    new ConsentGroupEventSink(publisher, caseSystem, writer).start()
   }
 
   // When running with H2, you can start a debug web server on port 8082.
