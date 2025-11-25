@@ -27,6 +27,7 @@ import org.cafienne.actormodel.message.response._
 import org.cafienne.model.cmmn.actorapi.response.{CaseNotModifiedResponse, CaseResponse, HumanTaskResponse}
 import org.cafienne.persistence.infrastructure.lastmodified.header.Headers
 import org.cafienne.persistence.querydb.query.exception._
+import org.cafienne.persistence.querydb.schema.QueryDB
 import org.cafienne.system.CaseSystem
 import org.cafienne.usermanagement.consentgroup.actorapi.response.{ConsentGroupCreatedResponse, ConsentGroupResponse}
 import org.cafienne.usermanagement.tenant.actorapi.response.{TenantOwnersResponse, TenantResponse}
@@ -40,6 +41,8 @@ trait CommandRoute extends AuthenticatedRoute {
 }
 
 object CommandRouteExecutor extends LastModifiedDirectives with LazyLogging {
+  override implicit val queryDB: QueryDB = null // no need for this one
+
   def askModelActor(caseSystem: CaseSystem, command: ModelCommand): Route = {
     onComplete(caseSystem.engine.request(command)) {
       case Success(value) =>

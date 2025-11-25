@@ -23,6 +23,7 @@ import org.cafienne.actormodel.exception.{AuthorizationException, InvalidCommand
 import org.cafienne.actormodel.identity.{IdentityRegistration, PlatformUser}
 import org.cafienne.persistence.infrastructure.lastmodified.header.Headers
 import org.cafienne.persistence.querydb.query.exception.SearchFailure
+import org.cafienne.persistence.querydb.schema.QueryDB
 import org.cafienne.service.infrastructure.authentication.{AuthenticatedUser, AuthenticationDirectives, AuthenticationException, CannotReachIDPException}
 import org.cafienne.service.infrastructure.configuration.OIDCConfiguration
 import org.cafienne.system.health.HealthMonitor
@@ -38,6 +39,7 @@ trait AuthenticatedRoute extends CaseServiceRoute with AuthenticationDirectives 
   override val userCache: IdentityRegistration = caseSystem.identityRegistration
   override implicit val ex: ExecutionContext = caseSystem.system.dispatcher
   override val config: OIDCConfiguration = httpService.oidcConfiguration
+  override val queryDB: QueryDB = caseSystem.queryDB
 
   override def exceptionHandler: ExceptionHandler = ExceptionHandler {
     case e: CannotReachIDPException => handleIDPException(e)

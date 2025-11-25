@@ -22,7 +22,9 @@ import org.apache.pekko.Done
 import org.apache.pekko.actor.ActorSystem
 import org.apache.pekko.stream.RestartSettings
 import org.apache.pekko.stream.scaladsl.Sink
+import org.cafienne.actormodel.message.event.ActorModified
 import org.cafienne.infrastructure.cqrs.batch.EventBatchSource
+import org.cafienne.persistence.infrastructure.lastmodified.notification.LastModifiedPublisher
 import org.cafienne.system.CaseSystem
 import org.cafienne.system.health.HealthMonitor
 
@@ -31,11 +33,13 @@ import scala.util.{Failure, Success}
 
 trait QueryDBEventSink extends EventBatchSource[QueryDBEventBatch] with LazyLogging {
   val caseSystem: CaseSystem // Need to provide a CaseSystem
+  val publisher: LastModifiedPublisher
 
   override def system: ActorSystem = caseSystem.system
   override val readJournal: String = caseSystem.config.persistence.readJournal
   override val restartSettings: RestartSettings = caseSystem.config.persistence.queryDB.restartSettings
 
+  def informReaders(event: ActorModified[_, _]): Unit = publisher.publish(event)
 
   import scala.concurrent.ExecutionContext.Implicits.global
 

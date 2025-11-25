@@ -57,7 +57,7 @@ class TenantEventBatch(val sink: TenantEventSink, override val persistenceId: St
     }
   }
 
-  private def commitTenantRecords(envelope: ModelEventEnvelope, tenantModified: TenantModified): Unit = {
+  private def commitTenantRecords(envelope: ModelEventEnvelope, event: TenantModified): Unit = {
     // Tell the projections to prepare for commit, i.e. let them update the persistence.
     tenantProjection.prepareCommit()
     userProjection.prepareCommit()
@@ -67,7 +67,7 @@ class TenantEventBatch(val sink: TenantEventSink, override val persistenceId: St
     dBTransaction.commit()
     // Clear the user cache for those user ids that have been updated
     userProjection.affectedUserIds.foreach(sink.caseSystem.identityRegistration.clear)
-    TenantReader.lastModifiedRegistration.handle(tenantModified)
+    sink.informReaders(event)
   }
 
   private def updateUserIds(event: TenantAppliedPlatformUpdate, offset: Offset): Unit = {
