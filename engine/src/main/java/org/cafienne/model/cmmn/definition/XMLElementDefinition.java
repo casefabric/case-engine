@@ -310,7 +310,7 @@ public abstract class XMLElementDefinition implements DefinitionElement {
             return null;
         }
 
-        String implementationClassName = implementationElement.getAttribute("class").replace("org.cafienne.processtask", "org.cafienne.model.processtask");
+        String implementationClassName = implementationElement.getAttribute("class").replace("org.cafienne.processtask", "org.cafienne.model.processtask").replace("org.cafienne.cmmn.instance.process", "org.cafienne.model.processtask.implementation");
         if (implementationClassName.isEmpty()) {
             if (presenceRequired) {
                 getModelDefinition().addDefinitionError("A custom " + CAFIENNE_IMPLEMENTATION + " tag does not contain the class attribute in " + printElement() + ", but it is required");

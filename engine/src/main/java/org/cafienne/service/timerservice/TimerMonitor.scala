@@ -51,7 +51,7 @@ class TimerMonitor(val timerService: TimerService) extends LazyLogging {
     message match {
       case response: ModelResponse =>
         // Find the active timer we just triggered and inform it about the response
-        activeTimers.values.filter(timer => timer.command.getCorrelationId eq response.getCorrelationId).foreach(_.handleResponse(response))
+        activeTimers.values.filter(timer => timer.command.getCorrelationId == response.getCorrelationId).foreach(_.handleResponse(response))
         Future.successful(Done)
       case clearTimers: ClearTimerData =>
         val sender: ActorRef = timerService.sender()
@@ -66,13 +66,18 @@ class TimerMonitor(val timerService: TimerService) extends LazyLogging {
   }
 
   def removeCaseTimers(caseInstanceId: String): Future[Done] = {
-    activeTimers.values.filter(timer => timer.command.actorId eq caseInstanceId).map(schedule => schedule.cancel())
+    activeTimers.values.filter(timer => timer.command.actorId == caseInstanceId).map(removeActiveTimer)
     runStorage(timerService.storage.removeCaseTimers(caseInstanceId))
     Future.successful(Done)
   }
 
+  private def removeActiveTimer(job: TimerJob) = {
+    activeTimers.remove(job.timer.timerId)
+    job.cancel()
+  }
+
   def removeTimer(timerId: String, offset: Option[Offset]): Future[Done] = {
-    activeTimers.remove(timerId).map(schedule => schedule.cancel())
+    activeTimers.get(timerId).map(removeActiveTimer)
     runStorage(timerService.storage.removeTimer(timerId, offset))
   }
 

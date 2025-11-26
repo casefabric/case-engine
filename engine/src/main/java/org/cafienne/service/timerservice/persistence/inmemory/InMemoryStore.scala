@@ -49,7 +49,7 @@ class InMemoryStore extends TimerStore with LazyLogging {
   }
 
   override def removeCaseTimers(caseInstanceId: String): Future[Done] = {
-    val caseTimers = timers.values.filter(timer => timer.caseInstanceId eq caseInstanceId)
+    val caseTimers = timers.values.filter(timer => timer.caseInstanceId == caseInstanceId)
     caseTimers.foreach(timer => timers.remove(timer.timerId))
     Future.successful(Done)
   }
