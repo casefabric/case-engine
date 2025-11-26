@@ -66,13 +66,18 @@ class TimerMonitor(val timerService: TimerService) extends LazyLogging {
   }
 
   def removeCaseTimers(caseInstanceId: String): Future[Done] = {
-    activeTimers.values.filter(timer => timer.command.actorId == caseInstanceId).map(schedule => schedule.cancel())
+    activeTimers.values.filter(timer => timer.command.actorId == caseInstanceId).map(removeActiveTimer)
     runStorage(timerService.storage.removeCaseTimers(caseInstanceId))
     Future.successful(Done)
   }
 
+  private def removeActiveTimer(job: TimerJob) = {
+    activeTimers.remove(job.timer.timerId)
+    job.cancel()
+  }
+
   def removeTimer(timerId: String, offset: Option[Offset]): Future[Done] = {
-    activeTimers.remove(timerId).map(schedule => schedule.cancel())
+    activeTimers.get(timerId).map(removeActiveTimer)
     runStorage(timerService.storage.removeTimer(timerId, offset))
   }
 
