@@ -22,6 +22,7 @@ import org.apache.pekko.actor.ActorSystem
 import org.apache.pekko.http.scaladsl.Http
 import org.apache.pekko.http.scaladsl.server.Directives.concat
 import org.apache.pekko.http.scaladsl.server.Route
+import org.cafienne.service.http.ai.AiRoutes
 import org.cafienne.service.http.anonymous.AnonymousRequestRoutes
 import org.cafienne.service.http.cases.CasesRoutes
 import org.cafienne.service.http.debug.DebugRoute
@@ -55,6 +56,10 @@ class CaseEngineHttpServer(val caseSystem: CaseSystem) extends LazyLogging {
   addRoute(new RepositoryRoute(this))
   addRoute(new StorageRoutes(this))
   addRoute(new DebugRoute(this))
+
+  //dynamically load that class.
+  addRoute(new AiRoutes(this))
+
   // Optionally add the anonymous route
   if (caseSystem.config.api.anonymousConfig.enabled) {
     addRoute(new AnonymousRequestRoutes(this))

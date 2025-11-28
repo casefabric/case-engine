@@ -22,11 +22,12 @@ object Dependencies {
   val pekkoHttpVersion    = "1.2.0"
   val pekkoVersion        = "1.1.4"
   val pekkoPersistenceVersion = "1.1.4"
-  val jacksonVersion     = "2.18.4"
+  val jacksonVersion     = "2.19.2"
   val enumeratumVersion  = "1.9.0"
   val swaggerVersion     = "2.2.34"
   val slickVersion       = "3.5.2"
   val jasperVersion      = "6.20.0"
+  val embabelVersion     = "0.3.0-SNAPSHOT"
 
   def pekkoModule(name: String, version: String = pekkoVersion): ModuleID = "org.apache.pekko" %% s"pekko-$name" % version
   def pekkoPersistenceModule(name: String, version: String = pekkoPersistenceVersion): ModuleID = pekkoModule(s"persistence-$name", version)
@@ -120,6 +121,24 @@ object Dependencies {
     , "com.github.j5ik2o"       %% "sw4jj"                                % "1.1.60" // Simple scala Wrapper For Java-Jwt
     , "com.nimbusds"            %  "nimbus-jose-jwt"                      % "10.3.1"
     , "com.nimbusds"            %  "oauth2-oidc-sdk"                      % "11.26"
+  )
+
+  val aiSupport: Seq[ModuleID] = Seq(
+     "com.embabel.agent"       %  "embabel-agent-starter"                % embabelVersion exclude("org.kohsuke", "github-api")
+    //, "com.embabel.agent"       %  "embabel-agent-starter-shell"          % embabelVersion exclude("org.kohsuke", "github-api")
+    , "com.embabel.agent"       %  "embabel-agent-starter-ollama"         % embabelVersion exclude("org.kohsuke", "github-api")
+    , "com.embabel.agent"       %  "embabel-agent-starter-openai"         % embabelVersion exclude("org.kohsuke", "github-api")
+    , "com.embabel.agent"       %  "embabel-agent-api"                    % embabelVersion exclude("org.kohsuke", "github-api")
+    , "com.embabel.agent"       %  "embabel-agent-shell"                  % embabelVersion exclude("org.kohsuke", "github-api")
+    , "com.embabel.agent"       %  "embabel-agent-autoconfigure"          % embabelVersion exclude("org.kohsuke", "github-api")
+    , "com.embabel.agent"       %  "embabel-agent-test"                   % embabelVersion exclude("org.kohsuke", "github-api")
+    , "org.springframework.shell" % "spring-shell-standard"               % "3.4.1"
+    //, "io.netty"                % "netty-resolver-dns-native-macos"       % "4.1.128.Final"
+    , "com.fasterxml.jackson.datatype" % "jackson-datatype-jsr310"        % "2.19.2"
+    , "com.github.victools"     % "jsonschema-generator"                  % "4.38.0"
+    , "com.github.victools"     % "jsonschema-module-jackson"             % "4.38.0"
+    , "com.github.victools"     % "jsonschema-module-swagger-2"           % "4.38.0"
+    //  , "org.kohsuke"             % "github-api"                            % "2.0-rc.3"
   )
 
   val testEngine: Seq[ModuleID] = Seq(

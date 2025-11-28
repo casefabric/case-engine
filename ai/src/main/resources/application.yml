@@ -1,0 +1,28 @@
+spring:
+  main:
+    web-application-type: NONE
+  ai:
+    ollama:
+      #base-url: http://ollama:11434
+      base-url: http://localhost:11434
+    mcp:
+      client:
+        enabled: true
+        name: embabel
+        version: 1.0.0
+        request-timeout: 300s
+        type: SYNC
+        initialized: true
+        sse:
+          connections:
+            server1:
+              #url: http://mcp-gateway:9011/sse
+              url: http://localhost:9011/sse
+embabel:
+  models:
+    default-llm: gpt-4.1
+    #default-llm: gpt-4.1
+    # mistral:latest
+  llm-operations:
+    data-binding:
+      maxAttempts: 2

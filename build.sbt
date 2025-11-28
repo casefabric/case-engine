@@ -35,6 +35,19 @@ val basicSettings = {
     Test / publishArtifact := false,
 
     /**
+      * Resolvers
+      */
+    resolvers ++= Seq(
+      Resolver.jcenterRepo,
+      Resolver.DefaultMavenRepository,
+      Resolver.sonatypeCentralSnapshots,
+      "typesafe releases" at "https://repo.typesafe.com/typesafe/releases",
+      "spring snapshots" at "https://repo.spring.io/snapshot",
+      "spring milestones" at "https://repo.spring.io/milestone/",
+      "embabel snapshots" at "https://repo.embabel.com/artifactory/libs-snapshot",
+    ),
+
+    /**
      * Publishing information for Sonatype and Maven
      */
     homepage := Some(url("https://cafienne.org")),
@@ -98,7 +111,7 @@ lazy val engineRoot = (project in file("."))
   )
   .enablePlugins(BuildInfoPlugin, GitPlugin, GitVersioning, GitBranchPrompt)
 //  .enablePlugins(AutomateHeaderPlugin)
-  .aggregate(engine, plugins, service)
+  .aggregate(engine, plugins, ai, service)
 
 val engine = (project in file("engine"))
   .enablePlugins(BuildInfoPlugin, GitPlugin, GitVersioning, GitBranchPrompt)
@@ -107,6 +120,18 @@ val engine = (project in file("engine"))
   .settings(
     name := "case-engine",
     libraryDependencies ++= Dependencies.engine ++ Dependencies.testEngine)
+
+val ai = (project in file("ai"))
+  .dependsOn(engine)
+  .enablePlugins(BuildInfoPlugin, GitPlugin, GitVersioning, GitBranchPrompt)
+  //  .enablePlugins(AutomateHeaderPlugin)
+  .settings(basicSettings: _*)
+  .settings(
+    name := "ai-extension",
+    publishArtifact := true,
+    publish / skip := true,
+    jacocoExcludes := Seq("org.cafienne.BuildInfo$"),
+    libraryDependencies ++= Dependencies.aiSupport ++ Dependencies.engine ++ Dependencies.testEngine)
 
 val plugins = (project in file("plugins"))
   .dependsOn(engine)
@@ -121,13 +146,13 @@ val plugins = (project in file("plugins"))
     libraryDependencies ++= Dependencies.plugins ++ Dependencies.engine ++ Dependencies.testEngine)
 
 val service = (project in file("service"))
-  .dependsOn(engine)
+  .dependsOn(engine, ai)
   .enablePlugins(BuildInfoPlugin, GitPlugin, GitVersioning, GitBranchPrompt, JavaAppPackaging, AshScriptPlugin, DockerPlugin, ClasspathJarPlugin)
 //  .enablePlugins(AutomateHeaderPlugin)
   .settings(basicSettings: _*)
   .settings(
     name := "case-service",
-    libraryDependencies ++= Dependencies.plugins ++ Dependencies.service ++ Dependencies.testService,
+    libraryDependencies ++= Dependencies.aiSupport ++ Dependencies.plugins ++ Dependencies.service ++ Dependencies.testService,
     Compile / mainClass := Some("org.cafienne.service.Main"),
     jacocoExcludes := Seq("org.cafienne.BuildInfo$"),
     // Package bin is required in case we ship a jar file with a manifest only. Think that's not happening at this moment.
