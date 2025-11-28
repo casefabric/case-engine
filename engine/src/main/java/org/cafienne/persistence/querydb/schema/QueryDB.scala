@@ -19,6 +19,7 @@ package org.cafienne.persistence.querydb.schema
 
 import com.typesafe.scalalogging.LazyLogging
 import org.cafienne.infrastructure.config.persistence.PersistenceConfig
+import org.cafienne.persistence.flyway.DB
 import org.cafienne.persistence.querydb.materializer.cases.CaseEventSink
 import org.cafienne.persistence.querydb.materializer.consentgroup.ConsentGroupEventSink
 import org.cafienne.persistence.querydb.materializer.slick.QueryDBWriter
@@ -27,8 +28,9 @@ import org.cafienne.system.CaseSystem
 import slick.basic.DatabaseConfig
 import slick.jdbc.JdbcProfile
 
-class QueryDB(val config: PersistenceConfig, val dbConfig: DatabaseConfig[JdbcProfile]) extends LazyLogging {
-  val schema: QueryDBSchema = new QueryDBSchema(config, dbConfig)
+class QueryDB(val config: PersistenceConfig, val dbConfig: DatabaseConfig[JdbcProfile]) extends DB with LazyLogging {
+  override val databaseDescription: String = "QueryDB"
+  override val schema: QueryDBSchema = new QueryDBSchema(config, dbConfig)
   val writer = new QueryDBWriter(this)
 
   def startEventSinks(caseSystem: CaseSystem): Unit = {

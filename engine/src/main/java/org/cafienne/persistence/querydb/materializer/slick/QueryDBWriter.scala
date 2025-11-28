@@ -19,6 +19,7 @@ package org.cafienne.persistence.querydb.materializer.slick
 
 import com.typesafe.scalalogging.LazyLogging
 import org.apache.pekko.persistence.query.Offset
+import org.cafienne.persistence.flyway.FlywayRunner
 import org.cafienne.persistence.infrastructure.jdbc.cqrs.JDBCOffsetStorage
 import org.cafienne.persistence.querydb.materializer.QueryDBStorage
 import org.cafienne.persistence.querydb.materializer.cases.CaseStorageTransaction
@@ -43,7 +44,7 @@ class QueryDBWriter(val queryDB: QueryDB) extends QueryDBStorage with LazyLoggin
   }.getOffset
 
   def initializeDatabaseSchema(): Unit = {
-    queryDB.schema.initializeDatabaseSchema()
+    new FlywayRunner(queryDB).initialize()
   }
 
   if (queryDB.config.initializeDatabaseSchemas) {
