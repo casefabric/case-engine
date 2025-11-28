@@ -6,6 +6,7 @@
     </appender>
 
     <logger name="org.cafienne" level="WARN"/>
+    <logger name="com.casefabric.ai" level="DEBUG"/>
 
     <!-- Show configuration settings (before and after migrations are applied) when starting the engine -->
     <!--    <logger name="org.cafienne.infrastructure.config" level="DEBUG"/>-->

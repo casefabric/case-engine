@@ -1,0 +1,43 @@
+/*
+ * Copyright (C) 2014  Batav B.V.
+ *
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU Affero General Public License as
+ * published by the Free Software Foundation, either version 3 of the
+ * License, or (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU Affero General Public License for more details.
+ *
+ * You should have received a copy of the GNU Affero General Public License
+ * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ */
+
+package org.cafienne.service.http.ai
+
+import com.casefabric.ai.AiAgentSystem
+import io.swagger.v3.oas.annotations.security.SecurityRequirement
+import jakarta.ws.rs.Path
+import org.cafienne.service.http.CaseEngineHttpServer
+import org.cafienne.service.infrastructure.route.CaseServiceRoute
+import org.springframework.boot.SpringApplication
+
+@Path("/ai")
+class AiRoutes(override val httpService: CaseEngineHttpServer) extends CaseServiceRoute {
+  val thread = new Thread() {
+    override def run(): Unit = {
+      SpringApplication.run(classOf[AiAgentSystem])
+    }
+  }
+
+  thread.start()
+
+  override val prefix = "ai"
+
+  addSubRoute(new AgentRoutes(httpService))
+  addSubRoute(new ToolRoutes(httpService))
+  addSubRoute(new TypeRoutes(httpService))
+  addSubRoute(new LlmRoutes(httpService))
+}
