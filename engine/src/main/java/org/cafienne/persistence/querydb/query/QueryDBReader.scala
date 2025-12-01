@@ -32,5 +32,5 @@ trait QueryDBReader extends SlickQueryExtensions
   with Views
   with TaskTables {
   val queryDB: QueryDB
-  val tablePrefix: String = queryDB.tablePrefix
+  val tablePrefix: String = queryDB.schema.tablePrefix
 }

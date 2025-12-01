@@ -32,8 +32,6 @@ class TaskQueriesImplTest extends QueryTestBaseClass("task-list-queries") {
     val caseUpdater = queryDBWriter.createCaseTransaction(null)
     val tenantUpdater = queryDBWriter.createTenantTransaction(null)
 
-    queryDB.initializeDatabaseSchema()
-
     println("Writing cases")
     caseUpdater.upsert(CaseRecord(id = case33, tenant = tenant, rootCaseId = case33, caseName = "aaa bbb ccc", state = State.Failed.toString, failures = 0, lastModified = Instant.now, createdOn = Instant.now))
     caseUpdater.upsert(CaseRecord(id = case44, tenant = tenant, rootCaseId = case44, caseName = "aaa bbb ccc", state = State.Failed.toString, failures = 0, lastModified = Instant.now, createdOn = Instant.now))
@@ -71,7 +69,7 @@ class TaskQueriesImplTest extends QueryTestBaseClass("task-list-queries") {
   }
 
   "Create a table" should "succeed the second time as well" in {
-    queryDB.initializeDatabaseSchema()
+    queryDBWriter.initializeDatabaseSchema()
   }
 
   "A query" should "give a search failure when task not found" in {

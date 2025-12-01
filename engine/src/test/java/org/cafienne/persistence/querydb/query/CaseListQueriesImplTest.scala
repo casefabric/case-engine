@@ -48,7 +48,6 @@ class CaseListQueriesImplTest extends QueryTestBaseClass("case-list-queries") {
   )
 
   override def beforeAll(): Unit = {
-    queryDB.initializeDatabaseSchema()
     val caseUpdater: CaseStorageTransaction = queryDBWriter.createCaseTransaction(null)
     val tenantUpdater: TenantStorageTransaction = queryDBWriter.createTenantTransaction(null)
     caseUpdater.upsert(activeCase)
@@ -70,7 +69,7 @@ class CaseListQueriesImplTest extends QueryTestBaseClass("case-list-queries") {
   // *******************************************************************************************************************
 
   "Create a table" should "succeed the second time as well" in {
-    queryDB.initializeDatabaseSchema()
+    queryDBWriter.initializeDatabaseSchema()
   }
 
   val tenantFilter: CaseFilter = CaseFilter(Some(tenant))

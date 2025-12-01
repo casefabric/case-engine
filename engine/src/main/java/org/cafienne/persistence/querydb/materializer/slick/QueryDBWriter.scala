@@ -17,7 +17,9 @@
 
 package org.cafienne.persistence.querydb.materializer.slick
 
+import com.typesafe.scalalogging.LazyLogging
 import org.apache.pekko.persistence.query.Offset
+import org.cafienne.persistence.flyway.FlywayRunner
 import org.cafienne.persistence.infrastructure.jdbc.cqrs.JDBCOffsetStorage
 import org.cafienne.persistence.querydb.materializer.QueryDBStorage
 import org.cafienne.persistence.querydb.materializer.cases.CaseStorageTransaction
@@ -27,8 +29,7 @@ import org.cafienne.persistence.querydb.schema.QueryDB
 
 import scala.concurrent.{ExecutionContext, Future}
 
-class QueryDBWriter(val queryDB: QueryDB) extends QueryDBStorage {
-
+class QueryDBWriter(val queryDB: QueryDB) extends QueryDBStorage with LazyLogging {
   override def createCaseTransaction(caseInstanceId: String): CaseStorageTransaction = new SlickCaseTransaction(this)
 
   override def createConsentGroupTransaction(groupId: String): ConsentGroupStorageTransaction = new SlickConsentGroupTransaction(this)
@@ -36,9 +37,17 @@ class QueryDBWriter(val queryDB: QueryDB) extends QueryDBStorage {
   override def createTenantTransaction(tenant: String): TenantStorageTransaction = new SlickTenantTransaction(this)
 
   override def getOffset(offsetName: String): Future[Offset] = new JDBCOffsetStorage {
-    override val tablePrefix: String = queryDB.tablePrefix
+    override val tablePrefix: String = queryDB.schema.tablePrefix
     override val storageName: String = offsetName
-    override lazy val dbConfig = queryDB.dbConfig
+    override lazy val dbConfig = queryDB.schema.dbConfig
     override implicit val ec: ExecutionContext = db.ioExecutionContext
   }.getOffset
+
+  def initializeDatabaseSchema(): Unit = {
+    new FlywayRunner(queryDB).initialize()
+  }
+
+  if (queryDB.config.initializeDatabaseSchemas) {
+    initializeDatabaseSchema()
+  }
 }

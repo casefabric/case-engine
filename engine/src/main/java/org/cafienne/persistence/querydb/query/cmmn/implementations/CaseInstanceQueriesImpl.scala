@@ -194,7 +194,7 @@ class CaseInstanceQueriesImpl(queryDB: QueryDB)
   private case class CaseRoleAccess(caseInstanceId: String, caseRole: String, hasCaseOwnership: Boolean)
 
   override def getCaseTasks(caseInstanceId: String, user: UserIdentity, includeSubCaseTasks: Boolean): Future[Seq[PerformableTaskRecord]] = {
-    if (queryDB.isHsql) {
+    if (queryDB.schema.isHsql) {
       return inMemoryGetCaseTasks(caseInstanceId, user, includeSubCaseTasks)
     }
     //    println("\n================= USER " + user.id +" IS FETCHING TASKS OF " + caseInstanceId)
