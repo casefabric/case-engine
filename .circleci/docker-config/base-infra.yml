@@ -27,3 +27,4 @@ services:
     environment:
       BIND: 0.0.0.0
       PORT: 2377
+      EXPOSED_HOST: http://localhost:2377
