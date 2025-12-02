@@ -27,7 +27,7 @@ import org.apache.pekko.http.scaladsl.model.StatusCodes
 import org.apache.pekko.http.scaladsl.server.Route
 import org.cafienne.model.cmmn.actorapi.command.plan.MakePlanItemTransition
 import org.cafienne.model.cmmn.instance.Transition
-import org.cafienne.persistence.infrastructure.lastmodified.Headers
+import org.cafienne.persistence.infrastructure.lastmodified.header.Headers
 import org.cafienne.service.http.CaseEngineHttpServer
 import org.cafienne.service.http.cases.CasesRoute
 import org.cafienne.service.http.cases.plan.PlanItemAPIFormat.PlanItemResponseFormat

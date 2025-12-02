@@ -25,7 +25,7 @@ import org.cafienne.actormodel.ActorType
 import org.cafienne.actormodel.message.command.ModelCommand
 import org.cafienne.actormodel.message.response._
 import org.cafienne.model.cmmn.actorapi.response.{CaseNotModifiedResponse, CaseResponse, HumanTaskResponse}
-import org.cafienne.persistence.infrastructure.lastmodified.Headers
+import org.cafienne.persistence.infrastructure.lastmodified.header.Headers
 import org.cafienne.persistence.querydb.query.exception._
 import org.cafienne.system.CaseSystem
 import org.cafienne.usermanagement.consentgroup.actorapi.response.{ConsentGroupCreatedResponse, ConsentGroupResponse}

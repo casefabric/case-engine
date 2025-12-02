@@ -1,5 +1,6 @@
-package org.cafienne.persistence.infrastructure.lastmodified
+package org.cafienne.persistence.infrastructure.lastmodified.header
 
+import org.cafienne.persistence.infrastructure.lastmodified.LastModifiedRegistration
 import org.cafienne.persistence.querydb.materializer.cases.CaseReader
 
 case class CaseLastModifiedHeader(override val value: Option[String]) extends LastModifiedHeader {

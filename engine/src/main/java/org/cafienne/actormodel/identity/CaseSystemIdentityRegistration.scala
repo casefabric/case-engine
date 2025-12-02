@@ -18,7 +18,7 @@
 package org.cafienne.actormodel.identity
 
 import com.typesafe.scalalogging.LazyLogging
-import org.cafienne.persistence.infrastructure.lastmodified.LastModifiedHeader
+import org.cafienne.persistence.infrastructure.lastmodified.header.LastModifiedHeader
 import org.cafienne.persistence.querydb.query.userregistration.TenantQueries
 import org.cafienne.persistence.querydb.query.userregistration.implementation.TenantQueriesImpl
 import org.cafienne.persistence.querydb.record.userregistration.TenantRecord

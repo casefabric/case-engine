@@ -15,7 +15,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package org.cafienne.persistence.infrastructure.lastmodified
+package org.cafienne.persistence.infrastructure.lastmodified.header
 
 object Headers {
   final val CASE_LAST_MODIFIED = "Case-Last-Modified"

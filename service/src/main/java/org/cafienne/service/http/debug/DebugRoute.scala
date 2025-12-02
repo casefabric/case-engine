@@ -26,7 +26,7 @@ import jakarta.ws.rs.{GET, PATCH, Path, Produces}
 import org.apache.pekko.http.scaladsl.model._
 import org.apache.pekko.http.scaladsl.server.Route
 import org.cafienne.infrastructure.cqrs.instance.ModelEventsReader
-import org.cafienne.persistence.infrastructure.lastmodified.LastModifiedHeader
+import org.cafienne.persistence.infrastructure.lastmodified.header.LastModifiedHeader
 import org.cafienne.persistence.querydb.query.system.{SystemQueries, SystemQueriesImpl}
 import org.cafienne.service.http.CaseEngineHttpServer
 import org.cafienne.service.infrastructure.route.{CommandRoute, QueryRoute}

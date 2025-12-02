@@ -17,7 +17,8 @@
 
 package org.cafienne.persistence.querydb.materializer.cases
 
-import org.cafienne.persistence.infrastructure.lastmodified.{Headers, LastModifiedRegistration}
+import org.cafienne.persistence.infrastructure.lastmodified.LastModifiedRegistration
+import org.cafienne.persistence.infrastructure.lastmodified.header.Headers
 
 object CaseReader {
   val lastModifiedRegistration: LastModifiedRegistration = new LastModifiedRegistration(Headers.CASE_LAST_MODIFIED)
