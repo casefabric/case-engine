@@ -20,7 +20,7 @@ package org.cafienne.service.infrastructure.route
 import org.apache.pekko.http.scaladsl.model.StatusCodes
 import org.apache.pekko.http.scaladsl.server.Route
 import org.cafienne.actormodel.exception.AuthorizationException
-import org.cafienne.persistence.infrastructure.lastmodified.LastModifiedHeader
+import org.cafienne.persistence.infrastructure.lastmodified.header.LastModifiedHeader
 import org.cafienne.persistence.querydb.query.exception.SearchFailure
 import org.cafienne.util.json.{CafienneJson, Value}
 

@@ -13,7 +13,7 @@ import org.apache.pekko.http.scaladsl.server._
 import org.apache.pekko.http.scaladsl.testkit.ScalatestRouteTest
 import org.cafienne.actormodel.identity.IdentityRegistration
 import org.cafienne.infrastructure.config.util.SystemConfig
-import org.cafienne.persistence.infrastructure.lastmodified.LastModifiedHeader
+import org.cafienne.persistence.infrastructure.lastmodified.header.LastModifiedHeader
 import org.cafienne.service.infrastructure.configuration.OIDCConfiguration
 import org.scalatest.concurrent.ScalaFutures
 import org.scalatest.matchers.should.Matchers

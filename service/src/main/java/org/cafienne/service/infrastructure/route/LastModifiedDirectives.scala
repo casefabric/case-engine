@@ -24,7 +24,7 @@ import org.apache.pekko.http.scaladsl.model.{ContentTypes, HttpEntity, StatusCod
 import org.apache.pekko.http.scaladsl.server.Directives.{complete, optionalHeaderValueByName, respondWithHeader, respondWithHeaders}
 import org.apache.pekko.http.scaladsl.server.{Directive0, Route}
 import org.cafienne.actormodel.message.response.ModelResponse
-import org.cafienne.persistence.infrastructure.lastmodified.LastModifiedHeader
+import org.cafienne.persistence.infrastructure.lastmodified.header.LastModifiedHeader
 
 trait LastModifiedDirectives extends LazyLogging {
   /**

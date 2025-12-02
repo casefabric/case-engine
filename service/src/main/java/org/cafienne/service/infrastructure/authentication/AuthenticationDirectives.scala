@@ -20,7 +20,7 @@ package org.cafienne.service.infrastructure.authentication
 import org.apache.pekko.http.scaladsl.server.directives.Credentials
 import org.apache.pekko.http.scaladsl.server.{Directive1, Directives}
 import org.cafienne.actormodel.identity.{IdentityRegistration, PlatformUser}
-import org.cafienne.persistence.infrastructure.lastmodified.LastModifiedHeader
+import org.cafienne.persistence.infrastructure.lastmodified.header.LastModifiedHeader
 import org.cafienne.service.infrastructure.configuration.OIDCConfiguration
 
 import scala.concurrent.{ExecutionContext, Future}

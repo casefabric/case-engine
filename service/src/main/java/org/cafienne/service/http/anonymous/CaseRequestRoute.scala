@@ -30,7 +30,7 @@ import org.cafienne.model.cmmn.actorapi.command.StartCase
 import org.cafienne.model.cmmn.actorapi.response.CaseStartedResponse
 import org.cafienne.model.cmmn.definition.InvalidDefinitionException
 import org.cafienne.model.cmmn.repository.MissingDefinitionException
-import org.cafienne.persistence.infrastructure.lastmodified.Headers
+import org.cafienne.persistence.infrastructure.lastmodified.header.Headers
 import org.cafienne.persistence.querydb.query.exception.SearchFailure
 import org.cafienne.service.http.CaseEngineHttpServer
 import org.cafienne.service.http.anonymous.model.AnonymousAPI._

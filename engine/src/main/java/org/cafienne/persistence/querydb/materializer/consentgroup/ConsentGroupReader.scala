@@ -17,7 +17,8 @@
 
 package org.cafienne.persistence.querydb.materializer.consentgroup
 
-import org.cafienne.persistence.infrastructure.lastmodified.{Headers, LastModifiedRegistration}
+import org.cafienne.persistence.infrastructure.lastmodified.LastModifiedRegistration
+import org.cafienne.persistence.infrastructure.lastmodified.header.Headers
 
 object ConsentGroupReader {
   val lastModifiedRegistration: LastModifiedRegistration = new LastModifiedRegistration(Headers.CONSENT_GROUP_LAST_MODIFIED)
