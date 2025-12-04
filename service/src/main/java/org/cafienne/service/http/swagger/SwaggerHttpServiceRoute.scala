@@ -24,9 +24,7 @@ import org.apache.pekko.http.scaladsl.server.Route
 import org.cafienne.service.http.CaseEngineHttpServer
 
 class SwaggerHttpServiceRoute(val httpService: CaseEngineHttpServer, val apiClasses: Set[Class[_]]) extends SwaggerHttpService {
-
-   //override val host = s"$configuredHost:$configuredPort" //the url of your api, not swagger's json endpoint
-  override val host = s"${httpService.caseSystem.config.api.bindHost}:${httpService.caseSystem.config.api.bindPort}"
+  override val schemes = List(); // to make sure no servers are registered
   override val basePath = "/" //the basePath for the API you are exposing
   override val apiDocsPath = "api-docs" //where you want the swagger-json endpoint exposed
   override val info: Info = Info(description =
