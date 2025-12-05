@@ -37,18 +37,13 @@ class QueryDB(val config: PersistenceConfig, val dbConfig: DatabaseConfig[JdbcPr
     new CaseEventSink(caseSystem, writer).start()
     new TenantEventSink(caseSystem, writer).start()
     new ConsentGroupEventSink(caseSystem, writer).start()
-
-    // When running with H2, you can start a debug web server on port 8082.
-    checkH2InDebugMode()
   }
 
-  private def checkH2InDebugMode(): Unit = {
+  // When running with H2, you can start a debug web server on port 8082.
+  if (config.queryDB.h2WebServer.enabled) {
     import org.h2.tools.Server
-
-    if (config.queryDB.debug) {
-      val port = "8082"
-      logger.warn("Starting H2 Web Client on port " + port)
-      Server.createWebServer("-web", "-webAllowOthers", "-webPort", port).start()
-    }
+    val port = String.valueOf(config.queryDB.h2WebServer.port)
+    logger.warn("Starting H2 Web Client on port " + port)
+    Server.createWebServer("-web", "-webAllowOthers", "-webPort", port).start()
   }
 }

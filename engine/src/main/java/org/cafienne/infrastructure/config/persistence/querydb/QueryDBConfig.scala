@@ -20,7 +20,7 @@ package org.cafienne.infrastructure.config.persistence.querydb
 import com.typesafe.config.Config
 import org.apache.pekko.stream.RestartSettings
 import org.cafienne.infrastructure.config.persistence.PersistenceConfig
-import org.cafienne.infrastructure.config.util.MandatoryConfig
+import org.cafienne.infrastructure.config.util.{ChildConfigReader, MandatoryConfig}
 import slick.basic.DatabaseConfig
 import slick.jdbc.JdbcProfile
 
@@ -53,12 +53,24 @@ class QueryDBConfig(val parent: PersistenceConfig) extends MandatoryConfig {
   override val msg = "Cafienne Query Database is not configured. Check local.conf for 'cafienne.query-db' settings"
 
   lazy val restartSettings: RestartSettings = new RestartConfig(this).settings
-  lazy val debug: Boolean = readBoolean("debug", default = false)
+
+  lazy val h2WebServer: H2WebServerConfig = new H2WebServerConfig(this)
+
   lazy val readJournal: String = {
     val foundJournal = readString("read-journal")
     logger.warn(s"Obtaining read-journal settings from 'cafienne.querydb.read-journal' = $foundJournal is deprecated; please place these settings in 'cafienne.read-journal' instead")
     foundJournal
   }
+}
+
+class H2WebServerConfig(val parent: QueryDBConfig) extends ChildConfigReader {
+  val path: String = "h2-webserver"
+
+  private lazy val defaultPort = if (parent.readBoolean("debug", default = false)) 8082 else -1
+
+  lazy val port: Integer = readInt("port", defaultPort)
+
+  lazy val enabled: Boolean = port > 0
 }
 
 
