@@ -23,7 +23,8 @@ jobs:
     resource_class: large
     steps:
       - build-preparation
-      - sonarcloud/scan
+      - sonarcloud/scan:
+          cache_version: 2
       - docker-login
       - setup-test-infra
       - setup-databases
