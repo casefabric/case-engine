@@ -18,25 +18,16 @@
 package org.cafienne.persistence.querydb.materializer.slick
 
 import com.typesafe.scalalogging.LazyLogging
-import org.cafienne.persistence.flyway.FlywayRunner
 import org.cafienne.persistence.querydb.materializer.cases.CaseEventSink
 import org.cafienne.persistence.querydb.materializer.consentgroup.ConsentGroupEventSink
 import org.cafienne.persistence.querydb.materializer.tenant.TenantEventSink
 import org.cafienne.persistence.querydb.schema.QueryDB
 import org.cafienne.system.CaseSystem
 
-class QueryDBWriter(val queryDB: QueryDB) extends LazyLogging {
+class QueryDBEventSinkManager(val queryDB: QueryDB) extends LazyLogging {
   def startEventSinks(caseSystem: CaseSystem): Unit = {
     new CaseEventSink(queryDB.publisher, caseSystem, queryDB).start()
     new TenantEventSink(queryDB.publisher, caseSystem, queryDB).start()
     new ConsentGroupEventSink(queryDB.publisher, caseSystem, queryDB).start()
-  }
-
-  def initializeDatabaseSchema(): Unit = {
-    new FlywayRunner(queryDB).initialize()
-  }
-
-  if (queryDB.config.initializeDatabaseSchemas) {
-    initializeDatabaseSchema()
   }
 }
