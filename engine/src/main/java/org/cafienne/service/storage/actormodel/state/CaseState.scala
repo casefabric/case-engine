@@ -20,10 +20,9 @@ package org.cafienne.service.storage.actormodel.state
 import org.cafienne.actormodel.ActorMetadata
 import org.cafienne.model.cmmn.actorapi.event.plan.{PlanItemCreated, PlanItemTransitioned}
 import org.cafienne.model.cmmn.instance.PlanItemType
-import org.cafienne.service.storage.querydb.CaseStorage
+import org.cafienne.persistence.querydb.schema.table.{CaseTables, TaskTables}
 
-trait CaseState extends StorageActorState {
-  override val dbStorage: CaseStorage = new CaseStorage(actor.caseSystem.queryDB.writer)
+trait CaseState extends StorageActorState with CaseTables with TaskTables {
 
   override def findCascadingChildren(): Seq[ActorMetadata] = {
     def taskCreatedFinder(taskType: PlanItemType, finder: String => ActorMetadata): Seq[ActorMetadata] = {
@@ -51,6 +50,22 @@ trait CaseState extends StorageActorState {
 
   override def clearQueryData(): Unit = {
 //    println("Clearing case query data for " + metadata.actorId)
-    dbStorage.deleteCase(metadata.actorId)
+    deleteCase(metadata.actorId)
+  }
+
+  import dbConfig.profile.api._
+
+  private def deleteCase(caseId: String): Unit = {
+    addStatement(TableQuery[CaseInstanceDefinitionTable].filter(_.caseInstanceId === caseId).delete)
+    addStatement(TableQuery[PlanItemTable].filter(_.caseInstanceId === caseId).delete)
+    addStatement(TableQuery[CaseFileTable].filter(_.caseInstanceId === caseId).delete)
+    addStatement(TableQuery[CaseBusinessIdentifierTable].filter(_.caseInstanceId === caseId).delete)
+    addStatement(TableQuery[CaseInstanceRoleTable].filter(_.caseInstanceId === caseId).delete)
+    addStatement(TableQuery[CaseInstanceTeamUserTable].filter(_.caseInstanceId === caseId).delete)
+    addStatement(TableQuery[CaseInstanceTeamTenantRoleTable].filter(_.caseInstanceId === caseId).delete)
+    addStatement(TableQuery[CaseInstanceTeamGroupTable].filter(_.caseInstanceId === caseId).delete)
+    addStatement(TableQuery[TaskTable].filter(_.caseInstanceId === caseId).delete)
+    addStatement(TableQuery[CaseInstanceTable].filter(_.id === caseId).delete)
+    commit()
   }
 }

@@ -18,30 +18,19 @@
 package org.cafienne.persistence.querydb.materializer.slick
 
 import com.typesafe.scalalogging.LazyLogging
-import org.apache.pekko.persistence.query.Offset
 import org.cafienne.persistence.flyway.FlywayRunner
-import org.cafienne.persistence.infrastructure.jdbc.cqrs.JDBCOffsetStorage
-import org.cafienne.persistence.querydb.materializer.QueryDBStorage
-import org.cafienne.persistence.querydb.materializer.cases.CaseStorageTransaction
-import org.cafienne.persistence.querydb.materializer.consentgroup.ConsentGroupStorageTransaction
-import org.cafienne.persistence.querydb.materializer.tenant.TenantStorageTransaction
+import org.cafienne.persistence.querydb.materializer.cases.CaseEventSink
+import org.cafienne.persistence.querydb.materializer.consentgroup.ConsentGroupEventSink
+import org.cafienne.persistence.querydb.materializer.tenant.TenantEventSink
 import org.cafienne.persistence.querydb.schema.QueryDB
+import org.cafienne.system.CaseSystem
 
-import scala.concurrent.{ExecutionContext, Future}
-
-class QueryDBWriter(val queryDB: QueryDB) extends QueryDBStorage with LazyLogging {
-  override def createCaseTransaction(caseInstanceId: String): CaseStorageTransaction = new SlickCaseTransaction(this)
-
-  override def createConsentGroupTransaction(groupId: String): ConsentGroupStorageTransaction = new SlickConsentGroupTransaction(this)
-
-  override def createTenantTransaction(tenant: String): TenantStorageTransaction = new SlickTenantTransaction(this)
-
-  override def getOffset(offsetName: String): Future[Offset] = new JDBCOffsetStorage {
-    override val tablePrefix: String = queryDB.schema.tablePrefix
-    override val storageName: String = offsetName
-    override lazy val dbConfig = queryDB.schema.dbConfig
-    override implicit val ec: ExecutionContext = db.ioExecutionContext
-  }.getOffset
+class QueryDBWriter(val queryDB: QueryDB) extends LazyLogging {
+  def startEventSinks(caseSystem: CaseSystem): Unit = {
+    new CaseEventSink(queryDB.publisher, caseSystem, queryDB).start()
+    new TenantEventSink(queryDB.publisher, caseSystem, queryDB).start()
+    new ConsentGroupEventSink(queryDB.publisher, caseSystem, queryDB).start()
+  }
 
   def initializeDatabaseSchema(): Unit = {
     new FlywayRunner(queryDB).initialize()

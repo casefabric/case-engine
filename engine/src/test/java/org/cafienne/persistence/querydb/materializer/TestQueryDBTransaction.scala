@@ -4,7 +4,7 @@ import org.cafienne.infrastructure.cqrs.offset.OffsetRecord
 
 import scala.collection.mutable.ListBuffer
 
-class TestQueryDBTransaction(val persistenceId: String) extends QueryDBTransaction {
+class TestQueryDBTransaction extends QueryDBTransaction {
 
   println("\n\nCreating test query db transaction")
 

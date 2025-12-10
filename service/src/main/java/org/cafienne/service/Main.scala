@@ -35,7 +35,7 @@ object Main extends App with LazyLogging {
     val caseSystem: CaseSystem = CaseSystem(config)
 
     // Start running the Event Sinks
-    caseSystem.queryDB.startEventSinks(caseSystem)
+    caseSystem.queryDB.open(caseSystem)
 
     implicit val ec: ExecutionContextExecutor = caseSystem.system.dispatcher
     // Create and start the http server
@@ -47,7 +47,6 @@ object Main extends App with LazyLogging {
         logger.error(s"Starting Cafienne HTTP Server failed: $msg")
         System.exit(-1) // Also exit the JVM; what use do we have to keep running when there is no http available...
     }
-
 
     // Inform actor system when we're going down.
     sys addShutdownHook {

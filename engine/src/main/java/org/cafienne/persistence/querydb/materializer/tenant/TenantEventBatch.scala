@@ -29,7 +29,7 @@ import org.cafienne.usermanagement.tenant.actorapi.event.user.TenantMemberEvent
 import org.cafienne.usermanagement.tenant.actorapi.event.{TenantAppliedPlatformUpdate, TenantModified}
 
 class TenantEventBatch(val sink: TenantEventSink, override val persistenceId: String, storage: QueryDBStorage) extends QueryDBEventBatch with LazyLogging {
-  val dBTransaction: TenantStorageTransaction = storage.createTenantTransaction(persistenceId)
+  val dBTransaction: TenantStorageTransaction = storage.createTenantTransaction()
   val tenant: String = persistenceId
 
   private val tenantProjection = new TenantProjection(this)
