@@ -18,16 +18,19 @@
 package org.cafienne.service.storage.actormodel.state
 
 import org.cafienne.actormodel.ActorMetadata
-import org.cafienne.service.storage.querydb.TenantStorage
+import org.cafienne.persistence.querydb.schema.table.CaseTables
+import org.cafienne.persistence.querydb.schema.table.userregistration.{ConsentGroupTables, TenantTables}
 
-trait TenantState extends StorageActorState {
-  override val dbStorage: TenantStorage = new TenantStorage(actor.caseSystem.queryDB.writer)
+trait TenantState extends StorageActorState
+  with TenantTables
+  with CaseTables
+  with ConsentGroupTables {
 
   override def findCascadingChildren(): Seq[ActorMetadata] = {
     printLogMessage("Running tenant query on cases and groups")
 
-    val storedCases = dbStorage.readCases(metadata.actorId)
-    val storedGroups = dbStorage.readGroups(metadata.actorId)
+    val storedCases = readCases(metadata.actorId)
+    val storedGroups = readGroups(metadata.actorId)
 
     val cases = storedCases.map(id => metadata.caseMember(id))
     val groups = storedGroups.map(id => metadata.groupMember(id))
@@ -35,5 +38,23 @@ trait TenantState extends StorageActorState {
     cases ++ groups
   }
 
-  override def clearQueryData(): Unit = dbStorage.deleteTenant(actorId)
+  override def clearQueryData(): Unit = deleteTenant(actorId)
+
+  import dbConfig.profile.api._
+
+  private def deleteTenant(tenant: String): Unit = {
+    addStatement(TableQuery[UserRoleTable].filter(_.tenant === tenant).delete)
+    addStatement(TableQuery[TenantTable].filter(_.name === tenant).delete)
+    commit()
+  }
+
+  private def readCases(tenant: String): Seq[String] = {
+    val query = TableQuery[CaseInstanceTable].filter(_.tenant === tenant).filter(_.parentCaseId === "").map(_.id).distinct
+    runSync(query.result)
+  }
+
+  private def readGroups(tenant: String): Seq[String] = {
+    val query = TableQuery[ConsentGroupTable].filter(_.tenant === tenant).map(_.id).distinct
+    runSync(query.result)
+  }
 }

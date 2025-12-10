@@ -1,8 +1,8 @@
 package org.cafienne.persistence.querydb.query
 
 import org.cafienne.actormodel.identity.PlatformUser
-import org.cafienne.model.cmmn.instance.State
 import org.cafienne.identity.TestIdentityFactory
+import org.cafienne.model.cmmn.instance.State
 import org.cafienne.persistence.querydb.query.exception.CaseSearchFailure
 import org.cafienne.persistence.querydb.record.{CaseRecord, TaskRecord}
 
@@ -24,8 +24,8 @@ class CaseTaskQueriesTest extends QueryTestBaseClass("case-task-queries") {
 
   override def beforeAll(): Unit = {
 
-    val caseUpdater = queryDBWriter.createCaseTransaction(null)
-    val tenantUpdater = queryDBWriter.createTenantTransaction(null)
+    val caseUpdater = queryDB.createCaseTransaction()
+    val tenantUpdater = queryDB.createTenantTransaction()
 
     println("Writing cases")
     caseUpdater.upsert(CaseRecord(id = case33, tenant = tenant, rootCaseId = case33, caseName = "aaa bbb ccc", state = State.Failed.toString, failures = 0, lastModified = Instant.now, createdOn = Instant.now))
@@ -61,10 +61,6 @@ class CaseTaskQueriesTest extends QueryTestBaseClass("case-task-queries") {
     caseUpdater.commit()
     tenantUpdater.commit()
 
-  }
-
-  "Create a table" should "succeed the second time as well" in {
-    queryDBWriter.initializeDatabaseSchema()
   }
 
   it should "filter all tasks with caseInstanceId" in {

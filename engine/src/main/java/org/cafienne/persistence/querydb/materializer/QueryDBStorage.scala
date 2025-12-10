@@ -30,11 +30,11 @@ import scala.concurrent.Future
   */
 trait QueryDBStorage {
 
-  def createCaseTransaction(caseInstanceId: String): CaseStorageTransaction
+  def createCaseTransaction(): CaseStorageTransaction
 
-  def createConsentGroupTransaction(groupId: String): ConsentGroupStorageTransaction
+  def createConsentGroupTransaction(): ConsentGroupStorageTransaction
 
-  def createTenantTransaction(tenant: String): TenantStorageTransaction
+  def createTenantTransaction(): TenantStorageTransaction
 
   def getOffset(offsetName: String): Future[Offset]
 }

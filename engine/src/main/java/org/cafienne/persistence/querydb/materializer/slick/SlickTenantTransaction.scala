@@ -22,9 +22,10 @@ import org.cafienne.infrastructure.cqrs.offset.OffsetRecord
 import org.cafienne.model.cmmn.actorapi.command.platform.NewUserInformation
 import org.cafienne.persistence.querydb.materializer.tenant.TenantStorageTransaction
 import org.cafienne.persistence.querydb.record.userregistration.{TenantRecord, UserRoleKey, UserRoleRecord}
+import org.cafienne.persistence.querydb.schema.QueryDB
 import org.cafienne.persistence.querydb.schema.table.userregistration.TenantTables
 
-class SlickTenantTransaction(val writer: QueryDBWriter) extends SlickQueryDBTransaction with TenantTables with TenantStorageTransaction {
+class SlickTenantTransaction(val queryDB: QueryDB) extends SlickQueryDBTransaction with TenantTables with TenantStorageTransaction {
 
   import dbConfig.profile.api._
 

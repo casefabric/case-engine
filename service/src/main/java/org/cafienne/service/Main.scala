@@ -35,7 +35,7 @@ object Main extends App with LazyLogging {
     val caseSystem: CaseSystem = CaseSystem(config)
 
     // Start running the Event Sinks
-    caseSystem.queryDB.startEventSinks(caseSystem)
+    caseSystem.queryDB.open(caseSystem)
 
     implicit val ec: ExecutionContextExecutor = caseSystem.system.dispatcher
     // Create and start the http server

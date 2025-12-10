@@ -4,6 +4,7 @@ import org.apache.pekko.persistence.query.Offset
 import org.cafienne.persistence.querydb.materializer.cases.TestCaseStorageTransaction
 import org.cafienne.persistence.querydb.materializer.consentgroup.ConsentGroupStorageTransaction
 import org.cafienne.persistence.querydb.materializer.tenant.TenantStorageTransaction
+import org.cafienne.persistence.querydb.record.CaseRecord
 
 import scala.collection.mutable.ListBuffer
 import scala.concurrent.Future
@@ -16,22 +17,26 @@ object TestQueryDB extends QueryDBStorage {
 
   def latest: TestCaseStorageTransaction = transactions.last
 
-  def hasTransaction(persistenceId: String): Boolean = transactions.exists(_.persistenceId == persistenceId)
+  private def findTransaction(persistenceId: String) = {
+    transactions.find(t => t.records.exists(r => r.isInstanceOf[CaseRecord] && r.asInstanceOf[CaseRecord].id == persistenceId))
+  }
+
+  def hasTransaction(persistenceId: String): Boolean = findTransaction(persistenceId).nonEmpty
 
   def getTransaction(persistenceId: String): TestQueryDBTransaction = {
     // println(s"Searching for transaction on case $persistenceId in ${transactions.size} transactions, with id's ${transactions.map(_.persistenceId)}")
-    transactions.find(_.persistenceId == persistenceId).getOrElse(throw new Exception(s"Cannot find a transaction for case $persistenceId"))
+    findTransaction(persistenceId).getOrElse(throw new Exception(s"Cannot find a transaction for case $persistenceId"))
   }
 
-  override def createCaseTransaction(caseInstanceId: String): TestCaseStorageTransaction = {
+  override def createCaseTransaction(): TestCaseStorageTransaction = {
     // println(s"\n\nAsking for new case transaction on persistence id $caseInstanceId\n\n")
-    transactions += new TestCaseStorageTransaction(caseInstanceId)
+    transactions += new TestCaseStorageTransaction()
     transactions.last
   }
 
-  override def createConsentGroupTransaction(groupId: String): ConsentGroupStorageTransaction = ???
+  override def createConsentGroupTransaction(): ConsentGroupStorageTransaction = ???
 
-  override def createTenantTransaction(tenant: String): TenantStorageTransaction = ???
+  override def createTenantTransaction(): TenantStorageTransaction = ???
 
   override def getOffset(offsetName: String): Future[Offset] = Future.successful(Offset.noOffset)
 }

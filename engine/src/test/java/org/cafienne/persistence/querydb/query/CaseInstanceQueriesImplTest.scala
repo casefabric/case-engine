@@ -1,8 +1,8 @@
 package org.cafienne.persistence.querydb.query
 
 import org.cafienne.actormodel.identity.PlatformUser
-import org.cafienne.model.cmmn.instance.State
 import org.cafienne.identity.TestIdentityFactory
+import org.cafienne.model.cmmn.instance.State
 import org.cafienne.persistence.querydb.materializer.cases.CaseStorageTransaction
 import org.cafienne.persistence.querydb.materializer.tenant.TenantStorageTransaction
 import org.cafienne.persistence.querydb.query.result.CaseList
@@ -44,8 +44,8 @@ class CaseInstanceQueriesImplTest extends QueryTestBaseClass("case-instance-quer
   )
 
   override def beforeAll(): Unit = {
-    val caseUpdater: CaseStorageTransaction = queryDBWriter.createCaseTransaction(null)
-    val tenantUpdater: TenantStorageTransaction = queryDBWriter.createTenantTransaction(null)
+    val caseUpdater: CaseStorageTransaction = queryDB.createCaseTransaction()
+    val tenantUpdater: TenantStorageTransaction = queryDB.createTenantTransaction()
     caseUpdater.upsert(activeCase)
     caseUpdater.upsert(planItem1_1)
     caseUpdater.upsert(terminatedCase)
@@ -60,10 +60,6 @@ class CaseInstanceQueriesImplTest extends QueryTestBaseClass("case-instance-quer
   // *******************************************************************************************************************
   // Responses of type Case
   // *******************************************************************************************************************
-
-  "Create a table" should "succeed the second time as well" in {
-    queryDBWriter.initializeDatabaseSchema()
-  }
 
   "A query" should "retrieve an existing case" in {
     val res = Await.result(caseInstanceQueries.getCaseInstance(activeCase.id, user), 3.seconds)

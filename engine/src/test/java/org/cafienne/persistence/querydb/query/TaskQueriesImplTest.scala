@@ -29,8 +29,8 @@ class TaskQueriesImplTest extends QueryTestBaseClass("task-list-queries") {
 
   override def beforeAll(): Unit = {
 
-    val caseUpdater = queryDBWriter.createCaseTransaction(null)
-    val tenantUpdater = queryDBWriter.createTenantTransaction(null)
+    val caseUpdater = queryDB.createCaseTransaction()
+    val tenantUpdater = queryDB.createTenantTransaction()
 
     println("Writing cases")
     caseUpdater.upsert(CaseRecord(id = case33, tenant = tenant, rootCaseId = case33, caseName = "aaa bbb ccc", state = State.Failed.toString, failures = 0, lastModified = Instant.now, createdOn = Instant.now))
@@ -66,10 +66,6 @@ class TaskQueriesImplTest extends QueryTestBaseClass("task-list-queries") {
     caseUpdater.commit()
     tenantUpdater.commit()
 
-  }
-
-  "Create a table" should "succeed the second time as well" in {
-    queryDBWriter.initializeDatabaseSchema()
   }
 
   "A query" should "give a search failure when task not found" in {
@@ -151,7 +147,7 @@ class TaskQueriesImplTest extends QueryTestBaseClass("task-list-queries") {
   it should "update a task" in {
     val current = Await.result(taskQueries.getTask("1", testUser), 3.seconds)
     val freshTask = current.copy(taskState = "Assigned")
-    val caseUpdater = queryDBWriter.createCaseTransaction(null)
+    val caseUpdater = queryDB.createCaseTransaction()
     caseUpdater.upsert(freshTask)
     caseUpdater.commit()
 

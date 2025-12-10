@@ -21,6 +21,7 @@ import org.cafienne.infrastructure.cqrs.offset.OffsetRecord
 import org.cafienne.model.cmmn.actorapi.command.platform.NewUserInformation
 import org.cafienne.persistence.infrastructure.jdbc.cqrs.OffsetStoreTables
 import org.cafienne.persistence.querydb.materializer.QueryDBTransaction
+import org.cafienne.persistence.querydb.schema.QueryDB
 
 import scala.collection.mutable
 import scala.collection.mutable.ListBuffer
@@ -31,9 +32,9 @@ trait SlickQueryDBTransaction
   extends QueryDBTransaction
     with OffsetStoreTables {
 
-  val writer: QueryDBWriter
-  override val tablePrefix: String = writer.queryDB.schema.tablePrefix
-  val dbConfig = writer.queryDB.schema.dbConfig
+  def queryDB: QueryDB
+  val tablePrefix: String = queryDB.schema.tablePrefix
+  val dbConfig = queryDB.schema.dbConfig
 
   import dbConfig.profile.api._
 
@@ -41,7 +42,7 @@ trait SlickQueryDBTransaction
 
   private val dbStatements: mutable.ListBuffer[DBIO[_]] = ListBuffer[DBIO[_]]()
 
-  def addStatement(action: dbConfig.profile.api.DBIO[_]): Unit = dbStatements += action
+  def addStatement(action: DBIO[_]): Unit = dbStatements += action
 
   private val DB_TIMEOUT: FiniteDuration = 21.seconds
 
