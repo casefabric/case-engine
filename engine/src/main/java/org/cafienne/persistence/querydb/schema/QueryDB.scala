@@ -29,7 +29,7 @@ import org.cafienne.persistence.infrastructure.lastmodified.notification.singlet
 import org.cafienne.persistence.querydb.materializer.QueryDBStorage
 import org.cafienne.persistence.querydb.materializer.cases.CaseStorageTransaction
 import org.cafienne.persistence.querydb.materializer.consentgroup.ConsentGroupStorageTransaction
-import org.cafienne.persistence.querydb.materializer.slick.{QueryDBWriter, SlickCaseTransaction, SlickConsentGroupTransaction, SlickTenantTransaction}
+import org.cafienne.persistence.querydb.materializer.slick.{QueryDBEventSinkManager, SlickCaseTransaction, SlickConsentGroupTransaction, SlickTenantTransaction}
 import org.cafienne.persistence.querydb.materializer.tenant.TenantStorageTransaction
 import org.cafienne.system.CaseSystem
 import slick.basic.DatabaseConfig
@@ -41,7 +41,7 @@ class QueryDB(val config: PersistenceConfig, val dbConfig: DatabaseConfig[JdbcPr
   override val databaseDescription: String = "QueryDB"
   override val schema: QueryDBSchema = new QueryDBSchema(config, dbConfig)
   val publisher: LastModifiedPublisher = new InMemoryPublisher(this)
-  val writer = new QueryDBWriter(this)
+  val writer = new QueryDBEventSinkManager(this)
   val caseLastModifiedRegistration = new LastModifiedRegistration(Headers.CASE_LAST_MODIFIED)
   val tenantLastModifiedRegistration = new LastModifiedRegistration(Headers.TENANT_LAST_MODIFIED)
   val groupLastModifiedRegistration = new LastModifiedRegistration(Headers.CONSENT_GROUP_LAST_MODIFIED)
