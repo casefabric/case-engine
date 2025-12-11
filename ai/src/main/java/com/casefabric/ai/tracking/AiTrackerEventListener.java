@@ -1,8 +1,9 @@
 package com.casefabric.ai.tracking;
 
-import com.embabel.agent.event.AgentPlatformEvent;
-import com.embabel.agent.event.AgentProcessEvent;
-import com.embabel.agent.event.AgenticEventListener;
+
+import com.embabel.agent.api.event.AgentPlatformEvent;
+import com.embabel.agent.api.event.AgentProcessEvent;
+import com.embabel.agent.api.event.AgenticEventListener;
 import org.jetbrains.annotations.NotNull;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
