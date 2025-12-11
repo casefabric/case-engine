@@ -33,14 +33,10 @@ public class LongValue extends NumericValue<Long> {
     }
     @Override
     public boolean matches(PropertyDefinition.PropertyType propertyType) {
-        switch (propertyType) {
-        case Integer:
-        case String: // Hmmm, do we really match strings?
-        case Unspecified:
-            return true;
-        default:
-            return baseMatch(propertyType);
-        }
+        return switch (propertyType) { // Hmmm, do we really match strings?
+            case Integer, Float, Decimal, Double, String, Unspecified -> true;
+            default -> baseMatch(propertyType);
+        };
     }
 
     @Override
