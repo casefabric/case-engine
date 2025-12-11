@@ -1,6 +1,6 @@
 version: 2.1
 orbs:
-  sonarcloud: sonarsource/sonarcloud@3.0
+  sonarcloud: sonarsource/sonarcloud@3.0.1
 jobs:
   branch-build:
     working_directory: ~/cafienne-engine
@@ -82,7 +82,8 @@ jobs:
 commands:
   build-preparation:
     steps:
-      - checkout
+      - checkout:
+          mehod: full
       - run:
           name: Clone CMMN-test framework (and optionally checkout corresponding test branch)
           command: |
