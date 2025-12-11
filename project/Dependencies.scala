@@ -27,7 +27,7 @@ object Dependencies {
   val swaggerVersion     = "2.2.34"
   val slickVersion       = "3.5.2"
   val jasperVersion      = "6.20.0"
-  val embabelVersion     = "0.3.0-SNAPSHOT"
+  val embabelVersion     = "0.3.1-SNAPSHOT"
 
   def pekkoModule(name: String, version: String = pekkoVersion): ModuleID = "org.apache.pekko" %% s"pekko-$name" % version
   def pekkoPersistenceModule(name: String, version: String = pekkoPersistenceVersion): ModuleID = pekkoModule(s"persistence-$name", version)
@@ -133,7 +133,8 @@ object Dependencies {
     , "com.embabel.agent"       %  "embabel-agent-autoconfigure"          % embabelVersion exclude("org.kohsuke", "github-api")
     , "com.embabel.agent"       %  "embabel-agent-test"                   % embabelVersion exclude("org.kohsuke", "github-api")
     , "org.springframework.shell" % "spring-shell-standard"               % "3.4.1"
-    //, "io.netty"                % "netty-resolver-dns-native-macos"       % "4.1.128.Final"
+    , "org.springframework.boot"  % "spring-boot-starter-web"             % "3.5.6"
+    , "io.netty"                % "netty-resolver-dns-native-macos"       % "4.2.7.Final"
     , "com.fasterxml.jackson.datatype" % "jackson-datatype-jsr310"        % "2.19.2"
     , "com.github.victools"     % "jsonschema-generator"                  % "4.38.0"
     , "com.github.victools"     % "jsonschema-module-jackson"             % "4.38.0"

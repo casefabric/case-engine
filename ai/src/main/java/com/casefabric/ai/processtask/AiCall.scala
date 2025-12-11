@@ -19,7 +19,8 @@ package com.casefabric.ai.processtask
 import com.casefabric.ai.AiProvider
 import com.casefabric.ai.processtask.definition.AiCallDefinition
 import com.casefabric.ai.util.JacksonValueHelper
-import com.embabel.agent.api.common.autonomy.AgentInvocation
+import com.embabel.agent.api.invocation.AgentInvocation
+import com.embabel.agent.core.{ProcessOptions, Verbosity}
 import com.embabel.agent.domain.io.UserInput
 import org.cafienne.model.processtask.implementation.SubProcess
 import org.cafienne.model.processtask.instance.ProcessTaskActor
@@ -59,15 +60,10 @@ class AiCall(processTask: ProcessTaskActor, definition: AiCallDefinition) extend
 
     try {
       val agentPlatform = AiProvider.getAgentPlatform
+      val processOptions = ProcessOptions.DEFAULT.withContextId(this.processTask.getId).withVerbosity(Verbosity.DEFAULT.withDebug(true).withShowPrompts(true).withShowLlmResponses(true));
       val agentCall =
         AgentInvocation.builder(agentPlatform)
-          .options(p => {
-            p.contextId(this.processTask.getId) //not sure if this is really useful.
-            p.verbosity(v => {
-              v.showPrompts(true)
-              v.showLlmResponses(true)
-              v.debug(true)
-          })}).build(Class.forName(responseClass))
+          .options(processOptions).build(Class.forName(responseClass))
       val fut: CompletableFuture[_] = agentCall.invokeAsync(new UserInput(prompt))
       val answer= fut.get()
       logger.debug(s"Agent invocation answer: $answer")
