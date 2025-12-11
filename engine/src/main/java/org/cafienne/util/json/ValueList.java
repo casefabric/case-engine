@@ -18,6 +18,7 @@
 package org.cafienne.util.json;
 
 import com.fasterxml.jackson.core.JsonGenerator;
+import org.cafienne.model.cmmn.definition.casefile.PropertyDefinition;
 
 import java.io.IOException;
 import java.util.*;
@@ -252,5 +253,10 @@ public class ValueList extends Value<List<Value<?>>> implements List<Value<?>> {
             }
         }
         return (V) this;
+    }
+
+    @Override
+    public boolean matches(PropertyDefinition.PropertyType propertyType) {
+        return value.stream().allMatch(element -> element.matches(propertyType));
     }
 }
