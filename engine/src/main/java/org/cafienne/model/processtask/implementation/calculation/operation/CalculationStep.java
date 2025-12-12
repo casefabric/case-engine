@@ -41,7 +41,11 @@ public class CalculationStep extends Source<StepDefinition> {
             inputs = new HashMap<>();
             for (InputReference input : definition.getInputs()) {
                 Source<?> source = calculation.getSource(input.getSource());
-                inputs.put(input, source.getResult().getValue());
+                if (source.isValid()) {
+                    inputs.put(input, source.getResult().getValue());
+                } else {
+                    addDebugInfo(() -> "Result for '" + input.getSource() + "' is not applicable, hence not added to the output parameters");
+                }
             }
         }
         return inputs;
