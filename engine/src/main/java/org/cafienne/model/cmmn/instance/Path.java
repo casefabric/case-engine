@@ -21,6 +21,7 @@ import org.cafienne.model.cmmn.definition.ItemDefinition;
 import org.cafienne.model.cmmn.definition.casefile.CaseFileDefinition;
 import org.cafienne.model.cmmn.definition.casefile.CaseFileItemDefinition;
 import org.cafienne.model.cmmn.instance.casefile.*;
+import org.cafienne.util.URLUtil;
 import org.cafienne.util.json.Value;
 import org.cafienne.util.json.ValueList;
 import org.cafienne.util.json.ValueMap;
@@ -35,6 +36,7 @@ import java.io.Serializable;
 public class Path implements Serializable {
 
     public final String name;
+    private final String encodedName;
     public final int index;
     private final String originalPath;
     private final Path parent;
@@ -55,6 +57,7 @@ public class Path implements Serializable {
 
     /**
      * Returns a path object in which the individual names keep any trailing spaces.
+     *
      * @param rawPath
      * @return
      * @throws InvalidPathException
@@ -74,6 +77,7 @@ public class Path implements Serializable {
 
     /**
      * Create a path for the case file item instance (including [index] if the item belongs to an array)
+     *
      * @param caseFileItem
      */
     public Path(CaseFileItem caseFileItem) {
@@ -82,6 +86,7 @@ public class Path implements Serializable {
 
     private Path(CaseFileItemDefinition cfid, Path child) {
         this.name = cfid.getName();
+        this.encodedName = encode(name);
         this.index = -1;
         this.child = child;
         if (cfid.getParentElement() instanceof CaseFileDefinition) {
@@ -98,6 +103,7 @@ public class Path implements Serializable {
 
     private Path(CaseFileItem caseFileItem, Path child) {
         this.name = caseFileItem.getDefinition().getName();
+        this.encodedName = encode(name);
         this.index = caseFileItem.getIndex();
         this.child = child;
         CaseFileItem parentItem = caseFileItem.getParent();
@@ -123,12 +129,14 @@ public class Path implements Serializable {
         this.child = null;
         this.depth = this.parent.depth + 1;
         this.name = definition.getName();
+        this.encodedName = encode(name);
         this.index = index;
         this.originalPath = toString();
     }
 
     private Path(PlanItem<?> planItem, Path child) {
         this.name = planItem.getName();
+        this.encodedName = encode(name);
         this.index = planItem.getItemDefinition().getPlanItemControl().getRepetitionRule().isDefault() ? -1 : planItem.getIndex();
         this.child = child;
         PlanItem<?> parentStage = planItem.getStage();
@@ -144,8 +152,31 @@ public class Path implements Serializable {
         this.originalPath = toString();
     }
 
+    private String encode(String name) {
+        if (hasSlash(name)) {
+            return URLUtil.encode(name);
+        } else {
+            return name;
+        }
+    }
+
+    private boolean hasSlash(String string) {
+        int position = string.indexOf("/");
+        return position > 0 && position < string.length() - 1;
+    }
+
+    private String decode(String name) {
+        String decoded = URLUtil.decode(name);
+        if (hasSlash(decoded)) {
+            return decoded;
+        } else {
+            return name;
+        }
+    }
+
     /**
      * Clones the path.
+     *
      * @param pathToClone
      * @param newPathRoot
      * @param newPathParent
@@ -154,6 +185,7 @@ public class Path implements Serializable {
      */
     private Path(Path pathToClone, Path newPathRoot, Path newPathParent, int requiredDepth, int requiredIndex) {
         this.name = pathToClone.name;
+        this.encodedName = encode(name);
         this.depth = pathToClone.depth;
         this.root = newPathRoot == null ? this : newPathRoot;
         this.parent = newPathParent;
@@ -179,7 +211,13 @@ public class Path implements Serializable {
         String myPart = chain[depth];
         int openingBracket = myPart.indexOf("[");
         this.index = parseIndex(myPart, originalPath, openingBracket);
-        this.name = myPart.substring(0, openingBracket >= 0 ? openingBracket : myPart.length());
+        this.encodedName = myPart.substring(0, openingBracket >= 0 ? openingBracket : myPart.length());
+        String decoded = decode(encodedName);
+//        if (!encodedName.equals(decoded)) {
+//            System.out.println("Coded:   " + encodedName + "\nDecoded: " + decoded);
+//        }
+        this.name = decoded;
+
         this.parent = depth > 0 ? new Path(chain, this, depth - 1, originalPath) : null;
         this.root = this.parent == null ? this : parent.root;
         this.originalPath = originalPath != null ? originalPath : toString();
@@ -241,6 +279,7 @@ public class Path implements Serializable {
             return this.resolve(caseFile, this.root, this.depth);
         }
     }
+
     //actual resolver based on a casefile Value<?>
     private Value<?> resolve(Value<?> caseFile, Path path, int totalDepth) {
         if (path.name != null && caseFile.isMap()) {
@@ -307,17 +346,17 @@ public class Path implements Serializable {
      * E.g., for a path /root/child-array[3]/item/element, this method will resolve to a ValueMap for /item/
      * If child-array does not yet exist in the case file, then the json structure will look like:
      * root: {
-     *     child-array:[ null, null, null, {
-     *          // this is the json object representing the item
-     *     }]
+     * child-array:[ null, null, null, {
+     * // this is the json object representing the item
+     * }]
      * }
-     *
+     * <p>
      * Also, suppose the case file passed contains a structure like
      * root: {
-     *     child-array:[ null, null, null, "SOME-STRING-VALUE"]
+     * child-array:[ null, null, null, "SOME-STRING-VALUE"]
      * }
      * Then the 4th (string) object in the child-array will be replaced with a new ValueMap (i.e., an empty json object)
-     *
+     * <p>
      * Note: this method is invoked currently only from CaseFileMerger, so in practice, the child-array will have values.
      *
      * @param casefile
@@ -370,7 +409,7 @@ public class Path implements Serializable {
     }
 
     public String toString() {
-        if (parent != null) {
+        if (parent != null && !parent.isEmpty()) {
             return parent + "/" + getPart();
         } else {
             return getPart();
@@ -387,12 +426,13 @@ public class Path implements Serializable {
      * @return
      */
     public String getPart() {
-        return isArrayElement() ? name + "[" + index + "]" : name;
+        return isArrayElement() ? encodedName + "[" + index + "]" : encodedName;
     }
 
     /**
      * Returns this path as array path, so if index is -1 it returns this, else it returns
      * a new path without index element.
+     *
      * @return
      */
     public Path getContainer() {
@@ -402,6 +442,7 @@ public class Path implements Serializable {
     /**
      * Returns the parent path (or an empty path if parent is null)
      * This parent path has no child.
+     *
      * @return
      */
     public Path getParent() {
@@ -432,6 +473,7 @@ public class Path implements Serializable {
 
     /**
      * Returns true if index greater than or equal to 0;
+     *
      * @return
      */
     public boolean isArrayElement() {
@@ -440,6 +482,7 @@ public class Path implements Serializable {
 
     /**
      * Returns true if the other path matches this path
+     *
      * @param otherPath
      * @return
      */
@@ -449,6 +492,7 @@ public class Path implements Serializable {
 
     /**
      * Returns true if the other path is a child of this path
+     *
      * @param otherPath
      * @return
      */
@@ -465,6 +509,7 @@ public class Path implements Serializable {
     /**
      * Returns true if this path element is an element in the other path.
      * E.g. other path is /abc, and this is /abc[0] then it returns true
+     *
      * @param otherPath
      * @return
      */
@@ -479,7 +524,7 @@ public class Path implements Serializable {
         if (path1.depth != path2.depth) {
             return false;
         }
-        if (! path1.name.equals(path2.name)) {
+        if (!path1.name.equals(path2.name)) {
             return false;
         }
         if (path1.index != path2.index) {
@@ -521,7 +566,7 @@ public class Path implements Serializable {
 
         String[] pathElements = rawPath.split("/");
         if (trim) {
-            for (int i=0; i<pathElements.length; i++) {
+            for (int i = 0; i < pathElements.length; i++) {
 //              System.out.println("part["+i+"] = '" + pathElements[i] + "'");
                 pathElements[i] = pathElements[i].trim();
             }
