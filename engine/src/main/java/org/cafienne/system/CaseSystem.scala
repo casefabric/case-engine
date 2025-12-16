@@ -45,7 +45,7 @@ class CaseSystem(val systemConfig: SystemConfig, val system: ActorSystem, val qu
     new EventDB(systemConfig.cafienne.persistence, systemConfig.cafienne.persistence.eventDB.databaseConfig)
   }
 
-  lazy val hasClusteredConfiguration: Boolean = systemConfig.config.getString("pekko.actor.provider").equals("cluster")
+  lazy val hasClusteredConfiguration: Boolean = config.isClustered
 
   /**
    * Returns the BuildInfo as a string (containing JSON)
@@ -68,11 +68,12 @@ class CaseSystem(val systemConfig: SystemConfig, val system: ActorSystem, val qu
 }
 
 object CaseSystem {
+  val NAME: String = "Case-Engine-Actor-System"
   def DEFAULT: CaseSystem = apply(SystemConfig.DEFAULT)
 
   def apply(systemConfig: SystemConfig): CaseSystem = {
     val queryDB = new QueryDB(systemConfig.cafienne.persistence, systemConfig.cafienne.persistence.queryDB.jdbcConfig)
-    new CaseSystem(systemConfig, ActorSystem("Case-Engine-Actor-System", systemConfig.config), queryDB)
+    new CaseSystem(systemConfig, ActorSystem(NAME, systemConfig.config), queryDB)
   }
 
   def apply(actorSystem: ActorSystem): CaseSystem = {

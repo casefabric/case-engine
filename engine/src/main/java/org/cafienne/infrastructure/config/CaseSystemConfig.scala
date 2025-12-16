@@ -23,6 +23,9 @@ import org.cafienne.infrastructure.config.api.ApiConfig
 import org.cafienne.infrastructure.config.engine.EngineConfig
 import org.cafienne.infrastructure.config.persistence.PersistenceConfig
 import org.cafienne.infrastructure.config.util.{ConfigReader, SystemConfig}
+import org.cafienne.system.CaseSystem
+
+import scala.jdk.CollectionConverters.ListHasAsScala
 
 /**
   * Configuration settings of this Cafienne Case System Platform
@@ -38,6 +41,39 @@ class CaseSystemConfig(val systemConfig: SystemConfig) extends ConfigReader with
     } else {
       fail("Cafienne System is not configured. Check local.conf for 'cafienne' settings")
     }
+  }
+
+  lazy val isClustered: Boolean = {
+    val foundClusterConfiguration = systemConfig.config.getString("pekko.actor.provider").equals("cluster")
+    if (foundClusterConfiguration) {
+      // Check that the seed nodes have the correct actor system name, as that is easy to make mistakes with
+      // ... and quite hard to understand what is wrong, since
+      val seedNodes = systemConfig.config.getStringList("pekko.cluster.seed-nodes").asScala.toSeq
+      seedNodes.foreach(node => {
+        val actorSystemNameIndex = node.replace("pekko://", "").indexOf('@')
+        val actorSystemName = node.replace("pekko://", "").substring(0, actorSystemNameIndex)
+        if (!actorSystemName.equals(CaseSystem.NAME)) {
+          val errorMessage =
+            s"""Fatal Configuration Error
+               |
+               |  pekko.cluster.seed-nodes = [
+               |    ${seedNodes.mkString("\"", "\"\n    \"", "\"")}
+               |  ]
+               |
+               | Change the invalid Actor System name in seed node ${seedNodes.indexOf(node) + 1} to \"${CaseSystem.NAME}\".
+               |
+               |   invalid:   \"$node\"
+               |   correct:   \"${node.replace(actorSystemName, CaseSystem.NAME)}\"
+               |
+               | Seed nodes must use a proper actor system name.
+               | Nodes defined with other actor systems names cannot be discovered or communicated with.
+               |
+               |""".stripMargin
+          throw new Error(errorMessage)
+        }
+      })
+    }
+    foundClusterConfiguration
   }
 
   /**
