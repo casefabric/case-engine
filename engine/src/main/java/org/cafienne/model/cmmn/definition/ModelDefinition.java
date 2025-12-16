@@ -76,7 +76,7 @@ public abstract class ModelDefinition extends CMMNElementDefinition {
      *
      * @param cmmnElementDefinition
      */
-    void addCMMNElement(CMMNElementDefinition cmmnElementDefinition) {
+    public void addCMMNElement(CMMNElementDefinition cmmnElementDefinition) {
         elements.add(cmmnElementDefinition);
         document.addElement(cmmnElementDefinition);
     }

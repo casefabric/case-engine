@@ -20,6 +20,7 @@ package org.cafienne.model.cmmn.definition;
 import org.cafienne.model.cmmn.definition.casefile.CaseFileItemDefinitionDefinition;
 import org.cafienne.model.cmmn.definition.casefile.ImportDefinition;
 import org.cafienne.model.cmmn.repository.MissingDefinitionException;
+import org.cafienne.model.dmn.definition.DecisionModelDefinition;
 import org.cafienne.model.processtask.definition.ProcessDefinition;
 import org.cafienne.util.XMLHelper;
 import org.slf4j.Logger;
@@ -119,6 +120,7 @@ public class DefinitionsDocument implements Serializable {
         parseImports();
         parseCaseFileItemDefinitions();
         parseProcessDefinitions();
+        parseDecisionDefinitions();
         parseCaseDefinitions();
 
         checkForErrors();
@@ -198,6 +200,13 @@ public class DefinitionsDocument implements Serializable {
         Collection<Element> typeElements = XMLHelper.getChildrenWithTagName(getDocument().getDocumentElement(), "case");
         for (Element element : typeElements) {
             ModelDefinition definition = new CaseDefinition(element, this);
+            getDefinitions().add(definition);
+        }
+    }
+    private void parseDecisionDefinitions() {
+        Collection<Element> typeElements = XMLHelper.getChildrenWithTagName(getDocument().getDocumentElement(), "decision");
+        for (Element element : typeElements) {
+            ModelDefinition definition = new DecisionModelDefinition(element, this);
             getDefinitions().add(definition);
         }
     }
@@ -319,6 +328,16 @@ public class DefinitionsDocument implements Serializable {
      */
     public ProcessDefinition getProcessDefinition(String identifier) {
         return getDefinition(ProcessDefinition.class, identifier);
+    }
+
+    /**
+     * Return the decision model definition with the specified identifier.
+     *
+     * @param identifier The name or id of the decision model to be parsed
+     * @return The definition, or null if it cannot be found
+     */
+    public DecisionModelDefinition getDecisionModelDefinition(String identifier) {
+        return getDefinition(DecisionModelDefinition.class, identifier);
     }
 
     /**

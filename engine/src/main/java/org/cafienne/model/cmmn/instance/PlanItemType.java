@@ -23,6 +23,7 @@ public enum PlanItemType {
     HumanTask(org.cafienne.model.cmmn.instance.task.humantask.HumanTask.class),
     CaseTask(org.cafienne.model.cmmn.instance.task.cmmn.CaseTask.class),
     ProcessTask(org.cafienne.model.cmmn.instance.task.process.ProcessTask.class),
+    DecisionTask(org.cafienne.model.cmmn.instance.task.dmn.DecisionTask.class),
     UserEvent(org.cafienne.model.cmmn.instance.UserEvent.class),
     TimerEvent(org.cafienne.model.cmmn.instance.TimerEvent.class),
     Milestone(org.cafienne.model.cmmn.instance.Milestone.class);

@@ -20,6 +20,7 @@ package org.cafienne.model.cmmn.expression.spel;
 import org.cafienne.model.cmmn.definition.CMMNElementDefinition;
 import org.cafienne.model.cmmn.expression.InvalidExpressionException;
 import org.cafienne.model.cmmn.expression.spel.api.APIRootObject;
+import org.cafienne.util.json.ValueMap;
 import org.springframework.expression.EvaluationException;
 import org.springframework.expression.Expression;
 import org.springframework.expression.ExpressionParser;
@@ -70,6 +71,12 @@ public class Evaluator {
         context.addPropertyAccessor(spelPropertyReader);
 
         return returnValue(rootObject, () -> expression.getValue(context));
+    }
+    public <T> T evaluate(ValueMap rootObject, APIRootObject<?> task) {
+        // System.out.println("Now evaluating the expression " + definition.getBody());
+        StandardEvaluationContext context = new StandardEvaluationContext(rootObject);
+
+        return returnValue(task, () -> expression.getValue(context));
     }
 
     protected <T> T returnValue(APIRootObject<?> rootObject, ExpressionRunner runner) {

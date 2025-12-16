@@ -1,0 +1,72 @@
+<definitions xmlns="http://www.omg.org/spec/CMMN/20151109/MODEL" xmlns:cafienne="org.cafienne">
+    <caseFileItemDefinition name="Claim" definitionType="http://www.omg.org/spec/CMMN/DefinitionType/Unspecified" id="decision_type_Claim.object">
+        <property name="type" type="http://www.omg.org/spec/CMMN/PropertyType/string"/>
+        <property name="exp" type="http://www.omg.org/spec/CMMN/PropertyType/float"/>
+    </caseFileItemDefinition>
+    <caseFileItemDefinition name="decision" definitionType="http://www.omg.org/spec/CMMN/DefinitionType/Unspecified" id="decision.type"/>
+    <case id="decision2.case" name="decision2" expressionLanguage="spel">
+        <caseFileModel cafienne:typeRef="decision.type">
+            <caseFileItem id="Claim" name="Claim" multiplicity="ExactlyOne" definitionRef="decision_type_Claim.object"/>
+        </caseFileModel>
+        <casePlanModel id="cm__7aMtx_0" name="decision2" autoComplete="true">
+            <planItem id="_7aMtx_1" name="Determine Employee&#10;" definitionRef="dt__7aMtx_1"/>
+            <decisionTask id="dt__7aMtx_1" name="Determine Employee&#10;" isBlocking="true" decisionRef="determineEmployee.decision"/>
+        </casePlanModel>
+        <caseRoles cafienne:caseTeamRef="decision2.caseteam"/>
+    </case>
+    <decision xmlns="http://www.omg.org/spec/CMMN/20151109/MODEL" name="determineEmployee" implementationType="http://www.omg.org/spec/CMMN/DecisionType/DMN1" id="determineEmployee.decision">
+        <input id="_KE6Sa_2" name="Expenditure" typeRef="integer"/>
+        <input id="_KE6Sa_24" name="Claim" typeRef="string"/>
+        <output id="_KE6Sa_3" name="Responsible" typeRef="string"/>
+        <output id="_KE6Sa_4" name="4eyes" typeRef="boolean"/>
+        <decisionTable hitPolicy="Rule Order" id="abel_1">
+            <input id="_KE6Sa_0" name="Claim"/>
+            <input id="_KE6Sa_8" name="expenditure"/>
+            <output id="_KE6Sa_1" name="ResponsibleEmplyee" typeRef="string"/>
+            <output id="_KE6Sa_11" name="4eyes" typeRef="boolean"/>
+            <rule id="_KE6Sa_5" name="DMNDecisionRule_0">
+                <inputEntry id="_KE6Sa_6" name="DMNUnaryTests_0">
+                    <text><![CDATA["Car Accident"]]></text>
+                </inputEntry>
+                <inputEntry id="_KE6Sa_9" name="DMNUnaryTests_2">
+                    <text><![CDATA[< 1000]]></text>
+                </inputEntry>
+                <outputEntry id="_KE6Sa_7" name="DMNLiteralExpression_0">
+                    <text><![CDATA["Thijs"]]></text>
+                </outputEntry>
+                <outputEntry id="_KE6Sa_12" name="DMNLiteralExpression_1">
+                    <text><![CDATA[false]]></text>
+                </outputEntry>
+                <description>ben je ...</description>
+            </rule>
+            <rule id="_KE6Sa_13" name="DMNDecisionRule_1">
+                <inputEntry id="_KE6Sa_14" name="DMNUnaryTests_3">
+                    <text><![CDATA["Car Accident"]]></text>
+                </inputEntry>
+                <inputEntry id="_KE6Sa_15" name="DMNUnaryTests_4">
+                    <text><![CDATA[[1000.. 100000]]]></text>
+                </inputEntry>
+                <outputEntry id="_KE6Sa_16" name="DMNLiteralExpression_2">
+                    <text><![CDATA["Olger"]]></text>
+                </outputEntry>
+                <outputEntry id="_KE6Sa_17" name="DMNLiteralExpression_3">
+                    <text><![CDATA[false]]></text>
+                </outputEntry>
+            </rule>
+            <rule id="_KE6Sa_18" name="DMNDecisionRule_2">
+                <inputEntry id="_KE6Sa_19" name="DMNUnaryTests_5">
+                    <text><![CDATA["Car Accident"]]></text>
+                </inputEntry>
+                <inputEntry id="_KE6Sa_20" name="DMNUnaryTests_6">
+                    <text><![CDATA[>=10000]]></text>
+                </inputEntry>
+                <outputEntry id="_KE6Sa_21" name="DMNLiteralExpression_4">
+                    <text><![CDATA["Johan"]]></text>
+                </outputEntry>
+                <outputEntry id="_KE6Sa_22" name="DMNLiteralExpression_5">
+                    <text><![CDATA[true]]></text>
+                </outputEntry>
+            </rule>
+        </decisionTable>
+    </decision>
+</definitions>
