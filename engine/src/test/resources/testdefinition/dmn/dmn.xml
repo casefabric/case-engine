@@ -4,32 +4,62 @@
         <property name="exp" type="http://www.omg.org/spec/CMMN/PropertyType/float"/>
     </caseFileItemDefinition>
     <caseFileItemDefinition name="decision" definitionType="http://www.omg.org/spec/CMMN/DefinitionType/Unspecified" id="decision.type"/>
+    <caseFileItemDefinition name="case_elements" definitionType="http://www.omg.org/spec/CMMN/DefinitionType/Unspecified" id="case_elements.type">
+        <property name="Responsible" type="http://www.omg.org/spec/CMMN/PropertyType/string"/>
+        <property name="4eyes" type="http://www.omg.org/spec/CMMN/PropertyType/boolean"/>
+    </caseFileItemDefinition>
     <case id="decision2.case" name="decision2" expressionLanguage="spel">
         <caseFileModel cafienne:typeRef="decision.type">
             <caseFileItem id="Claim" name="Claim" multiplicity="ExactlyOne" definitionRef="decision_type_Claim.object"/>
+            <caseFileItem id="out" name="out" multiplicity="ExactlyOne" definitionRef="case_elements.type"/>
         </caseFileModel>
         <casePlanModel id="cm__7aMtx_0" name="decision2" autoComplete="true">
             <planItem id="_7aMtx_1" name="Determine Employee&#10;" definitionRef="dt__7aMtx_1"/>
-            <decisionTask id="dt__7aMtx_1" name="Determine Employee&#10;" isBlocking="true" decisionRef="determineEmployee.decision"/>
+            <decisionTask id="dt__7aMtx_1" name="Determine Employee&#10;" isBlocking="true" decisionRef="determineEmployee.decision">
+                <inputs id="_7aMtx_34" name="Claim" bindingRef="Claim"/>
+                <outputs id="_7aMtx_37" name="out" bindingRef="out"/>
+                <outputs id="_7aMtx_39" name="fsdfdsf.1" bindingRef="out"/>
+                <parameterMapping id="_7aMtx_28" sourceRef="_7aMtx_34" targetRef="_KE6Sa_2">
+                    <transformation id="_7aMtx_35">
+                        <body><![CDATA[Claim.exp]]></body>
+                    </transformation>
+                </parameterMapping>
+                <parameterMapping id="_7aMtx_29" sourceRef="_7aMtx_34" targetRef="_KE6Sa_24">
+                    <transformation id="_7aMtx_36">
+                        <body><![CDATA[Claim.type]]></body>
+                    </transformation>
+                </parameterMapping>
+                <parameterMapping id="_7aMtx_30" sourceRef="_KE6Sa_3" targetRef="_7aMtx_37">
+                    <transformation id="_7aMtx_41">
+                        <body><![CDATA[map("Responsible", Responsible)]]></body>
+                    </transformation>
+                </parameterMapping>
+                <parameterMapping id="_7aMtx_31" sourceRef="_KE6Sa_4" targetRef="_7aMtx_39">
+                    <transformation id="_7aMtx_42">
+                        <body><![CDATA[map("4eyes", four_eyes)]]></body>
+                    </transformation>
+                </parameterMapping>
+            </decisionTask>
         </casePlanModel>
         <caseRoles cafienne:caseTeamRef="decision2.caseteam"/>
+        <input id="_7aMtx_33" name="Claim" bindingRef="Claim"/>
     </case>
     <decision xmlns="http://www.omg.org/spec/CMMN/20151109/MODEL" name="determineEmployee" implementationType="http://www.omg.org/spec/CMMN/DecisionType/DMN1" id="determineEmployee.decision">
         <input id="_KE6Sa_2" name="Expenditure" typeRef="integer"/>
         <input id="_KE6Sa_24" name="Claim" typeRef="string"/>
         <output id="_KE6Sa_3" name="Responsible" typeRef="string"/>
-        <output id="_KE6Sa_4" name="4eyes" typeRef="boolean"/>
-        <decisionTable hitPolicy="Rule Order" id="abel_1">
+        <output id="_KE6Sa_4" name="four_eyes" typeRef="boolean"/>
+        <decisionTable hitPolicy="Rule Order">
             <input id="_KE6Sa_0" name="Claim"/>
             <input id="_KE6Sa_8" name="expenditure"/>
             <output id="_KE6Sa_1" name="ResponsibleEmplyee" typeRef="string"/>
-            <output id="_KE6Sa_11" name="4eyes" typeRef="boolean"/>
+            <output id="_KE6Sa_11" name="four_eyes" typeRef="boolean"/>
             <rule id="_KE6Sa_5" name="DMNDecisionRule_0">
                 <inputEntry id="_KE6Sa_6" name="DMNUnaryTests_0">
-                    <text><![CDATA["Car Accident"]]></text>
+                    <text><![CDATA[Claim == "Car Accident"]]></text>
                 </inputEntry>
                 <inputEntry id="_KE6Sa_9" name="DMNUnaryTests_2">
-                    <text><![CDATA[< 1000]]></text>
+                    <text><![CDATA[expenditure < 1000]]></text>
                 </inputEntry>
                 <outputEntry id="_KE6Sa_7" name="DMNLiteralExpression_0">
                     <text><![CDATA["Thijs"]]></text>
@@ -41,10 +71,10 @@
             </rule>
             <rule id="_KE6Sa_13" name="DMNDecisionRule_1">
                 <inputEntry id="_KE6Sa_14" name="DMNUnaryTests_3">
-                    <text><![CDATA["Car Accident"]]></text>
+                    <text><![CDATA[Claim == "Car Accident"]]></text>
                 </inputEntry>
                 <inputEntry id="_KE6Sa_15" name="DMNUnaryTests_4">
-                    <text><![CDATA[[1000.. 100000]]]></text>
+                    <text><![CDATA[expenditure >= 1000 and expenditure<10000]]></text>
                 </inputEntry>
                 <outputEntry id="_KE6Sa_16" name="DMNLiteralExpression_2">
                     <text><![CDATA["Olger"]]></text>
@@ -55,10 +85,10 @@
             </rule>
             <rule id="_KE6Sa_18" name="DMNDecisionRule_2">
                 <inputEntry id="_KE6Sa_19" name="DMNUnaryTests_5">
-                    <text><![CDATA["Car Accident"]]></text>
+                    <text><![CDATA[Claim == "Car Accident"]]></text>
                 </inputEntry>
                 <inputEntry id="_KE6Sa_20" name="DMNUnaryTests_6">
-                    <text><![CDATA[>=10000]]></text>
+                    <text><![CDATA[expenditure  >=10000]]></text>
                 </inputEntry>
                 <outputEntry id="_KE6Sa_21" name="DMNLiteralExpression_4">
                     <text><![CDATA["Johan"]]></text>
@@ -69,4 +99,14 @@
             </rule>
         </decisionTable>
     </decision>
+    <CMMNDI>
+        <CMMNDiagram>
+            <CMMNShape name="decision2" cmmnElementRef="cm__7aMtx_0">
+                <Bounds x="20" y="20" width="800" height="500"/>
+            </CMMNShape>
+            <CMMNShape cmmnElementRef="_7aMtx_1">
+                <Bounds x="300" y="180" width="140" height="80"/>
+            </CMMNShape>
+        </CMMNDiagram>
+    </CMMNDI>
 </definitions>
