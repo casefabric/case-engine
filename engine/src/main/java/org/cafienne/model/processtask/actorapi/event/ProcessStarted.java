@@ -18,6 +18,8 @@
 package org.cafienne.model.processtask.actorapi.event;
 
 import com.fasterxml.jackson.core.JsonGenerator;
+import org.cafienne.actormodel.ActorMetadata;
+import org.cafienne.actormodel.ActorType;
 import org.cafienne.actormodel.message.command.BootstrapMessage;
 import org.cafienne.infrastructure.EngineVersion;
 import org.cafienne.infrastructure.serialization.Fields;
@@ -59,6 +61,16 @@ public class ProcessStarted extends BaseProcessEvent implements BootstrapMessage
         this.inputParameters = json.readMap(Fields.input);
         this.definition = json.readDefinition(Fields.processDefinition, ProcessDefinition.class);
         this.debugMode = json.readBoolean(Fields.debugMode);
+    }
+
+    @Override
+    protected ActorMetadata createActorMetadata(ValueMap json) {
+        String rootCaseId = json.readString(Fields.rootActorId);
+        String parentCaseId = json.readString(Fields.parentActorId);
+        ActorMetadata root = new ActorMetadata(ActorType.Case, rootCaseId, null);
+        ActorMetadata parent = new ActorMetadata(ActorType.Case, parentCaseId, root);
+        // Not full chain is known here, but this is ok enough for now.
+        return new ActorMetadata(ActorType.Process, actorId(), parent);
     }
 
     @Override
