@@ -28,6 +28,14 @@ import slick.jdbc.JdbcProfile
 class QueryDBConfig(val parent: PersistenceConfig) extends MandatoryConfig {
   def path = "query-db"
 
+  /**
+   * The cluster-key can be used to identify a query database within a clustered setup of the case engine
+   *  In a scenario of 2 QueryDB instances and 10 cluster nodes, 4 nodes could be using the first query database, and the other 6 nodes the second database/
+   *  By identifying the query database in use, each node knows how to subscribe with the proper database writer to receive the ActorModified updates.
+   *  Default value is "query-db"
+   */
+  lazy val key: String = readString("cluster-key", "query-db")
+
   override lazy val config: Config = {
     if (parent.parent.config.hasPath(path)) {
       // For compatibility, also try to read from 'cafienne' config itself, if persistence is not available
