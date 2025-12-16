@@ -18,6 +18,8 @@
 package org.cafienne.model.cmmn.actorapi.event;
 
 import com.fasterxml.jackson.core.JsonGenerator;
+import org.cafienne.actormodel.ActorMetadata;
+import org.cafienne.actormodel.ActorType;
 import org.cafienne.actormodel.message.command.BootstrapMessage;
 import org.cafienne.infrastructure.EngineVersion;
 import org.cafienne.infrastructure.serialization.Fields;
@@ -80,6 +82,16 @@ public class CaseDefinitionApplied extends CaseDefinitionEvent implements Bootst
      */
     public String getParentCaseId() {
         return parentCaseId;
+    }
+
+    @Override
+    protected ActorMetadata createActorMetadata(ValueMap json) {
+        String rootCaseId = json.readString(Fields.rootActorId);
+        String parentCaseId = json.readString(Fields.parentActorId);
+        ActorMetadata root = new ActorMetadata(ActorType.Case, rootCaseId, null);
+        ActorMetadata parent = new ActorMetadata(ActorType.Case, parentCaseId, root);
+        // Not full chain is known here, but this is ok enough for now.
+        return new ActorMetadata(ActorType.Case, actorId(), parent);
     }
 
     @Override

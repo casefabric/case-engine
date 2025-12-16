@@ -40,7 +40,7 @@ public abstract class BaseModelEvent<M extends ModelActor, U extends UserIdentit
 
     protected BaseModelEvent(M actor) {
         this.json = new ValueMap();
-        this.actor = actor.metadata();
+        this.actor = actor.metadata;
         this.actorId = actor.getId();
         this.tenant = actor.getTenant();
         this.timestamp = actor.getTransactionTimestamp();
@@ -55,12 +55,21 @@ public abstract class BaseModelEvent<M extends ModelActor, U extends UserIdentit
     protected BaseModelEvent(ValueMap json) {
         this.json = json;
         ValueMap modelEventJson = json.with(Fields.modelEvent);
-        this.actor = modelEventJson.readMetadata(Fields.actor);
         this.actorId = modelEventJson.readString(Fields.actorId);
+        this.actor = readActorMetadata(modelEventJson);
         this.tenant = modelEventJson.readString(Fields.tenant);
         this.timestamp = modelEventJson.readInstant(Fields.timestamp);
         this.user = actorType().readUser(modelEventJson.with(Fields.user));
         this.correlationId = modelEventJson.readString(Fields.correlationId);
+    }
+
+    private ActorMetadata readActorMetadata(ValueMap modelEventJson) {
+        ActorMetadata metadata = modelEventJson.readMetadata(Fields.actor);
+        return metadata != null ? metadata : createActorMetadata(this.json);
+    }
+
+    protected ActorMetadata createActorMetadata(ValueMap json) {
+        return new ActorMetadata(this.actorType(), this.actorId, null);
     }
 
     @Override
