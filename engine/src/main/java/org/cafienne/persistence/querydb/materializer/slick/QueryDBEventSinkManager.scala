@@ -18,6 +18,7 @@
 package org.cafienne.persistence.querydb.materializer.slick
 
 import com.typesafe.scalalogging.LazyLogging
+import org.cafienne.persistence.infrastructure.lastmodified.notification.LastModifiedPublisher
 import org.cafienne.persistence.querydb.materializer.cases.CaseEventSink
 import org.cafienne.persistence.querydb.materializer.consentgroup.ConsentGroupEventSink
 import org.cafienne.persistence.querydb.materializer.tenant.TenantEventSink
@@ -25,9 +26,9 @@ import org.cafienne.persistence.querydb.schema.QueryDB
 import org.cafienne.system.CaseSystem
 
 class QueryDBEventSinkManager(val queryDB: QueryDB) extends LazyLogging {
-  def startEventSinks(caseSystem: CaseSystem): Unit = {
-    new CaseEventSink(queryDB.publisher, caseSystem, queryDB).start()
-    new TenantEventSink(queryDB.publisher, caseSystem, queryDB).start()
-    new ConsentGroupEventSink(queryDB.publisher, caseSystem, queryDB).start()
+  def startEventSinks(publisher: LastModifiedPublisher, caseSystem: CaseSystem): Unit = {
+    new CaseEventSink(publisher, caseSystem, queryDB).start()
+    new TenantEventSink(publisher, caseSystem, queryDB).start()
+    new ConsentGroupEventSink(publisher, caseSystem, queryDB).start()
   }
 }
