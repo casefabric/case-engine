@@ -83,7 +83,7 @@ commands:
   build-preparation:
     steps:
       - checkout:
-          mehod: full
+          method: full
       - run:
           name: Clone CMMN-test framework (and optionally checkout corresponding test branch)
           command: |
