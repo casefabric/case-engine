@@ -56,4 +56,10 @@ class TimerServiceConfig(val parent: EngineConfig) extends ChildConfigReader {
     }
     interval
   }
+
+  /**
+   * This setting is for migration of large instances with timers that need to add and fill the "metadata" column in a JDBC database.
+   * Defaults to 1000, but if that doesn't work (either too small or too large) then it can be adjusted.
+   */
+  val migrationBatchSize: Int = readInt("migration-batch-size", 1000)
 }

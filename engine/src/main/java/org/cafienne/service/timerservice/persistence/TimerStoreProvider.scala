@@ -42,7 +42,7 @@ class TimerStoreProvider(val caseSystem: CaseSystem) extends ReadJournalProvider
         val timerStoreConfig = caseSystem.config.systemConfig.config.getConfig(timerStoreConfigKey)
 //        val msg = s"""journalConfig = ${journalConfig.root().render(ConfigRenderOptions.concise().setFormatted(true))}"""
 //        logger.info("Using config to start jdbc ts : " + msg)
-        new JDBCTimerStore(DatabaseConfig.forConfig("", timerStoreConfig), caseSystem.config.persistence.tablePrefix)
+        new JDBCTimerStore(caseSystem, DatabaseConfig.forConfig("", timerStoreConfig), caseSystem.config.persistence.tablePrefix)
       case _ => new InMemoryStore() // By default return in memory map
     }
   }
