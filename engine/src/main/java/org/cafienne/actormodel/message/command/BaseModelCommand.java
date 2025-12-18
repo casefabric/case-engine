@@ -59,22 +59,36 @@ public abstract class BaseModelCommand<T extends ModelActor, U extends UserIdent
 
     protected BaseModelCommand(U user, ActorMetadata target) {
         this.json = new ValueMap();
-        this.target = target;
+        this.target = validateMetadata(target);
         this.actorId = target.actorId();
-        // First, validate actor id
-        if (actorId == null) {
+        this.user = validateUser(user);
+        this.correlationId = new Guid().toString();
+    }
+
+    private ActorMetadata validateMetadata(ActorMetadata metadata) {
+        // First, make sure we have metadata
+        if (metadata == null) {
+            throw new InvalidCommandException("Target actor for a command of type " + this.getClass().getSimpleName() + " cannot be null");
+        }
+        // Next, validate actor id, also to be valid within in the actor system.
+        //  Note: ActorPath.validate does not handle null pointers, therefore check on null happens first.
+        if (metadata.actorId() == null) {
             throw new InvalidCommandException("Actor id cannot be null");
         }
+        // Also let the actor system validate the actor id
         try {
-            ActorPath.validatePathElement(actorId);
+            ActorPath.validatePathElement(metadata.actorId());
         } catch (Throwable t) {
-            throw new InvalidCommandException("Invalid actor path " + actorId, t);
+            throw new InvalidCommandException("Invalid actor path " + metadata.actorId(), t);
         }
+        return metadata;
+    }
+
+    private U validateUser(U user) {
         if (user == null || user.id() == null || user.id().trim().isEmpty()) {
-            throw new InvalidCommandException("Tenant user cannot be null");
+            throw new InvalidCommandException("User information is missing");
         }
-        this.correlationId = new Guid().toString();
-        this.user = user;
+        return user;
     }
 
     protected BaseModelCommand(ValueMap json) {
