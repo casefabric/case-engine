@@ -8,7 +8,7 @@ import org.cafienne.persistence.querydb.record._
 
 import java.time.Instant
 
-class TestCaseStorageTransaction(caseInstanceId: String) extends TestQueryDBTransaction(caseInstanceId) with CaseStorageTransaction {
+class TestCaseStorageTransaction extends TestQueryDBTransaction with CaseStorageTransaction {
   override def upsert(record: CaseRecord): Unit = {
     println("Adding case record")
     addRecord(record)

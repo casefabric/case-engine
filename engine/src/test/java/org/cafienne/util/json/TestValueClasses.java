@@ -1,8 +1,6 @@
-package org.cafienne.model.cmmn.instance;
+package org.cafienne.util.json;
 
 import org.cafienne.model.cmmn.test.TestScript;
-import org.cafienne.util.json.ValueList;
-import org.cafienne.util.json.ValueMap;
 import org.junit.Test;
 
 import java.util.ArrayList;

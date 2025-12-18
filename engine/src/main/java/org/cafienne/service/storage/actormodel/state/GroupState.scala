@@ -18,12 +18,18 @@
 package org.cafienne.service.storage.actormodel.state
 
 import org.cafienne.actormodel.ActorMetadata
-import org.cafienne.service.storage.querydb.ConsentGroupStorage
+import org.cafienne.persistence.querydb.schema.table.userregistration.ConsentGroupTables
 
-trait GroupState extends StorageActorState {
-  override val dbStorage: ConsentGroupStorage = new ConsentGroupStorage(actor.caseSystem.queryDB.writer)
-
+trait GroupState extends StorageActorState with ConsentGroupTables {
   override def findCascadingChildren(): Seq[ActorMetadata] = Seq()
 
-  override def clearQueryData(): Unit = dbStorage.deleteGroup(metadata.actorId)
+  override def clearQueryData(): Unit = deleteGroup(metadata.actorId)
+
+  import dbConfig.profile.api._
+
+  def deleteGroup(groupId: String): Unit = {
+    addStatement(TableQuery[ConsentGroupTable].filter(_.id === groupId).delete)
+    addStatement(TableQuery[ConsentGroupMemberTable].filter(_.group === groupId).delete)
+    commit()
+  }
 }

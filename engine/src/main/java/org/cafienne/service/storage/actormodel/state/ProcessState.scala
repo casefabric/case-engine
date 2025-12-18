@@ -18,11 +18,8 @@
 package org.cafienne.service.storage.actormodel.state
 
 import org.cafienne.actormodel.ActorMetadata
-import org.cafienne.service.storage.querydb.ProcessStorage
 
 trait ProcessState extends StorageActorState {
-  override val dbStorage: ProcessStorage = new ProcessStorage(actor.caseSystem.queryDB.writer)
-
   override def findCascadingChildren(): Seq[ActorMetadata] = Seq()
 
   override def clearQueryData(): Unit = ()// Nothing to delete here, just tell our actor we're done.

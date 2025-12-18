@@ -32,7 +32,7 @@ import org.cafienne.model.cmmn.actorapi.command.team.CaseTeam
 import org.cafienne.model.cmmn.definition.InvalidDefinitionException
 import org.cafienne.model.cmmn.repository.MissingDefinitionException
 import org.cafienne.persistence.infrastructure.jdbc.query.{Area, Sort}
-import org.cafienne.persistence.infrastructure.lastmodified.Headers
+import org.cafienne.persistence.infrastructure.lastmodified.header.Headers
 import org.cafienne.persistence.querydb.query.cmmn.filter.CaseFilter
 import org.cafienne.service.http.CaseEngineHttpServer
 import org.cafienne.service.http.cases.CaseAPIFormat._

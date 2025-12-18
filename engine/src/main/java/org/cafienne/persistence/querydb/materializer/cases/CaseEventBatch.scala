@@ -35,7 +35,7 @@ class CaseEventBatch(val sink: CaseEventSink, override val persistenceId: String
 
   val caseInstanceId: String = persistenceId
   lazy val tenant: String = events.head.event.tenant()
-  val dBTransaction: CaseStorageTransaction = storage.createCaseTransaction(persistenceId)
+  val dBTransaction: CaseStorageTransaction = storage.createCaseTransaction()
 
   val caseTeamProjection = new CaseTeamProjection(this)
   val caseFileProjection = new CaseFileProjection(this)
@@ -75,7 +75,7 @@ class CaseEventBatch(val sink: CaseEventSink, override val persistenceId: String
 
     // Commit and then inform the last modified registration
     dBTransaction.commit()
-    CaseReader.lastModifiedRegistration.handle(caseModified)
+    sink.informReaders(caseModified)
   }
 
   private def updateUserIds(event: CaseAppliedPlatformUpdate, envelope: ModelEventEnvelope): Unit = {

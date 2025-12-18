@@ -1,11 +1,14 @@
-package org.cafienne.persistence.infrastructure.lastmodified
+package org.cafienne.persistence.infrastructure.lastmodified.header
 
 import org.cafienne.actormodel.message.response.ActorLastModified
+import org.cafienne.persistence.infrastructure.lastmodified.LastModifiedRegistration
+import org.cafienne.persistence.querydb.schema.QueryDB
 
 import scala.concurrent.Future
 
 trait LastModifiedHeader {
   val name: String
+  def queryDB: QueryDB = null
   val registration: LastModifiedRegistration
   val value: Option[String] = None
   val lastModified: Option[ActorLastModified] = value.map(new ActorLastModified(name, _))
@@ -24,10 +27,10 @@ object LastModifiedHeader {
     override val registration: LastModifiedRegistration = null
   }
 
-  def get(headerName: String, headerValue: Option[String] = None): LastModifiedHeader = headerName match {
-    case Headers.CASE_LAST_MODIFIED => CaseLastModifiedHeader(headerValue)
-    case Headers.TENANT_LAST_MODIFIED => TenantLastModifiedHeader(headerValue)
-    case Headers.CONSENT_GROUP_LAST_MODIFIED => ConsentGroupLastModifiedHeader(headerValue)
+  def get(queryDB: QueryDB, headerName: String, headerValue: Option[String] = None): LastModifiedHeader = headerName match {
+    case Headers.CASE_LAST_MODIFIED => CaseLastModifiedHeader(headerValue, queryDB)
+    case Headers.TENANT_LAST_MODIFIED => TenantLastModifiedHeader(headerValue, queryDB)
+    case Headers.CONSENT_GROUP_LAST_MODIFIED => ConsentGroupLastModifiedHeader(headerValue, queryDB)
     case _ => throw new Exception(s"Unrecognized last modified header $headerName")
   }
 }

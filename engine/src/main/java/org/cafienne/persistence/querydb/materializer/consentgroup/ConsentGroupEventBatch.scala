@@ -26,7 +26,7 @@ import org.cafienne.usermanagement.consentgroup.actorapi.event.{ConsentGroupCrea
 
 class ConsentGroupEventBatch(val sink: ConsentGroupEventSink, override val persistenceId: String, storage: QueryDBStorage) extends QueryDBEventBatch with LazyLogging {
 
-  val dBTransaction: ConsentGroupStorageTransaction = storage.createConsentGroupTransaction(persistenceId)
+  val dBTransaction: ConsentGroupStorageTransaction = storage.createConsentGroupTransaction()
 
   private val groupProjection = new GroupProjection(this)
   private val memberProjection = new GroupMemberProjection(this)
@@ -56,6 +56,6 @@ class ConsentGroupEventBatch(val sink: ConsentGroupEventSink, override val persi
     // Commit and then inform the last modified registration
     dBTransaction.commit()
     memberProjection.affectedUserIds.foreach(sink.caseSystem.identityRegistration.clear)
-    ConsentGroupReader.lastModifiedRegistration.handle(event)
+    sink.informReaders(event)
   }
 }

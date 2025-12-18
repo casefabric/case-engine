@@ -24,9 +24,11 @@ import org.apache.pekko.http.scaladsl.model.{ContentTypes, HttpEntity, StatusCod
 import org.apache.pekko.http.scaladsl.server.Directives.{complete, optionalHeaderValueByName, respondWithHeader, respondWithHeaders}
 import org.apache.pekko.http.scaladsl.server.{Directive0, Route}
 import org.cafienne.actormodel.message.response.ModelResponse
-import org.cafienne.persistence.infrastructure.lastmodified.LastModifiedHeader
+import org.cafienne.persistence.infrastructure.lastmodified.header.LastModifiedHeader
+import org.cafienne.persistence.querydb.schema.QueryDB
 
 trait LastModifiedDirectives extends LazyLogging {
+  implicit val queryDB: QueryDB
   /**
     * Simple CaseResponse converter to JSON
     */
@@ -56,7 +58,7 @@ trait LastModifiedDirectives extends LazyLogging {
   def readLastModifiedHeader(headerName: String)(subRoute: LastModifiedHeader => Route): Route = {
     optionalHeaderValueByName(headerName) { value =>
       try {
-        subRoute(LastModifiedHeader.get(headerName, value))
+        subRoute(LastModifiedHeader.get(queryDB, headerName, value))
       } catch {
         case t: Throwable => // This happens if the header value does not comply with ActorLastModified format
           complete(StatusCodes.BadRequest, s"Header $headerName has invalid content. Reason: ${t.getMessage}")

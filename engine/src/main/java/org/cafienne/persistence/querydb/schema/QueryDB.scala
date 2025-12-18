@@ -18,37 +18,61 @@
 package org.cafienne.persistence.querydb.schema
 
 import com.typesafe.scalalogging.LazyLogging
+import org.apache.pekko.persistence.query.Offset
 import org.cafienne.infrastructure.config.persistence.PersistenceConfig
-import org.cafienne.persistence.flyway.DB
-import org.cafienne.persistence.querydb.materializer.cases.CaseEventSink
-import org.cafienne.persistence.querydb.materializer.consentgroup.ConsentGroupEventSink
-import org.cafienne.persistence.querydb.materializer.slick.QueryDBWriter
-import org.cafienne.persistence.querydb.materializer.tenant.TenantEventSink
+import org.cafienne.persistence.flyway.{DB, FlywayRunner}
+import org.cafienne.persistence.infrastructure.jdbc.cqrs.JDBCOffsetStorage
+import org.cafienne.persistence.infrastructure.lastmodified.LastModifiedRegistration
+import org.cafienne.persistence.infrastructure.lastmodified.header.Headers
+import org.cafienne.persistence.infrastructure.lastmodified.notification.LastModifiedPublisher
+import org.cafienne.persistence.infrastructure.lastmodified.notification.singleton.InMemoryPublisher
+import org.cafienne.persistence.querydb.materializer.QueryDBStorage
+import org.cafienne.persistence.querydb.materializer.cases.CaseStorageTransaction
+import org.cafienne.persistence.querydb.materializer.consentgroup.ConsentGroupStorageTransaction
+import org.cafienne.persistence.querydb.materializer.slick.{QueryDBEventSinkManager, SlickCaseTransaction, SlickConsentGroupTransaction, SlickTenantTransaction}
+import org.cafienne.persistence.querydb.materializer.tenant.TenantStorageTransaction
 import org.cafienne.system.CaseSystem
 import slick.basic.DatabaseConfig
 import slick.jdbc.JdbcProfile
 
-class QueryDB(val config: PersistenceConfig, val dbConfig: DatabaseConfig[JdbcProfile]) extends DB with LazyLogging {
+import scala.concurrent.{ExecutionContext, Future}
+
+class QueryDB(val config: PersistenceConfig, val dbConfig: DatabaseConfig[JdbcProfile]) extends DB with QueryDBStorage with LazyLogging {
   override val databaseDescription: String = "QueryDB"
   override val schema: QueryDBSchema = new QueryDBSchema(config, dbConfig)
-  val writer = new QueryDBWriter(this)
+  val publisher: LastModifiedPublisher = new InMemoryPublisher(this)
+  val writer = new QueryDBEventSinkManager(this)
+  val caseLastModifiedRegistration = new LastModifiedRegistration(Headers.CASE_LAST_MODIFIED)
+  val tenantLastModifiedRegistration = new LastModifiedRegistration(Headers.TENANT_LAST_MODIFIED)
+  val groupLastModifiedRegistration = new LastModifiedRegistration(Headers.CONSENT_GROUP_LAST_MODIFIED)
 
-  def startEventSinks(caseSystem: CaseSystem): Unit = {
-    new CaseEventSink(caseSystem, writer).start()
-    new TenantEventSink(caseSystem, writer).start()
-    new ConsentGroupEventSink(caseSystem, writer).start()
-
-    // When running with H2, you can start a debug web server on port 8082.
-    checkH2InDebugMode()
+  // First check if we need to check and set the database schema
+  if (config.initializeDatabaseSchemas) {
+    new FlywayRunner(this).initialize()
   }
 
-  private def checkH2InDebugMode(): Unit = {
-    import org.h2.tools.Server
+  def open(caseSystem: CaseSystem): Unit = {
+    writer.startEventSinks(caseSystem)
+  }
 
-    if (config.queryDB.debug) {
-      val port = "8082"
-      logger.warn("Starting H2 Web Client on port " + port)
-      Server.createWebServer("-web", "-webAllowOthers", "-webPort", port).start()
-    }
+  override def createCaseTransaction(): CaseStorageTransaction = new SlickCaseTransaction(this)
+
+  override def createConsentGroupTransaction(): ConsentGroupStorageTransaction = new SlickConsentGroupTransaction(this)
+
+  override def createTenantTransaction(): TenantStorageTransaction = new SlickTenantTransaction(this)
+
+  override def getOffset(offsetName: String): Future[Offset] = new JDBCOffsetStorage {
+    override val tablePrefix: String = schema.tablePrefix
+    override val storageName: String = offsetName
+    override lazy val dbConfig = schema.dbConfig
+    override implicit val ec: ExecutionContext = db.ioExecutionContext
+  }.getOffset
+
+  // When running with H2, you can start a debug web server on port 8082.
+  if (config.queryDB.h2WebServer.enabled) {
+    import org.h2.tools.Server
+    val port = String.valueOf(config.queryDB.h2WebServer.port)
+    logger.warn("Starting H2 Web Client on port " + port)
+    Server.createWebServer("-web", "-webAllowOthers", "-webPort", port).start()
   }
 }

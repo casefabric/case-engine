@@ -15,7 +15,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package org.cafienne.system.router
+package org.cafienne.system.router.singleton
 
 import com.typesafe.scalalogging.LazyLogging
 import org.apache.pekko.actor.{Actor, ActorRef, Props, Terminated}

@@ -21,18 +21,18 @@ import com.typesafe.scalalogging.LazyLogging
 import org.apache.pekko.actor.ActorRef
 import org.cafienne.actormodel.ActorMetadata
 import org.cafienne.actormodel.message.event.{ModelEvent, ModelEventCollection}
+import org.cafienne.persistence.querydb.materializer.slick.SlickQueryDBTransaction
+import org.cafienne.persistence.querydb.schema.QueryDB
 import org.cafienne.service.storage.StorageUser
 import org.cafienne.service.storage.actormodel.BaseStorageActor
 import org.cafienne.service.storage.actormodel.command.ClearTimerData
 import org.cafienne.service.storage.actormodel.event.{ChildrenReceived, QueryDataCleared, TimerDataCleared}
 import org.cafienne.service.storage.actormodel.message.{StorageActionStarted, StorageEvent}
-import org.cafienne.service.storage.querydb.QueryDBStorage
 
-trait StorageActorState extends ModelEventCollection with LazyLogging {
-  def dbStorage: QueryDBStorage
-
+trait StorageActorState extends SlickQueryDBTransaction with ModelEventCollection with LazyLogging {
   val actor: BaseStorageActor
-  val rootStorageActor: ActorRef = actor.context.parent
+  def queryDB: QueryDB = actor.caseSystem.queryDB // Note: this must be def, to enable "lazy loading", otherwise resulting in null pointer exceptions
+  private val rootStorageActor: ActorRef = actor.context.parent
   val user: StorageUser = actor.user
   val metadata: ActorMetadata = actor.metadata
   val actorId: String = metadata.actorId

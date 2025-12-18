@@ -23,9 +23,10 @@ import org.cafienne.model.cmmn.instance.team.MemberType
 import org.cafienne.persistence.querydb.materializer.cases.CaseStorageTransaction
 import org.cafienne.persistence.querydb.materializer.cases.team.CaseTeamMemberKey
 import org.cafienne.persistence.querydb.record._
+import org.cafienne.persistence.querydb.schema.QueryDB
 import org.cafienne.persistence.querydb.schema.table.{CaseTables, TaskTables}
 
-class SlickCaseTransaction(val writer: QueryDBWriter) extends SlickQueryDBTransaction
+class SlickCaseTransaction(val queryDB: QueryDB) extends SlickQueryDBTransaction
   with CaseTables
   with TaskTables
   with CaseStorageTransaction {

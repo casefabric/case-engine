@@ -7,7 +7,7 @@
  */
 package org.cafienne.model.cmmn.test;
 
-import org.cafienne.model.cmmn.instance.TestValueClasses;
+import org.cafienne.util.json.TestValueClasses;
 import org.cafienne.model.cmmn.test.basic.BasicTests;
 import org.cafienne.model.cmmn.test.casefile.CaseFileTests;
 import org.cafienne.model.cmmn.test.expression.ExpressionTests;
