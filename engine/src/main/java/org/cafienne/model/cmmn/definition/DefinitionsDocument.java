@@ -331,6 +331,16 @@ public class DefinitionsDocument implements Serializable {
     }
 
     /**
+     * Return the decision model definition with the specified identifier.
+     *
+     * @param identifier The name or id of the decision model to be parsed
+     * @return The definition, or null if it cannot be found
+     */
+    public DecisionModelDefinition getDecisionModelDefinition(String identifier) {
+        return getDefinition(DecisionModelDefinition.class, identifier);
+    }
+
+    /**
      * Return the case file item definition with the specified identifier.
      *
      * @param identifier The name or id of the case file item to be parsed

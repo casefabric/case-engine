@@ -7,6 +7,8 @@ import org.cafienne.actormodel.identity.UserIdentity;
 import org.cafienne.actormodel.message.event.ModelEvent;
 import org.cafienne.model.cmmn.actorapi.event.CaseEvent;
 import org.cafienne.model.cmmn.instance.Case;
+import org.cafienne.model.dmn.actorapi.event.DecisionEvent;
+import org.cafienne.model.dmn.actorapi.instance.DecisionTaskActor;
 import org.cafienne.model.processtask.actorapi.event.ProcessEvent;
 import org.cafienne.model.processtask.instance.ProcessTaskActor;
 import org.cafienne.usermanagement.consentgroup.ConsentGroupActor;
@@ -21,6 +23,7 @@ public enum ActorType {
     ModelActor(ModelActor.class, ModelEvent.class, UserIdentity::deserialize),
     Case(Case.class, CaseEvent.class, CaseUserIdentity::deserialize),
     Process(ProcessTaskActor.class, ProcessEvent.class, CaseUserIdentity::deserialize),
+    Decision(DecisionTaskActor.class, DecisionEvent.class, CaseUserIdentity::deserialize),
     Group(ConsentGroupActor.class, ConsentGroupEvent.class, ConsentGroupUser::deserialize),
     Tenant(TenantActor.class, TenantEvent.class, TenantUser::deserialize);
 
@@ -29,6 +32,7 @@ public enum ActorType {
     public final Class<? extends ModelEvent> actorEventClass;
     public final boolean isCase;
     public final boolean isProcess;
+    public final boolean isDecision;
     public final boolean isGroup;
     public final boolean isTenant;
     public final boolean isGeneric;
@@ -42,10 +46,11 @@ public enum ActorType {
         this.value = actorClass.getSimpleName();
         this.isCase = actorClass == Case.class;
         this.isProcess = actorClass == ProcessTaskActor.class;
+        this.isDecision = actorClass == DecisionTaskActor.class;
         this.isGroup = actorClass == ConsentGroupActor.class;
         this.isTenant = actorClass == TenantActor.class;
         this.isGeneric = actorClass == ModelActor.class;
-        this.isModel = this.isCase || this.isProcess;
+        this.isModel = this.isCase || this.isProcess || isDecision;
     }
 
     public <U extends UserIdentity> U readUser(ValueMap json) {
