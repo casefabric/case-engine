@@ -128,7 +128,6 @@ public enum Fields {
     input,
     owner,
     processDefinition,
-    decisionDefinition,
     output,
     engineVersion,
     newTenantUser,

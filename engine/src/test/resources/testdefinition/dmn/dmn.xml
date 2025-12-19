@@ -1,4 +1,19 @@
 <definitions xmlns="http://www.omg.org/spec/CMMN/20151109/MODEL" xmlns:cafienne="org.cafienne">
+    <caseFileItemDefinition name="Claim" definitionType="http://www.omg.org/spec/CMMN/DefinitionType/Unspecified" id="decision_type_Claim.object">
+        <property name="type" type="http://www.omg.org/spec/CMMN/PropertyType/string"/>
+        <property name="exp" type="http://www.omg.org/spec/CMMN/PropertyType/float"/>
+    </caseFileItemDefinition>
+    <caseFileItemDefinition name="decision" definitionType="http://www.omg.org/spec/CMMN/DefinitionType/Unspecified" id="decision.type"/>
+    <case id="decision2.case" name="decision2" expressionLanguage="spel">
+        <caseFileModel cafienne:typeRef="decision.type">
+            <caseFileItem id="Claim" name="Claim" multiplicity="ExactlyOne" definitionRef="decision_type_Claim.object"/>
+        </caseFileModel>
+        <casePlanModel id="cm__7aMtx_0" name="decision2" autoComplete="true">
+            <planItem id="_7aMtx_1" name="Determine Employee&#10;" definitionRef="dt__7aMtx_1"/>
+            <decisionTask id="dt__7aMtx_1" name="Determine Employee&#10;" isBlocking="true" decisionRef="determineEmployee.decision"/>
+        </casePlanModel>
+        <caseRoles cafienne:caseTeamRef="decision2.caseteam"/>
+    </case>
     <decision xmlns="http://www.omg.org/spec/CMMN/20151109/MODEL" name="determineEmployee" implementationType="http://www.omg.org/spec/CMMN/DecisionType/DMN1" id="determineEmployee.decision">
         <input id="_KE6Sa_2" name="Expenditure" typeRef="integer"/>
         <input id="_KE6Sa_24" name="Claim" typeRef="string"/>

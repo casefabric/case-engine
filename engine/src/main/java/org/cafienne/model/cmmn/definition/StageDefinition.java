@@ -35,6 +35,7 @@ public class StageDefinition extends PlanFragmentDefinition {
         super(element, modelDefinition, parentElement);
         parse("humanTask", HumanTaskDefinition.class, planItemDefinitions);
         parse("processTask", ProcessTaskDefinition.class, planItemDefinitions);
+        parse("decisionTask", DecisionTaskDefinition.class, planItemDefinitions);
         parse("caseTask", CaseTaskDefinition.class, planItemDefinitions);
         parse("milestone", MilestoneDefinition.class, planItemDefinitions);
         parse("userEvent", UserEventDefinition.class, planItemDefinitions);

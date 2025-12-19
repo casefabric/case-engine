@@ -15,7 +15,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package org.cafienne.model.cmmn.instance.task.decision;
+package org.cafienne.model.cmmn.instance.task.dmn;
 
 import org.cafienne.actormodel.ActorMetadata;
 import org.cafienne.actormodel.ActorType;
@@ -35,7 +35,8 @@ public class DecisionTask extends Task<DecisionTaskDefinition> {
     }
     @Override
     protected ActorMetadata target() {
-        return new ActorMetadata(ActorType.Process, getId(), getCaseInstance().metadata());
+        // TODO change ActorType to NO ACTOR
+        return new ActorMetadata(ActorType.ModelActor, getId(), getCaseInstance().metadata());
     }
 
     @Override
@@ -45,22 +46,22 @@ public class DecisionTask extends Task<DecisionTaskDefinition> {
 
     @Override
     protected void suspendImplementation() {
-        implementation.suspend();
+
     }
 
     @Override
     protected void resumeImplementation() {
-        implementation.resume();
+
     }
 
     @Override
     protected void terminateImplementation() {
-        implementation.terminate();
+
     }
 
     @Override
     protected void reactivateImplementation(ValueMap inputParameters) {
-        implementation.reactivate();
+        implementation.start();
     }
 
     @Override

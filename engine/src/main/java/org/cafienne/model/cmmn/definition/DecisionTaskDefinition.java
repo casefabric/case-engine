@@ -20,7 +20,7 @@ package org.cafienne.model.cmmn.definition;
 import org.cafienne.model.cmmn.instance.Case;
 import org.cafienne.model.cmmn.instance.PlanItemType;
 import org.cafienne.model.cmmn.instance.Stage;
-import org.cafienne.model.cmmn.instance.task.decision.DecisionTask;
+import org.cafienne.model.cmmn.instance.task.dmn.DecisionTask;
 import org.cafienne.model.dmn.definition.DecisionModelDefinition;
 import org.w3c.dom.Element;
 
@@ -35,7 +35,7 @@ public class DecisionTaskDefinition extends TaskDefinition<DecisionModelDefiniti
 
     @Override
     public PlanItemType getItemType() {
-        return PlanItemType.ProcessTask;
+        return PlanItemType.DecisionTask;
     }
 
     @Override
