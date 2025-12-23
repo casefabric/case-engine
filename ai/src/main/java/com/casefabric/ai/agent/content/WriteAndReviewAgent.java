@@ -33,12 +33,7 @@ abstract class Personas {
             .andGoal("Write engaging and imaginative stories")
             .andBackstory("Has a PhD in French literature; used to work in a circus");
 
-    static final Persona REVIEWER = new Persona(
-            "Media Book Review",
-            "New York Times Book Reviewer",
-            "Professional and insightful",
-            "Help guide readers toward good stories"
-    );
+    static final Reviewer REVIEWER = new Reviewer();
 }
 
 @Agent(description = "Generate a story based on user input and review it")

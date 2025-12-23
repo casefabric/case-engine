@@ -19,7 +19,7 @@ abstract class Personas {
                     CaseFabric: https://casefabric.com and https://guide.casefabric.com
                     """);
 
-    static final Persona RESEARCHER = new Persona(
+    static final Persona RESEARCHER = Persona.create(
             "HR Researcher",
             "HR employee specialized in web searvh",
             "Professional and precise",

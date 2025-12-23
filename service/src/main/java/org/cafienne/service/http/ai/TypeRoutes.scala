@@ -17,6 +17,7 @@
 
 package org.cafienne.service.http.ai
 
+import com.embabel.agent.core.{DomainType, DomainTypePropertyDefinition, PropertyDefinition, SimplePropertyDefinition}
 import io.swagger.v3.oas.annotations.Operation
 import io.swagger.v3.oas.annotations.media.{ArraySchema, Content, Schema}
 import io.swagger.v3.oas.annotations.responses.ApiResponse
@@ -47,11 +48,46 @@ class TypeRoutes(override val httpService: CaseEngineHttpServer) extends AiRoute
   @Produces(Array("application/json"))
   def getAllTypes: Route = get {
     path("types") {
-        val answer = agentPlatform().getDomainTypes.asScala.map(dt => {
-          AiTypeResponse(dt.getName, dt.getOwnProperties.asScala.toList)
-        }).toList
-        completeJson(new ValueList(answer))
+      val answer = addMissingTypes()
+      completeJson(new ValueList(answer))
+    }
+  }
+
+  private def addMissingTypes(): Seq[AiTypeResponse] = {
+    val rawTypes = agentPlatform().getDomainTypes.asScala.toList
+    val foundTypes: List[AiTypeResponse] = agentPlatform().getDomainTypes.asScala.filter(domainTypeFilter).map(dt => {
+      AiTypeResponse(dt.getName, dt.getProperties.asScala.filter(propFilter).toList)
+    }).toList
+    var missingTypes: Set[AiTypeResponse] = Set.empty
+    rawTypes.foreach(dt => {
+      dt.getProperties.asScala.foreach {
+        case definition: DomainTypePropertyDefinition =>
+          if (!rawTypes.exists(ft => ft.getName.equals(definition.getType.getName))) {
+            //carve out things that should not be added to the responses
+            if (domainTypeFilter(definition.getType)) {
+              missingTypes += AiTypeResponse(definition.getType.getName, definition.getType.getProperties.asScala.filter(propFilter).toList)
+            }
+          }
+        case definition: SimplePropertyDefinition => //
+        case _ => //
       }
+    })
+    //Add the AiRequest type with prompt.
+    (foundTypes ++ missingTypes).filter(dt => dt.properties.nonEmpty).toList
+  }
+
+  private def domainTypeFilter(dt: DomainType): Boolean = {
+    val toMatch = dt.getName.toLowerCase
+    theFilter(toMatch)
+  }
+
+  private def propFilter(pd: PropertyDefinition): Boolean = {
+    val toMatch = pd.getName.toLowerCase
+    theFilter(toMatch)
+  }
+
+  private def theFilter(toMatch: String): Boolean = {
+    if (toMatch.contains("log") || toMatch.contains('$') || toMatch.contains("companion") || toMatch.contains("userinput")) false else true
   }
 
 }

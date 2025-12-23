@@ -15,7 +15,7 @@ import org.cafienne.util.json.CafienneJson;
 public record ReviewedStory(
         Story story,
         String review,
-        Persona reviewer
+        Reviewer reviewer
 ) implements HasContent, Timestamped, CafienneJson {
 
     @Override
