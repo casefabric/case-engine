@@ -1,5 +1,6 @@
 package org.cafienne.model.cmmn.test.casefile;
 
+import org.cafienne.actormodel.ActorMetadata;
 import org.cafienne.model.cmmn.actorapi.command.StartCase;
 import org.cafienne.model.cmmn.actorapi.command.casefile.CreateCaseFileItem;
 import org.cafienne.model.cmmn.actorapi.command.casefile.DeleteCaseFileItem;
@@ -9,7 +10,6 @@ import org.cafienne.model.cmmn.instance.State;
 import org.cafienne.model.cmmn.test.TestScript;
 import org.cafienne.util.json.Value;
 import org.cafienne.util.json.ValueMap;
-import org.cafienne.util.Guid;
 import org.junit.Test;
 
 import static org.cafienne.model.cmmn.test.TestScript.*;
@@ -27,7 +27,7 @@ public class AddRemoveChildTest {
     public void testAddAndRemoveChild() {
         TestScript testCase = new TestScript(caseName);
 
-        String caseInstanceId = new Guid().toString();
+        ActorMetadata caseInstanceId = createIdentifier();
         StartCase startCase = createCaseCommand(testUser, caseInstanceId, definitions);
         testCase.addStep(startCase, caseFile -> caseFile.assertCaseFileItem(testPath).assertValue(Value.NULL));
 
@@ -64,7 +64,7 @@ public class AddRemoveChildTest {
     public void testAddChildAndRemoveParent() {
         TestScript testCase = new TestScript(caseName);
 
-        String caseInstanceId = new Guid().toString();
+        ActorMetadata caseInstanceId = createIdentifier();
         StartCase startCase = createCaseCommand(testUser, caseInstanceId, definitions);
         testCase.addStep(startCase, caseFile -> caseFile.assertCaseFileItem(testPath).assertValue(Value.NULL));
 
@@ -92,7 +92,7 @@ public class AddRemoveChildTest {
     public void testAddChildWithParent() {
         TestScript testCase = new TestScript(caseName);
 
-        String caseInstanceId = new Guid().toString();
+        ActorMetadata caseInstanceId = createIdentifier();
         StartCase startCase = createCaseCommand(testUser, caseInstanceId, definitions);
         testCase.addStep(startCase, caseFile -> caseFile.assertCaseFileItem(testPath).assertValue(Value.NULL));
 

@@ -1,7 +1,6 @@
 package org.cafienne.actormodel.communication.request.state;
 
 import org.cafienne.actormodel.ActorMetadata;
-import org.cafienne.actormodel.ActorType;
 import org.cafienne.actormodel.ModelActor;
 import org.cafienne.actormodel.communication.request.event.ActorRequestCreated;
 import org.cafienne.actormodel.communication.request.event.ActorRequestDelivered;
@@ -20,16 +19,17 @@ import java.util.Map;
  */
 public abstract class RemoteActorState<LocalActor extends ModelActor> {
     public final LocalActor actor;
-    public final String targetActorId;
     public final ActorMetadata target;
     public final ActorMetadata source;
     private final Map<String, Request> requests = new HashMap<>();
 
     protected RemoteActorState(LocalActor actor, ActorMetadata target) {
+        if (target == null) {
+            new Exception(actor +": We're in null at a " + getClass().getSimpleName()).printStackTrace();;
+        }
         this.actor = actor;
         this.target = target;
-        this.targetActorId = target.actorId();
-        this.source = actor.metadata();
+        this.source = actor.metadata;
         this.actor.register(this);
     }
 
@@ -57,7 +57,7 @@ public abstract class RemoteActorState<LocalActor extends ModelActor> {
     public abstract void handleFailure(ActorRequestFailure failure);
 
     public String getDescription() {
-        return this.getClass().getSimpleName() + "[" + targetActorId + "]";
+        return this.getClass().getSimpleName() + "[" + target.actorId() + "]";
     }
 
     public final void updateState(ModelActorReplyEvent event) {

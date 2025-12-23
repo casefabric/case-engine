@@ -20,6 +20,7 @@ package org.cafienne.service.storage.actormodel
 import com.typesafe.scalalogging.LazyLogging
 import org.apache.pekko.actor.{Actor, ActorRef, Props, Terminated}
 import org.cafienne.actormodel.ActorMetadata
+import org.cafienne.actormodel.message.response.ActorTerminated
 import org.cafienne.system.CaseSystem
 
 import scala.collection.mutable
@@ -42,12 +43,12 @@ trait StorageActorSupervisor extends Actor with LazyLogging {
     })
   }
 
-  def removeActorRef(message: Terminated): Unit = {
-    // TODO: can we also find the actor ref from the values with message.actor instead of using the name?
-    val actorId = message.actor.path.name
-    if (childActors.remove(actorId).isEmpty) {
-      logger.warn("Received a Termination message for actor " + actorId + ", but it was not registered in the LocalRoutingService. Termination message is ignored")
-    }
+  def removeActorRef(message: Terminated): Unit = removeActorRef(message.actor.path.name)
+
+  def removeActorRef(message: ActorTerminated): Unit = removeActorRef(message.metadata.actorId)
+
+  private def removeActorRef(actorId: String): Unit = {
+    childActors.remove(actorId)
     logger.whenDebugEnabled(logger.debug(s"Actor $actorId is removed from memory"))
   }
 
@@ -57,7 +58,7 @@ trait StorageActorSupervisor extends Actor with LazyLogging {
     */
   def terminateModelActor(metadata: ActorMetadata, followUpAction: => Unit = {}): Unit = {
     caseSystem.engine.awaitTermination(metadata).onComplete{
-      case Success(value) => followUpAction
+      case Success(_) => followUpAction
       case Failure(exception) => logger.warn(s"Failure upon termination of model actor $metadata", exception)
     }
   }

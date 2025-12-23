@@ -1,6 +1,7 @@
 package org.cafienne.actormodel.communication.request.event;
 
 import com.fasterxml.jackson.core.JsonGenerator;
+import org.cafienne.actormodel.ActorMetadata;
 import org.cafienne.actormodel.ModelActor;
 import org.cafienne.actormodel.communication.CaseSystemCommunicationEvent;
 import org.cafienne.actormodel.communication.request.state.RemoteActorState;
@@ -10,21 +11,21 @@ import org.cafienne.util.json.ValueMap;
 import java.io.IOException;
 
 public abstract class ModelActorReplyEvent extends CaseSystemCommunicationEvent {
-    public final String targetActorId;
+    public final ActorMetadata target;
 
-    protected ModelActorReplyEvent(ModelActor actor, String messageId, String targetActorId) {
+    protected ModelActorReplyEvent(ModelActor actor, String messageId, ActorMetadata target) {
         super(actor, messageId);
-        this.targetActorId = targetActorId;
+        this.target = target;
     }
 
     protected ModelActorReplyEvent(ValueMap json) {
         super(json);
-        this.targetActorId = json.readString(Fields.targetActorId);
+        this.target = json.readMetadata(Fields.targetActorId);
     }
 
     @Override
     public void updateState(ModelActor actor) {
-        RemoteActorState<?> state = actor.getRemoteActorState(this.targetActorId);
+        RemoteActorState<?> state = actor.getRemoteActorState(this.target);
         state.updateState(this);
     }
 
@@ -35,6 +36,6 @@ public abstract class ModelActorReplyEvent extends CaseSystemCommunicationEvent 
 
     public void writeOutgoingRequestEvent(JsonGenerator generator) throws IOException {
         super.writeActorRequestEvent(generator);
-        writeField(generator, Fields.targetActorId, targetActorId);
+        writeField(generator, Fields.targetActorId, target);
     }
 }

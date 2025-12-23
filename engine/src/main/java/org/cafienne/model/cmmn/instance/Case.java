@@ -17,8 +17,6 @@
 
 package org.cafienne.model.cmmn.instance;
 
-import org.cafienne.actormodel.ActorMetadata;
-import org.cafienne.actormodel.ActorType;
 import org.cafienne.actormodel.ModelActor;
 import org.cafienne.actormodel.identity.CaseUserIdentity;
 import org.cafienne.actormodel.message.command.ModelCommand;
@@ -64,6 +62,10 @@ public class Case extends ModelActor {
      */
     private Instant createdOn;
     /**
+     * Case model that is interpreted for this case
+     */
+    private CaseDefinition definition;
+    /**
      * List of plan items in the case.
      */
     private final Collection<PlanItem<?>> planItems = new ArrayList<>();
@@ -76,24 +78,9 @@ public class Case extends ModelActor {
      */
     private final SentryNetwork sentryNetwork = new SentryNetwork();
     /**
-     * Case model that is interpreted for this case
-     */
-    private CaseDefinition definition;
-    /**
      * Root level plan item of the case.
      */
     private CasePlan casePlan;
-
-    /**
-     * Identifier of parent case that caused this case to start.
-     */
-    private String parentCaseId;
-
-    /**
-     * Identifier of top-most case that caused this case to start.
-     */
-    private String rootCaseId;
-
     /**
      * Workers in the case team
      */
@@ -101,19 +88,11 @@ public class Case extends ModelActor {
 
     public Case(CaseSystem caseSystem) {
         super(caseSystem);
-        this.createdOn = getTransactionTimestamp();
-
-        logger.info("Recovering/creating case " + this.getId() + " with path " + self().path());
     }
 
     @Override
     public CaseUserIdentity getCurrentUser() {
         return super.getCurrentUser().asCaseUserIdentity();
-    }
-
-    @Override
-    public ActorMetadata metadata() {
-        return new ActorMetadata(ActorType.Case, getId(), null);
     }
 
     @Override
@@ -129,11 +108,6 @@ public class Case extends ModelActor {
     @Override
     protected Logger getLogger() {
         return logger;
-    }
-
-    @Override
-    public String getParentActorId() {
-        return this.getParentCaseId();
     }
 
     @Override
@@ -346,12 +320,9 @@ public class Case extends ModelActor {
     /**
      * Internal framework method
      */
-    public void applyCaseDefinition(CaseDefinition definition, String parentCaseId, String rootCaseId) {
+    public void applyCaseDefinition(CaseDefinition definition) {
         // Set the definition and tenant.
         setDefinition(definition);
-        // Link the (optional) ancestor information
-        this.parentCaseId = parentCaseId;
-        this.rootCaseId = rootCaseId;
     }
 
     public void setInputParameters(ValueMap inputParameters) {
@@ -403,7 +374,7 @@ public class Case extends ModelActor {
      * @return
      */
     public String getParentCaseId() {
-        return parentCaseId;
+        return metadata.hasParent() ? metadata.parent().actorId(): "";
     }
 
     /**
@@ -412,7 +383,7 @@ public class Case extends ModelActor {
      * @return
      */
     public String getRootCaseId() {
-        return rootCaseId;
+        return metadata.root().actorId();
     }
 
     /**
@@ -465,7 +436,7 @@ public class Case extends ModelActor {
     public void updateState(CaseDefinitionApplied event) {
         this.createdOn = event.createdOn;
         setEngineVersion(event.engineVersion);
-        applyCaseDefinition(event.getDefinition(), event.getParentCaseId(), event.getRootCaseId());
+        applyCaseDefinition(event.getDefinition());
     }
 
     @Override

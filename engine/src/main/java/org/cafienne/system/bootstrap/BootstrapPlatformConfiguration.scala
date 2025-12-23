@@ -19,6 +19,7 @@ package org.cafienne.system.bootstrap
 
 import com.typesafe.config.{Config, ConfigException, ConfigFactory}
 import com.typesafe.scalalogging.LazyLogging
+import org.cafienne.actormodel.{ActorMetadata, ActorType}
 import org.cafienne.actormodel.identity.TenantUser
 import org.cafienne.actormodel.message.response.{ActorExistsFailure, CommandFailure, ModelResponse}
 import org.cafienne.system.CaseSystem
@@ -125,7 +126,7 @@ object BootstrapPlatformConfiguration extends LazyLogging {
 
       val aPlatformOwner = caseSystem.config.platform.platformOwners.head
 
-      new CreateTenant(aPlatformOwner, tenantName, tenantName, users.asJava)
+      new CreateTenant(aPlatformOwner, new ActorMetadata(ActorType.Tenant, tenantName), tenantName, users.asJava)
 
     } catch {
       case c: ConfigException => throw new BootstrapFailure("Bootstrap file " + configFile.getAbsolutePath + " is invalid: " + c.getMessage, c)

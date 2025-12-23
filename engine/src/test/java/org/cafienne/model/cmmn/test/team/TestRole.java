@@ -7,6 +7,7 @@
  */
 package org.cafienne.model.cmmn.test.team;
 
+import org.cafienne.actormodel.ActorMetadata;
 import org.cafienne.model.cmmn.actorapi.command.StartCase;
 import org.cafienne.model.cmmn.actorapi.command.plan.MakeCaseTransition;
 import org.cafienne.model.cmmn.actorapi.command.plan.MakePlanItemTransition;
@@ -24,7 +25,8 @@ import static org.cafienne.model.cmmn.test.TestScript.*;
 public class TestRole {
 
     private final String testName = "roles";
-    private final String caseInstanceId = testName;
+
+    private final ActorMetadata caseInstanceId = createIdentifier(testName);
     private final TestUser admin = createTestUser("Admin", "Admin");
     private final TestUser employee = createTestUser("Employee", "Employee");
     private final CaseDefinition definitions = loadCaseDefinition("testdefinition/team/roles.xml");

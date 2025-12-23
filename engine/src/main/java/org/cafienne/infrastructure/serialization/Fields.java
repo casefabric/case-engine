@@ -24,6 +24,7 @@ public enum Fields {
     correlationId,
     actor,
     actorId,
+    actorIdentifier,
     user,
 
     lastModified,

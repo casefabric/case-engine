@@ -17,6 +17,7 @@
 
 package org.cafienne.model.cmmn.actorapi.command;
 
+import org.cafienne.actormodel.ActorMetadata;
 import org.cafienne.actormodel.exception.InvalidCommandException;
 import org.cafienne.actormodel.identity.CaseUserIdentity;
 import org.cafienne.actormodel.message.command.BaseModelCommand;
@@ -39,7 +40,7 @@ public abstract class CaseCommand extends BaseModelCommand<Case, CaseUserIdentit
      * @param user           The user that issues this command.
      * @param caseInstanceId The id of the case in which to perform this command.
      */
-    protected CaseCommand(CaseUserIdentity user, String caseInstanceId) {
+    protected CaseCommand(CaseUserIdentity user, ActorMetadata caseInstanceId) {
         super(user, caseInstanceId);
     }
 

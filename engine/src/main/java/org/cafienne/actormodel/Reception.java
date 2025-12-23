@@ -66,7 +66,7 @@ public class Reception {
 
     private void terminateActor() {
         ActorRef replyTo = actor.sender();
-        hooks.add(() -> replyTo.tell(new ActorTerminated(actor.getId()), actor.self()));
+        hooks.add(() -> replyTo.tell(new ActorTerminated(actor.metadata), actor.self()));
         actor.takeABreak("Upon request");
     }
 

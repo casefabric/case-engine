@@ -26,6 +26,7 @@ import io.swagger.v3.oas.annotations.{Operation, Parameter}
 import jakarta.ws.rs._
 import org.apache.pekko.http.scaladsl.model.StatusCodes
 import org.apache.pekko.http.scaladsl.server.Route
+import org.cafienne.actormodel.{ActorMetadata, ActorType}
 import org.cafienne.actormodel.identity.PlatformOwner
 import org.cafienne.service.http.CaseEngineHttpServer
 import org.cafienne.service.http.userregistration.tenant.model.TenantAPI.{PlatformUserFormat, TenantFormat}
@@ -58,7 +59,7 @@ class PlatformRoute(override val httpService: CaseEngineHttpServer) extends Comm
           import scala.jdk.CollectionConverters._
           val newTenantName = newTenant.name
           val users = newTenant.getTenantUsers.asJava
-          askPlatform(new CreateTenant(owner, newTenantName, newTenantName, users))
+          askPlatform(new CreateTenant(owner, new ActorMetadata(ActorType.Tenant, newTenantName), newTenantName, users))
         }
       }
     }
@@ -81,7 +82,7 @@ class PlatformRoute(override val httpService: CaseEngineHttpServer) extends Comm
   def disableTenant: Route = put {
     platformOwner { owner =>
       path(Segment / "disable") { tenant =>
-        askPlatform(new DisableTenant(owner, tenant.name))
+        askPlatform(new DisableTenant(owner, new ActorMetadata(ActorType.Tenant, tenant.name)))
       }
     }
   }
@@ -103,7 +104,7 @@ class PlatformRoute(override val httpService: CaseEngineHttpServer) extends Comm
   def enableTenant: Route = put {
     platformOwner { owner =>
       path(Segment / "enable") { tenant =>
-        askPlatform(new EnableTenant(owner, tenant.name))
+        askPlatform(new EnableTenant(owner, new ActorMetadata(ActorType.Tenant, tenant.name)))
       }
     }
   }

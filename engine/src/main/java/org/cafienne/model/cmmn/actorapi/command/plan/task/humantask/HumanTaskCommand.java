@@ -18,6 +18,7 @@
 package org.cafienne.model.cmmn.actorapi.command.plan.task.humantask;
 
 import com.fasterxml.jackson.core.JsonGenerator;
+import org.cafienne.actormodel.ActorMetadata;
 import org.cafienne.actormodel.exception.AuthorizationException;
 import org.cafienne.actormodel.exception.InvalidCommandException;
 import org.cafienne.actormodel.identity.CaseUserIdentity;
@@ -43,7 +44,7 @@ public abstract class HumanTaskCommand extends CaseCommand {
     private final String taskId;
     private HumanTask task;
 
-    protected HumanTaskCommand(CaseUserIdentity user, String caseInstanceId, String taskId) {
+    protected HumanTaskCommand(CaseUserIdentity user, ActorMetadata caseInstanceId, String taskId) {
         super(user, caseInstanceId);
         if (taskId == null || taskId.trim().isEmpty()) {
             throw new NullPointerException("Task id should not be null or empty");

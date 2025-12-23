@@ -18,6 +18,7 @@
 package org.cafienne.model.cmmn.actorapi.command.debug;
 
 import com.fasterxml.jackson.core.JsonGenerator;
+import org.cafienne.actormodel.ActorMetadata;
 import org.cafienne.actormodel.identity.CaseUserIdentity;
 import org.cafienne.infrastructure.serialization.Fields;
 import org.cafienne.infrastructure.serialization.Manifest;
@@ -41,7 +42,7 @@ public class SwitchDebugMode extends CaseCommand {
      * @param caseInstanceId      The instance identifier of the case
      * @param debugMode           True if debug must be enabled, false if disabled.
      */
-    public SwitchDebugMode(CaseUserIdentity user, String caseInstanceId, boolean debugMode) {
+    public SwitchDebugMode(CaseUserIdentity user, ActorMetadata caseInstanceId, boolean debugMode) {
         super(user, caseInstanceId);
         this.debugMode = debugMode;
     }

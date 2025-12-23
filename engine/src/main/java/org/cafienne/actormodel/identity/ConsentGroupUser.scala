@@ -17,10 +17,12 @@
 
 package org.cafienne.actormodel.identity
 
+import org.cafienne.actormodel.{ActorMetadata, ActorType}
 import org.cafienne.infrastructure.serialization.Fields
 import org.cafienne.util.json.{Value, ValueMap}
 
 case class ConsentGroupUser(id: String, groupId: String, tenant: String) extends UserIdentity {
+  val group = ActorMetadata(ActorType.Group, groupId)
   override def toValue: Value[_] = new ValueMap(Fields.userId, id, Fields.groupId, groupId, Fields.tenant, tenant)
 }
 

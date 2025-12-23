@@ -21,8 +21,8 @@ import java.time.Instant;
 public abstract class CaseSystemCommunicationResponse extends CaseSystemCommunicationCommand implements ModelResponse {
     private Instant lastModified;
 
-    protected CaseSystemCommunicationResponse(ActorMetadata target, ModelCommand command) {
-        super(target, command);
+    protected CaseSystemCommunicationResponse(ModelActor sender, ActorMetadata target, ModelCommand command) {
+        super(sender, target, command);
         this.lastModified = command.getActor() != null ? command.getActor().getLastModified() : null;
     }
 
@@ -38,10 +38,11 @@ public abstract class CaseSystemCommunicationResponse extends CaseSystemCommunic
 
     @Override
     public final void process(ModelActor actor) {
-        RemoteActorState<?> state = actor.getRemoteActorState(this.actorId);
+//        System.out.println(actor + ": fetching state for response from this.target " + target + " with this.target() " + this.target() +" and this.command.target(): " + command.target());
+        RemoteActorState<?> state = actor.getRemoteActorState(this.command.target());
         if (state == null) {
             // That's weird...
-            System.out.println("\n\n!!!!!!!!!!!!!!!!!!!!        We should have state");
+            System.out.println("\n\n!!!!!!!!!!!!!!!!!!!!        " + actor + " should have state for handling " + this.getDescription() +" from actor " + command.actorId()  +" in " + this.target);
         } else {
             process(state);
         }
