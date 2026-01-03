@@ -82,7 +82,7 @@ class TaskQueriesImplTest extends QueryTestBaseClass("task-list-queries") {
   it should "retrieve a caseInstanceId and tenant by taskId" in {
     val res = Await.result({
       implicit val ec: ExecutionContextExecutor = scala.concurrent.ExecutionContext.global
-      authorizationQueries.getCaseMembershipForTask("1", testUser).map(m => (m.caseInstanceId, m.tenant))
+      authorizationQueries.getCaseMembershipForTask("1", testUser).map(m => (m.caseIdentifier.actorId, m.tenant))
     }, 1.second)
     res must be((case33, tenant))
   }

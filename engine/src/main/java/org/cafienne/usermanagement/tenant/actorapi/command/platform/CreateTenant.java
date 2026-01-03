@@ -18,6 +18,7 @@
 package org.cafienne.usermanagement.tenant.actorapi.command.platform;
 
 import com.fasterxml.jackson.core.JsonGenerator;
+import org.cafienne.actormodel.ActorMetadata;
 import org.cafienne.actormodel.exception.InvalidCommandException;
 import org.cafienne.actormodel.identity.PlatformOwner;
 import org.cafienne.actormodel.identity.TenantUser;
@@ -36,7 +37,7 @@ public class CreateTenant extends PlatformTenantCommand implements BootstrapMess
     public final String name;
     private final List<TenantUser> users;
 
-    public CreateTenant(PlatformOwner user, String tenantId, String name, List<TenantUser> users) {
+    public CreateTenant(PlatformOwner user, ActorMetadata tenantId, String name, List<TenantUser> users) {
         super(user, tenantId);
         this.name = name;
         this.users = users;

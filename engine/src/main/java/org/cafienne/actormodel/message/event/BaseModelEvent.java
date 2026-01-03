@@ -18,6 +18,7 @@
 package org.cafienne.actormodel.message.event;
 
 import com.fasterxml.jackson.core.JsonGenerator;
+import org.cafienne.actormodel.ActorMetadata;
 import org.cafienne.actormodel.ModelActor;
 import org.cafienne.actormodel.identity.UserIdentity;
 import org.cafienne.infrastructure.serialization.Fields;
@@ -30,6 +31,7 @@ public abstract class BaseModelEvent<M extends ModelActor, U extends UserIdentit
     private final ValueMap json;
     
     // Serializable fields
+    public final ActorMetadata actor;
     private final String actorId;
     public final String tenant;
     private final U user;
@@ -38,6 +40,7 @@ public abstract class BaseModelEvent<M extends ModelActor, U extends UserIdentit
 
     protected BaseModelEvent(M actor) {
         this.json = new ValueMap();
+        this.actor = actor.metadata;
         this.actorId = actor.getId();
         this.tenant = actor.getTenant();
         this.timestamp = actor.getTransactionTimestamp();
@@ -46,17 +49,32 @@ public abstract class BaseModelEvent<M extends ModelActor, U extends UserIdentit
         //  Since we're recovering, there is no current transaction.
         //  In that case we set user and correlation id to null (since the event is ignored anyway).
         this.user = (U) actor.getCurrentUser();
-        this.correlationId =  actor.getCurrentTransaction().getCorrelationId();
+        this.correlationId = actor.getCurrentTransaction().getCorrelationId();
     }
 
     protected BaseModelEvent(ValueMap json) {
         this.json = json;
         ValueMap modelEventJson = json.with(Fields.modelEvent);
         this.actorId = modelEventJson.readString(Fields.actorId);
+        this.actor = readActorMetadata(modelEventJson);
         this.tenant = modelEventJson.readString(Fields.tenant);
         this.timestamp = modelEventJson.readInstant(Fields.timestamp);
         this.user = actorType().readUser(modelEventJson.with(Fields.user));
         this.correlationId = modelEventJson.readString(Fields.correlationId);
+    }
+
+    private ActorMetadata readActorMetadata(ValueMap modelEventJson) {
+        ActorMetadata metadata = modelEventJson.readMetadata(Fields.actor);
+        return metadata != null ? metadata : createActorMetadata(this.json);
+    }
+
+    protected ActorMetadata createActorMetadata(ValueMap json) {
+        return new ActorMetadata(this.actorType(), this.actorId, null);
+    }
+
+    @Override
+    public ActorMetadata metadata() {
+        return actor;
     }
 
     @Override
@@ -113,6 +131,7 @@ public abstract class BaseModelEvent<M extends ModelActor, U extends UserIdentit
     protected void writeModelEvent(JsonGenerator generator) throws IOException {
         generator.writeFieldName(Fields.modelEvent.toString());
         generator.writeStartObject();
+        writeField(generator, Fields.actor, this.actor);
         writeField(generator, Fields.actorId, this.getActorId());
         writeField(generator, Fields.correlationId, this.getCorrelationId());
         writeField(generator, Fields.tenant, this.tenant);

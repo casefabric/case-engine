@@ -14,18 +14,19 @@ import java.io.IOException;
 
 public abstract class CaseSystemCommunicationCommand extends BaseModelCommand<ModelActor, UserIdentity> implements CaseSystemCommunicationMessage {
     private ModelCommand deserializedModelCommand;
-    public final ActorMetadata target;
+    public final ActorMetadata sender;
     public final ModelCommand command;
 
-    protected CaseSystemCommunicationCommand(ActorMetadata target, ModelCommand command) {
-        super(command.getUser(), command.actorId());
-        this.target = target;
+    protected CaseSystemCommunicationCommand(ModelActor sender, ActorMetadata receiver, ModelCommand command) {
+        super(command.getUser(), receiver);
+        this.sender = sender.metadata;
         this.command = this.deserializedModelCommand = command;
+//        System.out.println(" sending " + getClass().getSimpleName() + "[" + command.getDescription() + "] from " + sender + " to " + receiver.path());
     }
 
     protected CaseSystemCommunicationCommand(ValueMap json) {
         super(json);
-        this.target = json.readMetadata(Fields.target);
+        this.sender = readSender(json, Fields.target);
         this.command = readCommand(json);
     }
 
@@ -66,7 +67,7 @@ public abstract class CaseSystemCommunicationCommand extends BaseModelCommand<Mo
 
     protected void writeActorCommand(JsonGenerator generator) throws IOException {
         super.writeModelCommand(generator);
-        writeField(generator, Fields.target, target);
+        writeSender(generator, sender);
         writeManifestField(generator, Fields.command, command);
     }
 }

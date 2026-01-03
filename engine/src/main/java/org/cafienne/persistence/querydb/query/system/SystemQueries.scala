@@ -1,7 +1,7 @@
 package org.cafienne.persistence.querydb.query.system
 
-import org.cafienne.actormodel.identity.UserIdentity
 import org.cafienne.actormodel.{ActorMetadata, ActorType}
+import org.cafienne.actormodel.identity.UserIdentity
 import org.cafienne.persistence.querydb.query.cmmn.implementations.BaseQueryImpl
 import org.cafienne.persistence.querydb.query.exception.ActorSearchFailure
 import org.cafienne.persistence.querydb.schema.QueryDB
@@ -22,38 +22,50 @@ class SystemQueriesImpl(queryDB: QueryDB) extends BaseQueryImpl(queryDB)
   import dbConfig.profile.api._
 
   override def findActor(user: UserIdentity, actorId: String): Future[ActorMetadata] = {
-    val caseQuery = TableQuery[CaseInstanceTable].filter(_.id === actorId).map(_.rootCaseId)
-    val processQuery = TableQuery[PlanItemTable].filter(_.id === actorId).join(TableQuery[CaseInstanceTable]).on(_.caseInstanceId === _.id).map(_._2.rootCaseId)
-    val tenantQuery = TableQuery[TenantTable].filter(_.name === actorId).map(_.name)
-    val consentGroupQuery = TableQuery[ConsentGroupTable].filter(_.id === actorId).map(_.id)
+    val result = for {
+      caseMetadata <- getCaseMetadata(actorId)
+      processMetadata <- getProcessMetadata(actorId)
+      tenantMetadata <- getTenantMetadata(actorId)
+      groupMetadata <- getConsentGroupMetadata(actorId)
+    } yield (caseMetadata, processMetadata, tenantMetadata, groupMetadata)
 
-    val query = caseQuery.joinFull(processQuery.joinFull(tenantQuery.joinFull(consentGroupQuery)))
+    result.map(r => {
+      //      println("Results of metadata queries: " + r)
+      if (r._1.nonEmpty) r._1.get
+      else if (r._2.nonEmpty) r._2.get
+      else if (r._3.nonEmpty) r._3.get
+      else if (r._4.nonEmpty) r._4.get
+      else throw ActorSearchFailure(actorId)
+    })
+  }
+
+  private def getCaseMetadata(caseInstanceId: String) = {
+    val query = queryCaseChain(caseInstanceId)
+    db.run(query.result).map(records => createCaseMetadata(caseInstanceId, records))
+  }
+
+  private def getProcessMetadata(processId: String) = {
+    val query = for {
+      caseId <- TableQuery[PlanItemTable].filter(_.id === processId).map(_.caseInstanceId)
+      caseChain <- queryCaseChain(caseId)
+    } yield (caseId, caseChain)
+
     db.run(query.result).map(records => {
       if (records.isEmpty) {
-        throw ActorSearchFailure(actorId)
-      }
-      val caseInstance = records.map(_._1).filter(_.nonEmpty).map(_.get).headOption
-      if (caseInstance.nonEmpty) {
-        ActorMetadata(ActorType.Case, actorId)
+        None
       } else {
-        val processInstance = records.map(_._2).filter(_.nonEmpty).map(_.get).filter(_._1.nonEmpty).map(_._1.get).headOption
-        if (processInstance.nonEmpty) {
-          ActorMetadata(ActorType.Process, actorId)
-        } else {
-          val tenantsAndGroups = records.map(_._2).filter(_.nonEmpty).map(_.get).filter(_._2.nonEmpty).map(_._2.get)
-          val tenant = tenantsAndGroups.map(_._1).filter(_.nonEmpty).map(_.get).headOption
-          if (tenant.nonEmpty) {
-            ActorMetadata(ActorType.Tenant, actorId)
-          } else {
-            val group = tenantsAndGroups.map(_._2).filter(_.nonEmpty).map(_.get).headOption
-            if (group.nonEmpty) {
-              ActorMetadata(ActorType.Group, actorId)
-            } else {
-              throw ActorSearchFailure(actorId)
-            }
-          }
-        }
+        val caseId = records.map(_._1).head
+        val chainRecords = records.map(_._2)
+        createCaseMetadata(caseId, chainRecords).fold(noMetadata)(parent => Some(ActorMetadata(ActorType.Process, processId, parent)))
       }
     })
+  }
+
+  private def getTenantMetadata(tenant: String) = {
+    db.run(TableQuery[TenantTable].filter(_.name === tenant).map(_.name).result).map(_.headOption).map(_.fold(noMetadata)(tenant => Some(ActorMetadata(ActorType.Tenant, tenant, null))))
+  }
+
+  private def getConsentGroupMetadata(groupId: String) = {
+    db.run(TableQuery[ConsentGroupTable].filter(_.id === groupId).map(_.id).result).map(_.headOption).map(_.fold(noMetadata)(group => Some(ActorMetadata(ActorType.Group, group, null))))
   }
 }

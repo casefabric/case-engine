@@ -57,7 +57,7 @@ class TaskActionRoutes(override val httpService: CaseEngineHttpServer) extends T
     caseUser { user =>
       path(Segment) { taskId =>
         entity(as[ValueMap]) {
-          outputParams => askTask(user, taskId, (caseInstanceId, tenantUser) => new ValidateTaskOutput(tenantUser, caseInstanceId, taskId, outputParams))
+          outputParams => askTask(user, taskId, caseMember => new ValidateTaskOutput(caseMember, caseMember.caseIdentifier, taskId, outputParams))
         }
       }
     }
@@ -83,7 +83,7 @@ class TaskActionRoutes(override val httpService: CaseEngineHttpServer) extends T
     caseUser { user =>
       path(Segment) { taskId =>
         entity(as[ValueMap]) { outputParams =>
-          askTask(user, taskId, (caseInstanceId, tenantUser) => new SaveTaskOutput(tenantUser, caseInstanceId, taskId, outputParams))
+          askTask(user, taskId, caseMember => new SaveTaskOutput(caseMember, caseMember.caseIdentifier, taskId, outputParams))
         }
       }
     }
@@ -108,7 +108,7 @@ class TaskActionRoutes(override val httpService: CaseEngineHttpServer) extends T
     put {
       caseUser { user =>
         path(Segment / "claim") {
-          taskId => askTask(user, taskId, (caseInstanceId, tenantUser) => new ClaimTask(tenantUser, caseInstanceId, taskId))
+          taskId => askTask(user, taskId, caseMember => new ClaimTask(caseMember, caseMember.caseIdentifier, taskId))
         }
       }
     }
@@ -132,7 +132,7 @@ class TaskActionRoutes(override val httpService: CaseEngineHttpServer) extends T
     put {
       caseUser { user =>
         path(Segment / "revoke") {
-          taskId => askTask(user, taskId, (caseInstanceId, tenantUser) => new RevokeTask(tenantUser, caseInstanceId, taskId))
+          taskId => askTask(user, taskId, caseMember => new RevokeTask(caseMember, caseMember.caseIdentifier, taskId))
         }
       }
     }
@@ -160,7 +160,7 @@ class TaskActionRoutes(override val httpService: CaseEngineHttpServer) extends T
           taskId =>
             requestEntityPresent {
               entity(as[Assignee]) { data =>
-                askTaskWithAssignee(user, taskId, data.assignee, (caseInstanceId, tenantUser, assignee) => new AssignTask(tenantUser, caseInstanceId, taskId, assignee))
+                askTaskWithAssignee(user, taskId, data.assignee, (caseMember, assignee) => new AssignTask(caseMember, caseMember.caseIdentifier, taskId, assignee))
               }
             }
         }
@@ -190,7 +190,7 @@ class TaskActionRoutes(override val httpService: CaseEngineHttpServer) extends T
           taskId =>
             requestEntityPresent {
               entity(as[Assignee]) { data =>
-                askTaskWithAssignee(user, taskId, data.assignee, (caseInstanceId, tenantUser, assignee) => new DelegateTask(tenantUser, caseInstanceId, taskId, assignee))
+                askTaskWithAssignee(user, taskId, data.assignee, (caseMember, assignee) => new DelegateTask(caseMember, caseMember.caseIdentifier, taskId, assignee))
               }
             }
         }
@@ -221,11 +221,11 @@ class TaskActionRoutes(override val httpService: CaseEngineHttpServer) extends T
           taskId =>
             requestEntityPresent {
               entity(as[ValueMap]) { taskOutput =>
-                askTask(user, taskId, (caseInstanceId, tenantUser) => new CompleteHumanTask(tenantUser, caseInstanceId, taskId, taskOutput))
+                askTask(user, taskId, caseMember => new CompleteHumanTask(caseMember, caseMember.caseIdentifier, taskId, taskOutput))
               }
             } ~ requestEntityEmpty {
               // Complete the task with empty output parameters
-              askTask(user, taskId, (caseInstanceId, tenantUser) => new CompleteHumanTask(tenantUser, caseInstanceId, taskId, new ValueMap))
+              askTask(user, taskId, caseMember => new CompleteHumanTask(caseMember, caseMember.caseIdentifier, taskId, new ValueMap))
             }
         }
       }

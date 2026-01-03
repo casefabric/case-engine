@@ -18,6 +18,7 @@
 package org.cafienne.model.cmmn.actorapi.command.casefile;
 
 import com.fasterxml.jackson.core.JsonGenerator;
+import org.cafienne.actormodel.ActorMetadata;
 import org.cafienne.actormodel.identity.CaseUserIdentity;
 import org.cafienne.infrastructure.serialization.Fields;
 import org.cafienne.model.cmmn.actorapi.command.CaseCommand;
@@ -47,7 +48,7 @@ abstract class CaseFileItemCommand extends CaseCommand {
      * @param path   Path to the case file item to be created
      * @param intendedTransition
      */
-    protected CaseFileItemCommand(CaseUserIdentity user, String caseInstanceId, Value<?> newContent, Path path, CaseFileItemTransition intendedTransition) {
+    protected CaseFileItemCommand(CaseUserIdentity user, ActorMetadata caseInstanceId, Value<?> newContent, Path path, CaseFileItemTransition intendedTransition) {
         super(user, caseInstanceId);
         this.path = path;
         this.content = newContent;

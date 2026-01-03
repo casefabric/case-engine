@@ -17,6 +17,7 @@
 
 package org.cafienne.model.cmmn.actorapi.command.plan.task.humantask;
 
+import org.cafienne.actormodel.ActorMetadata;
 import org.cafienne.actormodel.identity.CaseUserIdentity;
 import org.cafienne.infrastructure.serialization.Manifest;
 import org.cafienne.model.cmmn.instance.task.humantask.HumanTask;
@@ -25,7 +26,7 @@ import org.cafienne.util.json.ValueMap;
 
 @Manifest
 public class RevokeTask extends TaskManagementCommand {
-    public RevokeTask(CaseUserIdentity user, String caseInstanceId, String taskId) {
+    public RevokeTask(CaseUserIdentity user, ActorMetadata caseInstanceId, String taskId) {
         super(user, caseInstanceId, taskId);
     }
 

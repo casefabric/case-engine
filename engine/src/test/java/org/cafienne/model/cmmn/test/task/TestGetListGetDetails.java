@@ -8,6 +8,7 @@
 package org.cafienne.model.cmmn.test.task;
 
 import com.github.tomakehurst.wiremock.junit.WireMockRule;
+import org.cafienne.actormodel.ActorMetadata;
 import org.cafienne.model.cmmn.actorapi.command.StartCase;
 import org.cafienne.model.cmmn.actorapi.command.casefile.CreateCaseFileItem;
 import org.cafienne.model.cmmn.actorapi.command.plan.MakePlanItemTransition;
@@ -53,7 +54,7 @@ public class TestGetListGetDetails {
 
     @Test
     public void testGetListGetDetails() {
-        String caseInstanceId = "GetListGetDetailsTest";
+        ActorMetadata caseInstanceId = createIdentifier("GetListGetDetailsTest");
         TestScript testCase = new TestScript(caseInstanceId);
 
         /**

@@ -1,4 +1,4 @@
-package org.cafienne.actormodel.communication.reply.event;
+package org.cafienne.actormodel.communication.receiver.event;
 
 import com.fasterxml.jackson.core.JsonGenerator;
 import org.cafienne.actormodel.ActorMetadata;
@@ -11,16 +11,16 @@ import org.cafienne.util.json.ValueMap;
 import java.io.IOException;
 
 public abstract class ModelActorRequestEvent extends CaseSystemCommunicationEvent {
-    public final ActorMetadata source;
+    public final ActorMetadata sender;
 
-    protected ModelActorRequestEvent(ModelCommand command, ActorMetadata source) {
+    protected ModelActorRequestEvent(ModelCommand command, ActorMetadata sender) {
         super(command.getActor(), command.getCorrelationId());
-        this.source = source;
+        this.sender = sender;
     }
 
     protected ModelActorRequestEvent(ValueMap json) {
         super(json);
-        this.source = json.readMetadata(Fields.source);
+        this.sender = readSender(json, Fields.sourceActorId);
     }
 
     @Override
@@ -35,6 +35,6 @@ public abstract class ModelActorRequestEvent extends CaseSystemCommunicationEven
 
     public void writeIncomingRequestEvent(JsonGenerator generator) throws IOException {
         super.writeActorRequestEvent(generator);
-        writeField(generator, Fields.source, source);
+        writeSender(generator, sender);
     }
 }

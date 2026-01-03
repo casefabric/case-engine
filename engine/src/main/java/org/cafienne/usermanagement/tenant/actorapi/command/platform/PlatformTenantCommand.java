@@ -18,6 +18,7 @@
 package org.cafienne.usermanagement.tenant.actorapi.command.platform;
 
 import com.fasterxml.jackson.core.JsonGenerator;
+import org.cafienne.actormodel.ActorMetadata;
 import org.cafienne.actormodel.exception.AuthorizationException;
 import org.cafienne.actormodel.exception.InvalidCommandException;
 import org.cafienne.actormodel.identity.PlatformOwner;
@@ -33,8 +34,8 @@ import java.io.IOException;
  */
 @Manifest
 public abstract class PlatformTenantCommand extends TenantCommand {
-    protected PlatformTenantCommand(PlatformOwner user, String tenantId) {
-        super(user.asTenantUser(tenantId), tenantId);
+    protected PlatformTenantCommand(PlatformOwner user, ActorMetadata tenantId) {
+        super(user.asTenantUser(tenantId.actorId()), tenantId);
     }
 
     protected PlatformTenantCommand(ValueMap json) {

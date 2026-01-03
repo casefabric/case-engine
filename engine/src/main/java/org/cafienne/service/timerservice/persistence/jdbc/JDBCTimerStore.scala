@@ -23,6 +23,7 @@ import org.cafienne.infrastructure.cqrs.offset.OffsetRecord
 import org.cafienne.persistence.infrastructure.jdbc.cqrs.JDBCOffsetStorage
 import org.cafienne.service.timerservice.Timer
 import org.cafienne.service.timerservice.persistence.TimerStore
+import org.cafienne.system.CaseSystem
 import slick.basic.DatabaseConfig
 import slick.jdbc.JdbcProfile
 
@@ -30,7 +31,7 @@ import java.time.Instant
 import scala.concurrent.duration.DurationInt
 import scala.concurrent.{Await, ExecutionContext, Future}
 
-class JDBCTimerStore(val dbConfig: DatabaseConfig[JdbcProfile], val tablePrefix: String)
+class JDBCTimerStore(caseSystem: CaseSystem, val dbConfig: DatabaseConfig[JdbcProfile], val tablePrefix: String)
   extends TimerStore
     with JDBCOffsetStorage
     with TimerServiceTables {
@@ -39,14 +40,46 @@ class JDBCTimerStore(val dbConfig: DatabaseConfig[JdbcProfile], val tablePrefix:
 
   override implicit val ec: ExecutionContext = db.ioExecutionContext
 
+  private def updateTimerRecords(records: Seq[TimerServiceRecord]): Unit = {
+    //      println(s"Starting update for ${records.size} timers that lack ActorMetadata information")
+    // Migrate timers without metadata by reading and constructing the metadata from the QueryDB
+    val migrator = new MigratorAddingActorMetadataToTimers(caseSystem.queryDB)
+    val enhancedTimerRecords = migrator.enrichWithActorMetadata(records)
+    //      println(s"Enriched ${enhancedTimerRecords.size} timer records with ActorMetadata, starting update transaction")
+    // Now create update statements for the timers
+    val updates = enhancedTimerRecords.map(r => TableQuery[TimerServiceTable].insertOrUpdate(r))
+    //      println(s"Starting update transaction")
+    // And run the transaction
+    Await.result(db.run(DBIO.sequence(updates).transactionally), 60.seconds)
+    //      println(s"Completed migration of ${enhancedTimerRecords.size} timer records")
+  }
+
+  private def migrateTimersWithEmptyMetadata(): Unit = {
+    val query = TableQuery[TimerServiceTable].filter(_.metadata === "")
+//    println("Running q \n\n" + query.result.statements +"\n\n")
+    val records = Await.result(db.run(query.result), 60.seconds)
+    if (records.nonEmpty) {
+      val batchSize = caseSystem.config.engine.timerService.migrationBatchSize
+      // If there are more than 1000 records, we split the update into batches of 1000 each (because of the "IN" clause in the query that is run on the QueryDB)
+      if (records.size > batchSize) {
+        val batches = records.grouped(batchSize)
+        batches.foreach(updateTimerRecords)
+      } else {
+        updateTimerRecords(records)
+      }
+    }
+  }
+
+  migrateTimersWithEmptyMetadata()
+
   override def getTimers(window: Instant): Future[Seq[Timer]] = {
     val query = TableQuery[TimerServiceTable].filter(_.moment <= window)
-    db.run(query.distinct.result).map(records => records.map(record => Timer(record.caseInstanceId, record.timerId, record.moment, record.user)))
+    db.run(query.distinct.result).map(records => records.map(record => Timer(record.caseInstanceId, record.metadata, record.timerId, record.moment, record.user)))
   }
 
   override def storeTimer(job: Timer, offset: Option[Offset]): Future[Done] = {
     logger.debug("Storing JDBC timer " + job.timerId + " for timestamp " + job.moment)
-    val record = TimerServiceRecord(timerId = job.timerId, caseInstanceId = job.caseInstanceId, moment = job.moment, tenant = "", user = job.userId)
+    val record = TimerServiceRecord(timerId = job.timerId, caseInstanceId = job.caseInstanceId, metadata = job.metadata.path, moment = job.moment, tenant = "", user = job.userId)
     commit(offset, TableQuery[TimerServiceTable].insertOrUpdate(record))
   }
 
@@ -68,7 +101,7 @@ class JDBCTimerStore(val dbConfig: DatabaseConfig[JdbcProfile], val tablePrefix:
 
   override def importTimers(list: Seq[Timer]): Unit = {
     val tx = list
-      .map(job => TimerServiceRecord(timerId = job.timerId, caseInstanceId = job.caseInstanceId, moment = job.moment, tenant = "", user = job.userId))
+      .map(job => TimerServiceRecord(timerId = job.timerId, caseInstanceId = job.caseInstanceId, metadata = job.metadata.path, moment = job.moment, tenant = "", user = job.userId))
       .map(record => TableQuery[TimerServiceTable].insertOrUpdate(record))
     Await.result(db.run(DBIO.sequence(tx).transactionally), 30.seconds)
   }

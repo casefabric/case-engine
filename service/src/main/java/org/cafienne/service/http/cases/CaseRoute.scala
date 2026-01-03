@@ -26,6 +26,7 @@ import io.swagger.v3.oas.annotations.{Operation, Parameter}
 import jakarta.ws.rs._
 import org.apache.pekko.http.scaladsl.model.{ContentTypes, HttpEntity, StatusCodes}
 import org.apache.pekko.http.scaladsl.server.Route
+import org.cafienne.actormodel.{ActorMetadata, ActorType}
 import org.cafienne.model.cmmn.actorapi.command.StartCase
 import org.cafienne.model.cmmn.actorapi.command.debug.SwitchDebugMode
 import org.cafienne.model.cmmn.actorapi.command.team.CaseTeam
@@ -189,7 +190,8 @@ class CaseRoute(override val httpService: CaseEngineHttpServer) extends CasesRou
                 val inputParameters = payload.inputs
                 val caseTeam: CaseTeam = payload.caseTeam.asTeam
                 val debugMode = payload.debug.getOrElse(caseSystem.config.actor.debugEnabled)
-                validateTenantAndTeam(caseTeam, tenant, team => askModelActor(new StartCase(tenant, user, newCaseId, caseDefinition, inputParameters, team, debugMode)))
+                val identifier = ActorMetadata(ActorType.Case, newCaseId)
+                validateTenantAndTeam(caseTeam, tenant, team => askModelActor(new StartCase(tenant, user, identifier, caseDefinition, inputParameters, team, debugMode)))
               } catch {
                 case e: MissingDefinitionException => complete(StatusCodes.BadRequest, e.getMessage)
                 case e: InvalidDefinitionException => complete(StatusCodes.BadRequest, e.getMessage)
@@ -220,7 +222,7 @@ class CaseRoute(override val httpService: CaseEngineHttpServer) extends CasesRou
   def debugCase: Route = put {
     caseInstanceSubRoute { (user, caseInstanceId) =>
       path("debug" / Segment) { debugMode =>
-        askCase(user, caseInstanceId, caseMember => new SwitchDebugMode(caseMember, caseInstanceId, debugMode == "true"))
+        askCase(user, caseInstanceId, caseMember => new SwitchDebugMode(caseMember, caseMember.caseIdentifier, debugMode == "true"))
       }
     }
   }

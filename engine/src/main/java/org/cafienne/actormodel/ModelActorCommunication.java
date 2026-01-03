@@ -1,7 +1,7 @@
 package org.cafienne.actormodel;
 
-import org.cafienne.actormodel.communication.reply.state.IncomingRequestState;
-import org.cafienne.actormodel.communication.request.state.RemoteActorState;
+import org.cafienne.actormodel.communication.receiver.state.IncomingRequestState;
+import org.cafienne.actormodel.communication.sender.state.RemoteActorState;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -14,15 +14,18 @@ public class ModelActorCommunication {
     ModelActorCommunication(ModelActor actor) {
         this.actor = actor;
         this.incomingRequests = new IncomingRequestState(actor);
-
     }
 
     void register(RemoteActorState<?> remoteActorState) {
-        this.remoteActors.put(remoteActorState.targetActorId, remoteActorState);
+        this.remoteActors.put(remoteActorState.receiver.actorId(), remoteActorState);
     }
 
-    RemoteActorState<?> getRemoteActorState(String actorId) {
-        return remoteActors.get(actorId);
+    RemoteActorState<?> getRemoteActorState(ActorMetadata remoteActorMetadata) {
+        RemoteActorState<?> state = remoteActors.get(remoteActorMetadata.actorId());
+        if (state == null) {
+            System.out.println(actor.metadata +": Cannot find state for path " + remoteActorMetadata.path());
+        }
+        return state;
     }
 
     IncomingRequestState getIncomingRequestState() {
