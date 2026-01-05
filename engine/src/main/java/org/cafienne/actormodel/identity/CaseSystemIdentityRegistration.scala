@@ -36,8 +36,22 @@ class CaseSystemIdentityRegistration(caseSystem: CaseSystem)(implicit val ec: Ex
   private val tenantCache = new SimpleLRUCache[String, TenantRecord](caseSystem.config.api.security.identityCacheSize)
   private val tokens = new SimpleLRUCache[String, String](caseSystem.config.api.security.tokenCacheSize)
 
+  private val userReader: UserIdentity => Future[PlatformUser] = {
+    // If the case engine runs in cluster mode, then user caching and clearing may fail.
+    // Reason: clearing users from the cache is done from the event sink writer;
+    //  Because this writer does not run on all nodes, some of the caches may not be cleared properly.
+    if (caseSystem.hasClusteredConfiguration) {
+      (user: UserIdentity) => tenantQueries.getPlatformUser(user.id).map(cacheUser)
+    } else {
+      (user: UserIdentity) => platformUserCache.get(user.id) match {
+        case user: PlatformUser => Future(user)
+        case null => tenantQueries.getPlatformUser(user.id).map(cacheUser)
+      }
+    }
+  }
+
   override def getPlatformUser(user: UserIdentity, tenantLastModified: LastModifiedHeader): Future[PlatformUser] = {
-    tenantLastModified.available.flatMap(_ => executeUserQuery(user))
+    tenantLastModified.available.flatMap(_ => userReader(user))
   }
 
   override def cacheUserToken(user: UserIdentity, token: String): Unit = {
@@ -54,15 +68,14 @@ class CaseSystemIdentityRegistration(caseSystem: CaseSystem)(implicit val ec: Ex
   }
 
   private def cacheUser(user: PlatformUser) = {
+    // DISABLE CACHING TO TEST CLUSTERING
     platformUserCache.put(user.id, user)
     user
   }
 
-  private def executeUserQuery(user: UserIdentity): Future[PlatformUser] = {
-    platformUserCache.get(user.id) match {
-      case user: PlatformUser => Future(user)
-      case null => tenantQueries.getPlatformUser(user.id).map(cacheUser)
-    }
+  override def clear(userId: String): Unit = {
+    // NOTE: We can also extend this to update the cache information, instead of removing keys.
+    platformUserCache.remove(userId)
   }
 
   override def getTenant(tenantId: String): Future[TenantRecord] = {
@@ -73,10 +86,5 @@ class CaseSystemIdentityRegistration(caseSystem: CaseSystem)(implicit val ec: Ex
         tenant
       })
     }
-  }
-
-  override def clear(userId: String): Unit = {
-    // NOTE: We can also extend this to update the cache information, instead of removing keys.
-    platformUserCache.remove(userId)
   }
 }
