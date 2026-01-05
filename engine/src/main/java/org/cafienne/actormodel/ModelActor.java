@@ -22,6 +22,7 @@ import org.apache.pekko.persistence.AbstractPersistentActor;
 import org.apache.pekko.persistence.JournalProtocol;
 import org.apache.pekko.persistence.SnapshotOffer;
 import org.apache.pekko.persistence.SnapshotProtocol;
+import org.apache.pekko.persistence.journal.Tagged;
 import org.cafienne.actormodel.communication.receiver.state.IncomingRequestState;
 import org.cafienne.actormodel.communication.sender.state.RemoteActorState;
 import org.cafienne.actormodel.debug.DebugInfoAppender;
@@ -324,8 +325,11 @@ public abstract class ModelActor extends AbstractPersistentActor {
         //  whereas if we break e.g. Cassandra connection, it properly recovers after having invoked context().stop(self()).
         //  Not sure right now what the reason is for this.
 
+        Class<?> eventClass = event instanceof Tagged ? ((Tagged)event).payload().getClass() : event.getClass();
+        String eventClassName = eventClass.getName();
+
         // First log a message
-        getLogger().error("Failure in " + getClass().getSimpleName() + " " + getId() + " during persistence of event " + seqNr + " of type " + event.getClass().getName() + ". Stopping instance.", cause);
+        getLogger().error("Failure in {} during persistence of event {} of type {} in {}. Stopping instance.", metadata, seqNr, eventClassName, cause);
         // Inform the HealthMonitor
         HealthMonitor.writeJournal().hasFailed(cause);
         // Optionally send a reply (in the CommandHandler). If persistence fails, also sending a reply may fail, hence first logging the issue.
