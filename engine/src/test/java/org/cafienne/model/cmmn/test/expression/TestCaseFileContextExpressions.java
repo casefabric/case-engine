@@ -1,13 +1,13 @@
 package org.cafienne.model.cmmn.test.expression;
 
 
+import org.cafienne.actormodel.ActorMetadata;
 import org.cafienne.model.cmmn.actorapi.command.StartCase;
 import org.cafienne.model.cmmn.definition.CaseDefinition;
 import org.cafienne.model.cmmn.test.TestScript;
 import org.cafienne.util.json.Value;
 import org.cafienne.util.json.ValueList;
 import org.cafienne.util.json.ValueMap;
-import org.cafienne.util.Guid;
 import org.junit.Test;
 
 import static org.cafienne.model.cmmn.test.TestScript.*;
@@ -20,7 +20,7 @@ public class TestCaseFileContextExpressions {
     public void testContextSettingsFromTasks() {
 
         // Basically this tests input parameter mapping
-        String caseInstanceId = new Guid().toString();
+        ActorMetadata caseInstanceId = createIdentifier();
         TestScript testCase = new TestScript(caseName);
 
         ValueMap child1 = new ValueMap("arrayProp1", "child1");

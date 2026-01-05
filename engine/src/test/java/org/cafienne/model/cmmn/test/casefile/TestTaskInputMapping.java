@@ -1,5 +1,6 @@
 package org.cafienne.model.cmmn.test.casefile;
 
+import org.cafienne.actormodel.ActorMetadata;
 import org.cafienne.model.cmmn.actorapi.command.StartCase;
 import org.cafienne.model.cmmn.actorapi.command.plan.MakePlanItemTransition;
 import org.cafienne.model.cmmn.actorapi.event.plan.PlanItemTransitioned;
@@ -11,7 +12,6 @@ import org.cafienne.model.cmmn.test.assertions.HumanTaskAssertion;
 import org.cafienne.model.cmmn.actorapi.command.plan.task.humantask.CompleteHumanTask;
 import org.cafienne.util.json.ValueList;
 import org.cafienne.util.json.ValueMap;
-import org.cafienne.util.Guid;
 import org.junit.Test;
 
 import static org.cafienne.model.cmmn.test.TestScript.*;
@@ -24,7 +24,7 @@ public class TestTaskInputMapping {
     public void testContextSettingsFromTasks() {
 
         // Basically this tests input parameter mapping
-        String caseInstanceId = new Guid().toString();
+        ActorMetadata caseInstanceId = createIdentifier();
         TestScript testCase = new TestScript(caseName);
         ValueMap caseInput = new ValueMap();
 

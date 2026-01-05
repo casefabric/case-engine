@@ -17,6 +17,7 @@
 
 package org.cafienne.model.processtask.actorapi.command;
 
+import org.cafienne.actormodel.ActorMetadata;
 import org.cafienne.actormodel.identity.CaseUserIdentity;
 import org.cafienne.infrastructure.serialization.Manifest;
 import org.cafienne.model.processtask.actorapi.event.ProcessReactivated;
@@ -27,8 +28,8 @@ import org.cafienne.util.json.ValueMap;
 
 @Manifest
 public class ReactivateProcess extends StartProcess {
-    public ReactivateProcess(CaseUserIdentity user, String tenant, String id, String name, ProcessDefinition definition, ValueMap inputParameters, String parentActorId, String rootActorId, boolean debugMode) {
-        super(user, tenant, id, name, definition, inputParameters, parentActorId, rootActorId, debugMode);
+    public ReactivateProcess(CaseUserIdentity user, String tenant, ActorMetadata id, String name, ProcessDefinition definition, ValueMap inputParameters, String parentActorId, String rootActorId, boolean debugMode) {
+        super(user, tenant, id, name, definition, inputParameters, debugMode);
     }
 
     public ReactivateProcess(ValueMap json) {

@@ -17,6 +17,7 @@
 
 package org.cafienne.model.processtask.actorapi.command;
 
+import org.cafienne.actormodel.ActorMetadata;
 import org.cafienne.actormodel.identity.CaseUserIdentity;
 import org.cafienne.infrastructure.serialization.Manifest;
 import org.cafienne.model.processtask.actorapi.event.ProcessResumed;
@@ -26,7 +27,7 @@ import org.cafienne.util.json.ValueMap;
 
 @Manifest
 public class ResumeProcess extends ProcessCommand {
-    public ResumeProcess(CaseUserIdentity user, String id) {
+    public ResumeProcess(CaseUserIdentity user, ActorMetadata id) {
         super(user, id);
     }
 

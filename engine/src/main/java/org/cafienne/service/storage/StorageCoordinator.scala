@@ -24,6 +24,7 @@ import org.apache.pekko.persistence.query.{EventEnvelope, Offset}
 import org.apache.pekko.stream.Materializer
 import org.apache.pekko.stream.scaladsl.Sink
 import org.cafienne.actormodel.ActorMetadata
+import org.cafienne.actormodel.message.response.ActorTerminated
 import org.cafienne.infrastructure.cqrs.ReadJournalProvider
 import org.cafienne.service.storage.actormodel.StorageActorSupervisor
 import org.cafienne.service.storage.actormodel.command.StorageCommand
@@ -99,10 +100,10 @@ class StorageCoordinator(val caseSystem: CaseSystem)
           logger.warn(s"Cannot recover a storage process, because the actor ${event.metadata} is not a root actor")
         }
       case EventEnvelope(_, _, _, _: StorageEvent) => // Other storage events can be safely ignored.
-      case EventEnvelope(offset, persistenceId, sequenceNr, event) =>
+      case _ =>
         // Apparently other events also use the Storage tag. That's weird. Let's print it clearly in the error log
-        val eventClass = if (event == null) "null" else event.getClass.getName
-        logger.error(s"Encountered unexpected tag '${StorageEvent.TAG}' on event[offset=$offset|persistenceId=$persistenceId|sequenceNr=$sequenceNr|className=$eventClass]")
+        val eventClass = if (envelope.event == null) "null" else envelope.event.getClass.getName
+        logger.error(s"Encountered unexpected tag '${StorageEvent.TAG}' on event[offset=$envelope.offset|persistenceId=$envelope.persistenceId|sequenceNr=$envelope.sequenceNr|className=$eventClass]")
     }
     Future.successful(Done)
   }
@@ -123,6 +124,7 @@ class StorageCoordinator(val caseSystem: CaseSystem)
       // Nothing needs to be done, as the actor will stop itself and below we handle the resulting Termination message.
       logger.whenDebugEnabled(logger.debug(s"Completed storage action for ${event.metadata}"))
     case t: Terminated => removeActorRef(t)
+    case t: ActorTerminated => removeActorRef(t)
     case other => logger.warn(s"StorageCoordinator received an unknown message of type ${other.getClass.getName}")
   }
 }

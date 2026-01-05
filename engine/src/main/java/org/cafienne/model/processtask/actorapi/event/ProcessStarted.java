@@ -18,6 +18,8 @@
 package org.cafienne.model.processtask.actorapi.event;
 
 import com.fasterxml.jackson.core.JsonGenerator;
+import org.cafienne.actormodel.ActorMetadata;
+import org.cafienne.actormodel.ActorType;
 import org.cafienne.actormodel.message.command.BootstrapMessage;
 import org.cafienne.infrastructure.EngineVersion;
 import org.cafienne.infrastructure.serialization.Fields;
@@ -31,8 +33,6 @@ import java.io.IOException;
 
 @Manifest
 public class ProcessStarted extends BaseProcessEvent implements BootstrapMessage {
-    public final String parentActorId;
-    public final String rootActorId;
     public final String name;
     public final ValueMap inputParameters;
     public transient ProcessDefinition definition;
@@ -44,8 +44,6 @@ public class ProcessStarted extends BaseProcessEvent implements BootstrapMessage
         this.debugMode = command.debugMode();
         this.definition = command.getDefinition();
         this.name = command.getName();
-        this.parentActorId = command.getParentActorId();
-        this.rootActorId = command.getRootActorId();
         this.inputParameters = command.getInputParameters();
         this.engineVersion = actor.caseSystem.version();
     }
@@ -54,11 +52,19 @@ public class ProcessStarted extends BaseProcessEvent implements BootstrapMessage
         super(json);
         this.engineVersion = json.readObject(Fields.engineVersion, EngineVersion::new);
         this.name = json.readString(Fields.name);
-        this.parentActorId = json.readString(Fields.parentActorId);
-        this.rootActorId = json.readString(Fields.rootActorId);
         this.inputParameters = json.readMap(Fields.input);
         this.definition = json.readDefinition(Fields.processDefinition, ProcessDefinition.class);
         this.debugMode = json.readBoolean(Fields.debugMode);
+    }
+
+    @Override
+    protected ActorMetadata createActorMetadata(ValueMap json) {
+        String rootCaseId = json.readString(Fields.rootActorId);
+        String parentCaseId = json.readString(Fields.parentActorId);
+        ActorMetadata root = new ActorMetadata(ActorType.Case, rootCaseId, null);
+        ActorMetadata parent = new ActorMetadata(ActorType.Case, parentCaseId, root);
+        // Not full chain is known here, but this is ok enough for now.
+        return new ActorMetadata(ActorType.Process, actorId(), parent);
     }
 
     @Override
@@ -71,8 +77,6 @@ public class ProcessStarted extends BaseProcessEvent implements BootstrapMessage
         super.write(generator);
         writeField(generator, Fields.input, inputParameters);
         writeField(generator, Fields.name, name);
-        writeField(generator, Fields.parentActorId, parentActorId);
-        writeField(generator, Fields.rootActorId, rootActorId);
         writeField(generator, Fields.debugMode, debugMode);
         writeField(generator, Fields.processDefinition, definition);
         writeField(generator, Fields.engineVersion, engineVersion.json());

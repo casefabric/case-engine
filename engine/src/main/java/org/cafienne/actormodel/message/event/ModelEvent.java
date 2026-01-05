@@ -17,6 +17,7 @@
 
 package org.cafienne.actormodel.message.event;
 
+import org.cafienne.actormodel.ActorMetadata;
 import org.cafienne.actormodel.ModelActor;
 import org.cafienne.actormodel.message.UserMessage;
 
@@ -30,6 +31,27 @@ public interface ModelEvent extends UserMessage {
 
     default Set<String> tags() {
         return tags;
+    }
+
+    ActorMetadata metadata();
+
+    /**
+     * Returns the identifier of the outer-most parent that started this model actor. E.g., if this event happened in a subcase,
+     * then this will return the id of it's top most ancestor case starting it, and for which the subcase is a blocking task.
+     * So, non-blocking subcase tasks are stand alone, and will not return the identifier of the parent case that started it.
+     * Furthermore, if this case is itself a root-case, then root case id and case instance id will be the same.
+     */
+    default String rootActorId() {
+        return metadata().root().actorId();
+    }
+
+    /**
+     * Returns the identifier of the ModelActor that started the subcase causing this event to happen, or null if there was no parent.
+     * Note, this will also return the parent case id if this subcase was started in non-blocking mode (as opposed to getRootCaseId behavior)
+     *
+     */
+    default String parentActorId() {
+        return metadata().parentId();
     }
 
     /**

@@ -17,6 +17,7 @@
 
 package org.cafienne.model.cmmn.actorapi.command.plan;
 
+import org.cafienne.actormodel.ActorMetadata;
 import org.cafienne.actormodel.identity.CaseUserIdentity;
 import org.cafienne.infrastructure.serialization.Fields;
 import org.cafienne.infrastructure.serialization.Manifest;
@@ -37,7 +38,7 @@ public class GetDiscretionaryItems extends CaseCommand {
      * @param caseInstanceId
      *          The id of the case instance to get the discretionary items for
      */
-    public GetDiscretionaryItems(CaseUserIdentity user, String caseInstanceId) {
+    public GetDiscretionaryItems(CaseUserIdentity user, ActorMetadata caseInstanceId) {
         super(user, caseInstanceId);
     }
 

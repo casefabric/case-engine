@@ -21,7 +21,7 @@ import com.fasterxml.jackson.core.JsonFactory;
 import com.fasterxml.jackson.core.JsonGenerator;
 import com.fasterxml.jackson.core.util.DefaultPrettyPrinter;
 import org.apache.pekko.actor.ActorPath;
-import org.apache.pekko.actor.ActorRef;
+import org.cafienne.actormodel.ActorMetadata;
 import org.cafienne.actormodel.ModelActor;
 import org.cafienne.actormodel.exception.InvalidCommandException;
 import org.cafienne.actormodel.identity.UserIdentity;
@@ -40,7 +40,7 @@ public abstract class BaseModelCommand<T extends ModelActor, U extends UserIdent
     protected final ValueMap json;
     public final String correlationId;
     public final String actorId;
-    private ActorRef sender;
+    public final ActorMetadata target;
     protected transient T actor;
     private ModelResponse response;
 
@@ -49,30 +49,61 @@ public abstract class BaseModelCommand<T extends ModelActor, U extends UserIdent
      */
     private final U user;
 
-    protected BaseModelCommand(U user, String actorId) {
+    protected BaseModelCommand(U user, ActorMetadata target) {
         this.json = new ValueMap();
-        // First, validate actor id
-        if (actorId == null) {
-            throw new InvalidCommandException("Actor id cannot be null");
-        }
-        try {
-            ActorPath.validatePathElement(actorId);
-        } catch (Throwable t) {
-            throw new InvalidCommandException("Invalid actor path " + actorId, t);
-        }
-        if (user == null || user.id() == null || user.id().trim().isEmpty()) {
-            throw new InvalidCommandException("Tenant user cannot be null");
-        }
+        this.target = validateMetadata(target);
+        this.actorId = target.actorId();
+        this.user = validateUser(user);
         this.correlationId = new Guid().toString();
-        this.user = user;
-        this.actorId = actorId;
+    }
+
+    private ActorMetadata validateMetadata(ActorMetadata metadata) {
+        // First, make sure we have metadata
+        if (metadata == null) {
+            throw new InvalidCommandException("Target actor for a command of type " + this.getClass().getSimpleName() + " cannot be null");
+        }
+        // Next, validate actor id, also to be valid within in the actor system.
+        //  Note: ActorPath.validate does not handle null pointers, therefore check on null happens first.
+        if (metadata.actorId() == null) {
+            throw new InvalidCommandException("Actor id cannot be null in command of type " + this.getClass().getSimpleName());
+        }
+        // Also let the actor system validate the actor id
+        try {
+            ActorPath.validatePathElement(metadata.actorId());
+        } catch (Throwable t) {
+            throw new InvalidCommandException("Invalid actor path " + metadata.actorId() + " in command of type " + this.getClass().getSimpleName(), t);
+        }
+        return metadata;
+    }
+
+    private U validateUser(U user) {
+        if (user == null || user.id() == null || user.id().trim().isEmpty()) {
+            throw new InvalidCommandException("User information is missing in command of type " + this.getClass().getSimpleName());
+        }
+        return user;
     }
 
     protected BaseModelCommand(ValueMap json) {
         this.json = json;
-        this.correlationId = json.readString(Fields.correlationId);
-        this.actorId = json.readString(Fields.actorId);
-        this.user = actorType().readUser(json.with(Fields.user));
+        if (json.has(Fields.metadata)) {
+            ValueMap metadata = json.readMap(Fields.metadata);
+            this.user = actorType().readUser(metadata.with(Fields.user));
+            this.correlationId = metadata.readString(Fields.correlationId);
+            this.target = metadata.readMetadata(Fields.target);
+            this.actorId = metadata.readString(Fields.actorId);
+        } else {
+            // This is a command that is most probably wrapped in a ModelEvent of type CaseSystemCommunicationEvent, such as ActorRequestCreated and ActorRequestStored
+//            System.out.println("Upgrading JSON deserialization of a " + getClass().getSimpleName() + " in a " + actorType());
+            this.user = actorType().readUser(json.with(Fields.user));
+            this.correlationId = json.readString(Fields.correlationId);
+            this.actorId = json.readString(Fields.actorId);
+            this.target = new ActorMetadata(this.actorType(), actorId, null);
+        }
+    }
+
+    @Override
+    public ActorMetadata target() {
+        return target;
     }
 
     /**
@@ -81,17 +112,6 @@ public abstract class BaseModelCommand<T extends ModelActor, U extends UserIdent
     @Override
     public void setActor(ModelActor actor) {
         this.actor = (T) actor;
-        this.sender = actor.getSender();
-    }
-
-    /**
-     * Returns information about the sender of this command.
-     * Can be used to independently send replies.
-     * Independently means: independent of the command processing logic.
-     * Note: if the response field of the command is filled, the framework will also send a response to the sender.
-     */
-    public ActorRef getSender() {
-        return sender;
     }
 
     @Override
@@ -169,10 +189,13 @@ public abstract class BaseModelCommand<T extends ModelActor, U extends UserIdent
     }
 
     protected void writeModelCommand(JsonGenerator generator) throws IOException {
+        generator.writeObjectFieldStart(Fields.metadata.toString());
         writeField(generator, Fields.type, this.getCommandDescription());
         writeField(generator, Fields.correlationId, this.getCorrelationId());
         writeField(generator, Fields.actorId, this.getActorId());
+        writeField(generator, Fields.target, this.target);
         writeField(generator, Fields.user, user);
+        generator.writeEndObject();
     }
 
     public ValueMap rawJson() {

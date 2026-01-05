@@ -1,7 +1,7 @@
-package org.cafienne.actormodel.communication.request.event;
+package org.cafienne.actormodel.communication.sender.event;
 
 import com.fasterxml.jackson.core.JsonGenerator;
-import org.cafienne.actormodel.communication.request.state.RemoteActorState;
+import org.cafienne.actormodel.communication.sender.state.RemoteActorState;
 import org.cafienne.actormodel.message.command.ModelCommand;
 import org.cafienne.infrastructure.serialization.Fields;
 import org.cafienne.infrastructure.serialization.Manifest;
@@ -14,7 +14,7 @@ public class ActorRequestCreated extends ModelActorReplyEvent {
     public final ModelCommand command;
 
     public ActorRequestCreated(RemoteActorState<?> state, ModelCommand command) {
-        super(state.actor, command.getCorrelationId(), state.targetActorId);
+        super(state.actor, command.getCorrelationId(), state.receiver);
         this.command = command;
     }
 

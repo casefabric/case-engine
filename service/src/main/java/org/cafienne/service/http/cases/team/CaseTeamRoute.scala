@@ -87,7 +87,7 @@ class CaseTeamRoute(override val httpService: CaseEngineHttpServer) extends Case
       path("caseteam") {
         entity(as[Compatible.TeamFormat]) { input =>
           val teamInput = input.asTeam
-          authorizeCaseAccess(user, caseInstanceId, member => validateTeam(teamInput, member.tenant, team => askModelActor(new SetCaseTeam(member, caseInstanceId, team))))
+          authorizeCaseAccess(user, caseInstanceId, caseMember => validateTeam(teamInput, caseMember.tenant, team => askModelActor(new SetCaseTeam(caseMember, caseMember.caseIdentifier, team))))
         }
       }
     }
@@ -115,10 +115,10 @@ class CaseTeamRoute(override val httpService: CaseEngineHttpServer) extends Case
       path("caseteam" / "users") {
         entity(as[CaseTeamUserFormat]) { input =>
           authorizeCaseAccess(user, caseInstanceId, {
-            member => {
+            caseMember => {
               val newTeamMember = input.asCaseTeamUser
-              onComplete(getUserOrigin(newTeamMember, member.tenant)) {
-                case Success(enrichedUser: CaseTeamUser) => askModelActor(new SetCaseTeamUser(member, caseInstanceId, enrichedUser))
+              onComplete(getUserOrigin(newTeamMember, caseMember.tenant)) {
+                case Success(enrichedUser: CaseTeamUser) => askModelActor(new SetCaseTeamUser(caseMember, caseMember.caseIdentifier, enrichedUser))
                 case Failure(t: Throwable) => complete(StatusCodes.NotFound, t.getLocalizedMessage)
               }
             }
@@ -156,7 +156,7 @@ class CaseTeamRoute(override val httpService: CaseEngineHttpServer) extends Case
   def deleteUser: Route = delete {
     caseInstanceSubRoute { (user, caseInstanceId) =>
       path("caseteam" / "users" / Segment) { userId =>
-        askCase(user, caseInstanceId, caseMember => new RemoveCaseTeamUser(caseMember, caseInstanceId, userId))
+        askCase(user, caseInstanceId, caseMember => new RemoveCaseTeamUser(caseMember, caseMember.caseIdentifier, userId))
       }
     }
   }
@@ -182,7 +182,7 @@ class CaseTeamRoute(override val httpService: CaseEngineHttpServer) extends Case
       path("caseteam" / "groups") {
         entity(as[GroupFormat]) { input =>
           onComplete(validateConsentGroups(Seq(input.asGroup))) {
-            case Success(groups: Seq[CaseTeamGroup]) => askCase(user, caseInstanceId, caseMember => new SetCaseTeamGroup(caseMember, caseInstanceId, groups.head))
+            case Success(groups: Seq[CaseTeamGroup]) => askCase(user, caseInstanceId, caseMember => new SetCaseTeamGroup(caseMember, caseMember.caseIdentifier, groups.head))
             case Failure(t: Throwable) => complete(StatusCodes.NotFound, t.getLocalizedMessage)
           }
         }
@@ -218,7 +218,7 @@ class CaseTeamRoute(override val httpService: CaseEngineHttpServer) extends Case
   def deleteGroup: Route = delete {
     caseInstanceSubRoute { (user, caseInstanceId) =>
       path("caseteam" / "groups" / Segment) { groupId =>
-        askCase(user, caseInstanceId, caseMember => new RemoveCaseTeamGroup(caseMember, caseInstanceId, groupId))
+        askCase(user, caseInstanceId, caseMember => new RemoveCaseTeamGroup(caseMember, caseMember.caseIdentifier, groupId))
       }
     }
   }
@@ -243,7 +243,7 @@ class CaseTeamRoute(override val httpService: CaseEngineHttpServer) extends Case
     caseInstanceSubRoute { (user, caseInstanceId) => {
       path("caseteam" / "tenant-roles") {
         entity(as[TenantRoleFormat]) { input =>
-          askCase(user, caseInstanceId, caseMember => new SetCaseTeamTenantRole(caseMember, caseInstanceId, input.asTenantRole))
+          askCase(user, caseInstanceId, caseMember => new SetCaseTeamTenantRole(caseMember, caseMember.caseIdentifier, input.asTenantRole))
         }
       }
     }
@@ -277,7 +277,7 @@ class CaseTeamRoute(override val httpService: CaseEngineHttpServer) extends Case
   def deleteTenantRole: Route = delete {
     caseInstanceSubRoute { (user, caseInstanceId) =>
       path("caseteam" / "tenant-roles" / Segment) { tenantRoleName =>
-        askCase(user, caseInstanceId, caseMember => new RemoveCaseTeamTenantRole(caseMember, caseInstanceId, tenantRoleName))
+        askCase(user, caseInstanceId, caseMember => new RemoveCaseTeamTenantRole(caseMember, caseMember.caseIdentifier, tenantRoleName))
       }
     }
   }

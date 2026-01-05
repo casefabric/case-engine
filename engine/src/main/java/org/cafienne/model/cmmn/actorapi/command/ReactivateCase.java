@@ -17,6 +17,7 @@
 
 package org.cafienne.model.cmmn.actorapi.command;
 
+import org.cafienne.actormodel.ActorMetadata;
 import org.cafienne.actormodel.exception.InvalidCommandException;
 import org.cafienne.actormodel.identity.CaseUserIdentity;
 import org.cafienne.infrastructure.serialization.Manifest;
@@ -43,11 +44,9 @@ public class ReactivateCase extends StartCase {
      * @param caseInputParameters The case input parameters
      * @param caseTeam            The CaseTeam for the case
      * @param debugMode           Indication whether case should run in debug mode or not
-     * @param parentCaseId        The id of the parent case, if it exists
-     * @param rootCaseId          The root case id, if it exists.
      */
-    public ReactivateCase(String tenant, CaseUserIdentity user, String caseInstanceId, CaseDefinition definition, ValueMap caseInputParameters, CaseTeam caseTeam, boolean debugMode, String parentCaseId, String rootCaseId) {
-        super(tenant, user, caseInstanceId, definition, caseInputParameters, caseTeam, debugMode, parentCaseId, rootCaseId);
+    public ReactivateCase(String tenant, CaseUserIdentity user, ActorMetadata caseInstanceId, CaseDefinition definition, ValueMap caseInputParameters, CaseTeam caseTeam, boolean debugMode) {
+        super(tenant, user, caseInstanceId, definition, caseInputParameters, caseTeam, debugMode);
     }
 
     public ReactivateCase(ValueMap json) {

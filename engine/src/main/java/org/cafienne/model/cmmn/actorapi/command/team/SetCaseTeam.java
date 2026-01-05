@@ -18,6 +18,7 @@
 package org.cafienne.model.cmmn.actorapi.command.team;
 
 import com.fasterxml.jackson.core.JsonGenerator;
+import org.cafienne.actormodel.ActorMetadata;
 import org.cafienne.actormodel.identity.CaseUserIdentity;
 import org.cafienne.infrastructure.serialization.Fields;
 import org.cafienne.infrastructure.serialization.Manifest;
@@ -35,7 +36,7 @@ public class SetCaseTeam extends CaseTeamCommand {
 
     private final CaseTeam caseTeam;
 
-    public SetCaseTeam(CaseUserIdentity user, String caseInstanceId, CaseTeam caseTeam) {
+    public SetCaseTeam(CaseUserIdentity user, ActorMetadata caseInstanceId, CaseTeam caseTeam) {
         super(user, caseInstanceId);
         this.caseTeam = caseTeam;
     }

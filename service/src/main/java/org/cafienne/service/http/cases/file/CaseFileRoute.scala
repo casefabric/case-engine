@@ -33,6 +33,7 @@ import org.cafienne.service.http.cases.CasesRoute
 import org.cafienne.service.http.cases.file.CaseFileAPIFormat.CaseFileJsonExampleFormat
 import org.cafienne.service.infrastructure.authentication.AuthenticatedUser
 import org.cafienne.service.infrastructure.payload.HttpJsonReader._
+import org.cafienne.util.URLUtil
 import org.cafienne.util.json.Value
 
 @SecurityRequirement(name = "oauth2", scopes = Array("openid"))
@@ -82,7 +83,7 @@ class CaseFileRoute(override val httpService: CaseEngineHttpServer) extends Case
   @RequestBody(description = "Case file item to create in JSON format", required = true, content = Array(new Content(schema = new Schema(implementation = classOf[Map[String, _]]))))
   @Consumes(Array("application/json"))
   def createCaseFileItem: Route = post {
-    casefileContentRoute("create", (user, json, caseInstanceId, path) => askCase(user, caseInstanceId, caseMember => new CreateCaseFileItem(caseMember, caseInstanceId, json, path)))
+    casefileContentRoute("create", (user, json, caseInstanceId, path) => askCase(user, caseInstanceId, caseMember => new CreateCaseFileItem(caseMember, caseMember.caseIdentifier, json, path)))
   }
 
   @Path("/{caseInstanceId}/casefile/replace/{path}")
@@ -103,7 +104,7 @@ class CaseFileRoute(override val httpService: CaseEngineHttpServer) extends Case
   @RequestBody(description = "Case file item to create in JSON format", required = true, content = Array(new Content(schema = new Schema(implementation = classOf[Map[String, _]]))))
   @Consumes(Array("application/json"))
   def replaceCaseFileItem: Route = put {
-    casefileContentRoute("replace", (user, json, caseInstanceId, path) => askCase(user, caseInstanceId, caseMember => new ReplaceCaseFileItem(caseMember, caseInstanceId, json, path)))
+    casefileContentRoute("replace", (user, json, caseInstanceId, path) => askCase(user, caseInstanceId, caseMember => new ReplaceCaseFileItem(caseMember, caseMember.caseIdentifier, json, path)))
   }
 
   @Path("/{caseInstanceId}/casefile/update/{path}")
@@ -123,7 +124,7 @@ class CaseFileRoute(override val httpService: CaseEngineHttpServer) extends Case
   )
   @RequestBody(description = "Case file item to update in JSON format", required = true, content = Array(new Content(schema = new Schema(implementation = classOf[Map[String, _]]))))
   def updateCaseFileItem: Route = put {
-    casefileContentRoute("update", (user, json, caseInstanceId, path) => askCase(user, caseInstanceId, caseMember => new UpdateCaseFileItem(caseMember, caseInstanceId, json, path)))
+    casefileContentRoute("update", (user, json, caseInstanceId, path) => askCase(user, caseInstanceId, caseMember => new UpdateCaseFileItem(caseMember, caseMember.caseIdentifier, json, path)))
   }
 
   @Path("/{caseInstanceId}/casefile/delete/{path}")
@@ -143,7 +144,7 @@ class CaseFileRoute(override val httpService: CaseEngineHttpServer) extends Case
   )
   @Consumes(Array("application/json"))
   def deleteCaseFileItem: Route = delete {
-    casefileRoute("delete", (user, caseInstanceId, path) => askCase(user, caseInstanceId, caseMember => new DeleteCaseFileItem(caseMember, caseInstanceId, path)))
+    casefileRoute("delete", (user, caseInstanceId, path) => askCase(user, caseInstanceId, caseMember => new DeleteCaseFileItem(caseMember, caseMember.caseIdentifier, path)))
   }
 
   /**
@@ -189,8 +190,7 @@ class CaseFileRoute(override val httpService: CaseEngineHttpServer) extends Case
       // Take the "raw" remaining string, and decode it, and make it a Cafienne CaseFile Path
       // Note: taking "Segment" or "Segments" instead of "Remaining" fails and returns 405 on paths like "abc[0 ",
       //  when parsing it to a Cafienne path the error message is more clear.
-      import java.nio.charset.StandardCharsets
-      val decodedRawPath = java.net.URLDecoder.decode(rawPath, StandardCharsets.UTF_8.name)
+      val decodedRawPath = URLUtil.decode(rawPath)
       subRoute(new Path(decodedRawPath))
     }
   }

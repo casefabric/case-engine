@@ -19,7 +19,6 @@ package org.cafienne.model.cmmn.test;
 
 import com.fasterxml.jackson.core.JsonGenerator;
 import org.cafienne.actormodel.ActorMetadata;
-import org.cafienne.actormodel.ActorType;
 import org.cafienne.actormodel.identity.CaseUserIdentity;
 import org.cafienne.infrastructure.serialization.Fields;
 import org.cafienne.model.cmmn.actorapi.command.CaseCommand;
@@ -36,7 +35,7 @@ import java.io.IOException;
 abstract class TestScriptCommand extends CaseCommand {
     private final String tenant;
 
-    protected TestScriptCommand(String tenant, CaseUserIdentity user, String caseInstanceId) {
+    protected TestScriptCommand(String tenant, CaseUserIdentity user, ActorMetadata caseInstanceId) {
         super(user, caseInstanceId);
         this.tenant = tenant;
     }
@@ -44,10 +43,6 @@ abstract class TestScriptCommand extends CaseCommand {
     protected TestScriptCommand(ValueMap json) {
         super(json);
         this.tenant = json.readString(Fields.tenant);
-    }
-
-    protected ActorMetadata getActorMetadata() {
-        return new ActorMetadata(ActorType.Case, getActorId(), null);
     }
 
     abstract void beforeSendCommand(TestScript testScript);

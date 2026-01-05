@@ -7,6 +7,7 @@
  */
 package org.cafienne.model.cmmn.test.basic;
 
+import org.cafienne.actormodel.ActorMetadata;
 import org.cafienne.model.cmmn.actorapi.command.StartCase;
 import org.cafienne.model.cmmn.actorapi.command.plan.MakePlanItemTransition;
 import org.cafienne.model.cmmn.definition.CaseDefinition;
@@ -27,7 +28,7 @@ public class TestBasic {
         // This tests a set of basic plan item types, such as HumanTask, Stage, Milestone and UserEvent
         // and additionally some Sentries.
         // The test just starts the case and then validates the output, no specific actions are done (no transitions are made)
-        String caseInstanceId = "Basic";
+        ActorMetadata caseInstanceId = createIdentifier("Basic");
         TestScript testCase = new TestScript(caseInstanceId);
         CaseDefinition definitions = loadCaseDefinition("testdefinition/basic.xml");
 

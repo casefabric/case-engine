@@ -19,9 +19,9 @@ package org.cafienne.actormodel;
 
 import org.apache.pekko.actor.ActorRef;
 import org.apache.pekko.persistence.journal.Tagged;
-import org.cafienne.actormodel.communication.reply.command.RunActorRequest;
-import org.cafienne.actormodel.communication.reply.event.ActorRequestFailed;
-import org.cafienne.actormodel.communication.request.response.ActorRequestFailure;
+import org.cafienne.actormodel.communication.receiver.command.RunActorRequest;
+import org.cafienne.actormodel.communication.receiver.event.ActorRequestFailed;
+import org.cafienne.actormodel.communication.receiver.reply.ActorRequestFailure;
 import org.cafienne.actormodel.debug.DebugInfoAppender;
 import org.cafienne.actormodel.exception.AuthorizationException;
 import org.cafienne.actormodel.exception.CommandException;
@@ -212,7 +212,7 @@ public class ModelActorTransaction extends UserMessageTransaction<ModelCommand> 
         actor.addDebugInfo(() -> "", exception, msg);
         if (this.message instanceof RunActorRequest actorRequest) {
             this.addEvent(new ActorRequestFailed(actorRequest, exception));
-            this.response = new ActorRequestFailure(actorRequest.source, actorRequest.command, exception);
+            this.response = new ActorRequestFailure(actor, actorRequest.sender, actorRequest.command, exception);
         } else {
             this.response = failure;
         }

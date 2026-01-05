@@ -18,6 +18,7 @@
 package org.cafienne.model.cmmn.actorapi.command.plan.task.humantask;
 
 import com.fasterxml.jackson.core.JsonGenerator;
+import org.cafienne.actormodel.ActorMetadata;
 import org.cafienne.actormodel.identity.CaseUserIdentity;
 import org.cafienne.infrastructure.serialization.Fields;
 import org.cafienne.infrastructure.serialization.Manifest;
@@ -32,7 +33,7 @@ import java.time.Instant;
 public class FillTaskDueDate extends TaskManagementCommand {
 	private final Instant dueDate;
 
-	public FillTaskDueDate(CaseUserIdentity user, String caseInstanceId, String taskId, Instant dueDate) {
+	public FillTaskDueDate(CaseUserIdentity user, ActorMetadata caseInstanceId, String taskId, Instant dueDate) {
 		super(user, caseInstanceId, taskId);
 		this.dueDate = dueDate;
 	}

@@ -17,8 +17,6 @@
 
 package org.cafienne.usermanagement.consentgroup;
 
-import org.cafienne.actormodel.ActorMetadata;
-import org.cafienne.actormodel.ActorType;
 import org.cafienne.actormodel.ModelActor;
 import org.cafienne.actormodel.identity.ConsentGroupUser;
 import org.cafienne.actormodel.message.command.ModelCommand;
@@ -39,11 +37,6 @@ public class ConsentGroupActor extends ModelActor {
 
     public ConsentGroupActor(CaseSystem caseSystem) {
         super(caseSystem);
-    }
-
-    @Override
-    public ActorMetadata metadata() {
-        return new ActorMetadata(ActorType.Group, getId(), null);
     }
 
     @Override

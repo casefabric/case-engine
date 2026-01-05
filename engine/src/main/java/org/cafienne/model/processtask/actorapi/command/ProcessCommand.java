@@ -17,6 +17,7 @@
 
 package org.cafienne.model.processtask.actorapi.command;
 
+import org.cafienne.actormodel.ActorMetadata;
 import org.cafienne.actormodel.exception.InvalidCommandException;
 import org.cafienne.actormodel.identity.CaseUserIdentity;
 import org.cafienne.actormodel.message.command.BaseModelCommand;
@@ -27,7 +28,7 @@ import org.cafienne.model.processtask.instance.ProcessTaskActor;
 import org.cafienne.util.json.ValueMap;
 
 public abstract class ProcessCommand extends BaseModelCommand<ProcessTaskActor, CaseUserIdentity> implements ProcessActorMessage {
-    protected ProcessCommand(CaseUserIdentity user, String id) {
+    protected ProcessCommand(CaseUserIdentity user, ActorMetadata id) {
         super(user, id);
     }
 

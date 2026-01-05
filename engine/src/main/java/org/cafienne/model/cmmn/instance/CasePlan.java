@@ -17,10 +17,9 @@
 
 package org.cafienne.model.cmmn.instance;
 
-import org.cafienne.actormodel.ActorMetadata;
-import org.cafienne.actormodel.ActorType;
-import org.cafienne.actormodel.communication.request.response.ActorRequestFailure;
-import org.cafienne.actormodel.communication.request.state.RemoteActorState;
+import org.cafienne.actormodel.communication.receiver.reply.ActorRequestFailure;
+import org.cafienne.actormodel.communication.sender.event.ActorRequestNotDelivered;
+import org.cafienne.actormodel.communication.sender.state.RemoteActorState;
 import org.cafienne.model.cmmn.actorapi.command.CaseCommand;
 import org.cafienne.model.cmmn.actorapi.command.plan.task.CompleteTask;
 import org.cafienne.model.cmmn.actorapi.command.plan.task.FailTask;
@@ -30,44 +29,57 @@ import org.cafienne.model.cmmn.definition.CasePlanDefinition;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.util.function.Supplier;
+
 public class CasePlan extends Stage<CasePlanDefinition> {
     private final static Logger logger = LoggerFactory.getLogger(CasePlan.class);
-    private final ParentCaseTaskState parentCase;
+    private final ParentCaseTaskState parentTaskState;
 
     public CasePlan(String id, CasePlanDefinition definition, Case caseInstance) {
         super(id, 0, definition, definition, null, caseInstance, StateMachine.CasePlan);
-        this.parentCase = new ParentCaseTaskState(this);
+        this.parentTaskState = caseInstance.metadata.hasParent() ? new ParentCaseTaskState(this) : null;
+    }
+
+    private void inform(Transition transition) {
+        inform(() -> new HandleTaskImplementationTransition(getCaseInstance(), transition));
+    }
+
+    private void inform(Supplier<CaseCommand> creator) {
+        if (this.parentTaskState != null) {
+            // Only inform about our transitions if we have a parent.
+            this.parentTaskState.sendRequest(creator.get());
+        }
     }
 
     @Override
     protected void suspendInstance() {
         super.suspendInstance();
-        parentCase.inform(Transition.Suspend);
+        inform(Transition.Suspend);
     }
 
     @Override
     protected void reactivateInstance() {
         super.reactivateInstance();
-        parentCase.inform(Transition.Reactivate);
+        inform(Transition.Reactivate);
     }
 
     @Override
     protected void completeInstance() {
         super.completeInstance();
         addEvent(new CaseOutputFilled(getCaseInstance(), getCaseInstance().getOutputParameters()));
-        parentCase.inform(() -> new CompleteTask(getCaseInstance(), getCaseInstance().getOutputParameters()));
+        inform(() -> new CompleteTask(getCaseInstance(), getCaseInstance().getOutputParameters()));
     }
 
     @Override
     protected void terminateInstance() {
         super.terminateInstance();
-        parentCase.inform(Transition.Terminate);
+        inform(Transition.Terminate);
     }
 
     @Override
     protected void failInstance() {
         super.failInstance();
-        parentCase.inform(() -> new FailTask(getCaseInstance(), getCaseInstance().getOutputParameters()));
+        inform(() -> new FailTask(getCaseInstance(), getCaseInstance().getOutputParameters()));
     }
 
     @Override
@@ -77,29 +89,12 @@ public class CasePlan extends Stage<CasePlanDefinition> {
         addDebugInfo(() -> "Completed Case Plan migration\n");
     }
 
-    @FunctionalInterface
-    interface CommandCreator {
-        CaseCommand createCommand();
-    }
-
     private static class ParentCaseTaskState extends RemoteActorState<Case> {
         private final CasePlan plan;
 
         public ParentCaseTaskState(CasePlan plan) {
-            super(plan.getCaseInstance(), new ActorMetadata(ActorType.Case, plan.getCaseInstance().getParentActorId(), null));
+            super(plan.getCaseInstance(), plan.getCaseInstance().metadata.parent());
             this.plan = plan;
-        }
-
-        private void inform(Transition transition) {
-            inform(() -> new HandleTaskImplementationTransition(plan.getCaseInstance(), transition));
-        }
-
-        private void inform(CommandCreator creator) {
-            if (targetActorId.isEmpty()) {
-                // No need to inform about our transitions.
-                return;
-            }
-            sendRequest(creator.createCommand());
         }
 
         @Override
@@ -108,7 +103,12 @@ public class CasePlan extends Stage<CasePlanDefinition> {
 
             // Wow, now what? CaseTask did not accept our information, but why??
             //  And... should we handle this by e.g. going to Fault state? Or what? Can we make this inconsistency clear somehow other than through the log file? Generate a special event or so?
-            logger.error("Parent case " + plan.getCaseInstance().getParentActorId() + " did not accept our request " + failure.command + " and responded with a failure\n" + failure);
+            logger.error("Parent case {} did not accept our request {} and responded with a failure\n{}", plan.getCaseInstance().getParentActorId(), failure.command, failure);
+        }
+
+        @Override
+        public void handleNotDelivered(ActorRequestNotDelivered notDelivered) {
+            actor.addDebugInfo(() -> "Could not complete case task for " + actor.metadata + " in parent, due to:" + notDelivered.errorMessage);
         }
     }
 }

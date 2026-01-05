@@ -18,6 +18,7 @@
 package org.cafienne.model.cmmn.actorapi.command.migration;
 
 import com.fasterxml.jackson.core.JsonGenerator;
+import org.cafienne.actormodel.ActorMetadata;
 import org.cafienne.actormodel.identity.CaseUserIdentity;
 import org.cafienne.infrastructure.serialization.Fields;
 import org.cafienne.infrastructure.serialization.Manifest;
@@ -42,7 +43,7 @@ public class MigrateCaseDefinition extends CaseCommand {
      * @param caseInstanceId The instance identifier of the case
      * @param newDefinition  The case definition (according to the CMMN xsd) to be updated to
      */
-    public MigrateCaseDefinition(CaseUserIdentity user, String caseInstanceId, CaseDefinition newDefinition, CaseTeam newTeam) {
+    public MigrateCaseDefinition(CaseUserIdentity user, ActorMetadata caseInstanceId, CaseDefinition newDefinition, CaseTeam newTeam) {
         super(user, caseInstanceId);
         this.newDefinition = newDefinition;
         this.newCaseTeam = newTeam;

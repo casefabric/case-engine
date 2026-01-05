@@ -8,6 +8,7 @@
 
 package org.cafienne.model.cmmn.test.planning;
 
+import org.cafienne.actormodel.ActorMetadata;
 import org.cafienne.model.cmmn.actorapi.command.StartCase;
 import org.cafienne.model.cmmn.actorapi.command.plan.AddDiscretionaryItem;
 import org.cafienne.model.cmmn.actorapi.command.plan.GetDiscretionaryItems;
@@ -26,7 +27,7 @@ import static org.cafienne.model.cmmn.test.TestScript.*;
 public class PlanningAuthorizationTest {
 
     private final String testName = "authorization-test";
-    private final String caseInstanceId = testName;
+    private final ActorMetadata caseInstanceId = createIdentifier(testName);
     private final TestUser caseOwner = createTestUser("CaseOwner");
     private final TestUser caseMember = createTestUser("CaseMember");
     private final TestUser planner = createTestUser("Planner", "planner");

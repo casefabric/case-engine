@@ -17,6 +17,7 @@
 
 package org.cafienne.usermanagement.tenant.actorapi.command;
 
+import org.cafienne.actormodel.ActorMetadata;
 import org.cafienne.actormodel.exception.AuthorizationException;
 import org.cafienne.actormodel.exception.InvalidCommandException;
 import org.cafienne.actormodel.identity.TenantUser;
@@ -43,7 +44,7 @@ public abstract class TenantCommand extends BaseModelCommand<TenantActor, Tenant
      * @param tenantOwner The user that issues this command.
      * @param tenantId    Id of the tenant to send the command to
      */
-    protected TenantCommand(TenantUser tenantOwner, String tenantId) {
+    protected TenantCommand(TenantUser tenantOwner, ActorMetadata tenantId) {
         super(tenantOwner, tenantId);
     }
 

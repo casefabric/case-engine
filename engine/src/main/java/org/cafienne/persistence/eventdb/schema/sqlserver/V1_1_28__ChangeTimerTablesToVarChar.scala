@@ -7,7 +7,7 @@ class V1_1_28__ChangeTimerTablesToVarChar(tablePrefix: String) extends ClassicEv
 
   val description = "ChangeTimerTablesToVarChar"
 
-  val scriptName = "V1_1_28__ChangeTimerTablesToVarChar.sql"
+  override val scriptName = "V1_1_28__ChangeTimerTablesToVarChar.sql"
 
   override def getChecksum: Integer = -2037901020
 

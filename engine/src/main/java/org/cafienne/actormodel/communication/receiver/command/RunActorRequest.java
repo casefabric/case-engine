@@ -1,14 +1,13 @@
-package org.cafienne.actormodel.communication.reply.command;
+package org.cafienne.actormodel.communication.receiver.command;
 
 import com.fasterxml.jackson.core.JsonGenerator;
 import org.cafienne.actormodel.ActorMetadata;
 import org.cafienne.actormodel.ModelActor;
 import org.cafienne.actormodel.communication.CaseSystemCommunicationCommand;
-import org.cafienne.actormodel.communication.reply.event.ActorRequestExecuted;
-import org.cafienne.actormodel.communication.reply.event.ActorRequestStored;
+import org.cafienne.actormodel.communication.receiver.event.ActorRequestExecuted;
+import org.cafienne.actormodel.communication.receiver.event.ActorRequestStored;
 import org.cafienne.actormodel.exception.InvalidCommandException;
 import org.cafienne.actormodel.message.response.ModelResponse;
-import org.cafienne.infrastructure.serialization.Fields;
 import org.cafienne.infrastructure.serialization.Manifest;
 import org.cafienne.util.json.ValueMap;
 
@@ -23,16 +22,12 @@ import java.io.IOException;
  */
 @Manifest
 public class RunActorRequest extends CaseSystemCommunicationCommand {
-    public final ActorMetadata source;
-
-    public RunActorRequest(ActorMetadata target, ActorRequestStored event) {
-        super(target, event.request.command);
-        this.source = event.source;
+    public RunActorRequest(ModelActor sender, ActorMetadata receiver, ActorRequestStored event) {
+        super(sender, receiver, event.request.command);
     }
 
     public RunActorRequest(ValueMap json) {
         super(json);
-        this.source = json.readMetadata(Fields.source);
     }
 
     @Override
@@ -50,7 +45,7 @@ public class RunActorRequest extends CaseSystemCommunicationCommand {
     @Override
     public void process(ModelActor modelActor) {
         command.processCommand(actor);
-        actor.addEvent(new ActorRequestExecuted(command, source));
+        actor.addEvent(new ActorRequestExecuted(command, sender));
     }
 
     @Override
@@ -68,6 +63,5 @@ public class RunActorRequest extends CaseSystemCommunicationCommand {
     @Override
     public void write(JsonGenerator generator) throws IOException {
         super.writeActorCommand(generator);
-        writeField(generator, Fields.source, source);
     }
 }

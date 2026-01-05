@@ -1,4 +1,4 @@
-package org.cafienne.actormodel.communication.request.state
+package org.cafienne.actormodel.communication.sender.state
 
 import com.typesafe.scalalogging.LazyLogging
 import org.apache.pekko.actor.{Cancellable, Scheduler}
@@ -16,10 +16,10 @@ class RequestTracker(val request: Request, val caseSystem: CaseSystem) extends R
   private var count = 0L
 
   def run(): Unit = {
-    if (count > maxAttempts) {
-      logger.warn(s"Maximum number $maxAttempts of attempts to send request is reached. Timer-retry mechanism is canceled.")
+    if (count > 1) {
+      logger.warn(s"Maximum number $maxAttempts of attempts to send request $request is reached. Timer-retry mechanism is canceled.")
       stop()
-      request.failed()
+      request.failed(s"Maximum number $maxAttempts of attempts to send request $request is reached. Timer-retry mechanism is canceled.")
     } else {
       logger.warn(s"Retrying (attempt $count) to send request $request to ${request.getCommand.getActorId} for which so far no delivery confirmation was received")
       request.send()

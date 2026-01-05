@@ -7,6 +7,7 @@
  */
 package org.cafienne.model.cmmn.test.casefile;
 
+import org.cafienne.actormodel.ActorMetadata;
 import org.cafienne.model.cmmn.actorapi.command.StartCase;
 import org.cafienne.model.cmmn.actorapi.command.casefile.CreateCaseFileItem;
 import org.cafienne.model.cmmn.actorapi.command.casefile.DeleteCaseFileItem;
@@ -74,7 +75,7 @@ public class TestBasicTypes {
         // However, instead of that behavior we should make the engine allow for properly restarting the case and allowing us to use the same id.
         // TODO: put this in a different test. Here we're testing case file, not engine robustness
 
-        String caseInstanceId = new Guid().toString();
+        ActorMetadata caseInstanceId = createIdentifier();
         TestScript testCase = new TestScript(caseName);
 
         ValueMap inputs = getInputs();
@@ -87,7 +88,7 @@ public class TestBasicTypes {
     @Test
     public void testInvalidInputParameterName() {
         TestScript testCase = new TestScript(caseName);
-        String caseInstanceId = "CaseFileDefinitionTest";
+        ActorMetadata caseInstanceId = createIdentifier("CaseFileDefinitionTest");
 
         // First we do a test with wrong input parameter names
         String wrongParameterName = "wrong-inputCaseFile";
@@ -134,8 +135,7 @@ public class TestBasicTypes {
         ValueMap wrongInputs = inputs.cloneValueNode();
         wrongInputs.put(inputParameterName, wrongContents);
 
-        String caseInstanceId = "TestingWrongProperty" + propertyName + "_" + new Guid(); // Make a new CaseInstanceId to overcome framework
-        // limitation.
+        ActorMetadata caseInstanceId = createIdentifier("TestingWrongProperty" + propertyName + "_" + new Guid()); // Make a new CaseInstanceId to overcome framework limitation.
         StartCase startCase = createCaseCommand(testUser, caseInstanceId, definitions, wrongInputs.cloneValueNode());
         testCase.assertStepFails(startCase, action -> action.assertException(CaseFileError.class, "Property '" + propertyName + "' has wrong type"));
     }
@@ -153,7 +153,7 @@ public class TestBasicTypes {
         childItem.plus("aSecondChildString", "child-string-2");
 
         contents.put("ChildItem", childItem);
-        String caseInstanceId = new Guid().toString();
+        ActorMetadata caseInstanceId = createIdentifier();
         StartCase startCase = createCaseCommand(testUser, caseInstanceId, definitions, inputs.cloneValueNode());
         testCase.addStep(startCase, caseFile -> caseFile.assertCaseFileItem(childItemPath).assertValue(childItem));
 
@@ -165,7 +165,7 @@ public class TestBasicTypes {
         TestScript testCase = new TestScript(caseName);
 
         ValueMap inputs = getInputs();
-        String caseInstanceId = new Guid().toString();
+        ActorMetadata caseInstanceId = createIdentifier();
         StartCase startCase = createCaseCommand(testUser, caseInstanceId, definitions, inputs.cloneValueNode());
         testCase.addStep(startCase, caseFile -> caseFile.assertCaseFileItem(childItemPath).assertValue(Value.NULL));
 
@@ -208,7 +208,7 @@ public class TestBasicTypes {
         TestScript testCase = new TestScript(caseName);
 
         ValueMap inputs = getInputs();
-        String caseInstanceId = new Guid().toString();
+        ActorMetadata caseInstanceId = createIdentifier();
         StartCase startCase = createCaseCommand(testUser, caseInstanceId, definitions, inputs.cloneValueNode());
         testCase.addStep(startCase, caseFile -> caseFile.assertCaseFileItem(this.childItemPath).assertValue(Value.NULL));
 
@@ -264,7 +264,7 @@ public class TestBasicTypes {
     public void testArrayOperations() {
         TestScript testCase = new TestScript(caseName);
         ValueMap inputs = getInputs();
-        String caseInstanceId = new Guid().toString();
+        ActorMetadata caseInstanceId = createIdentifier();
         StartCase startCase = createCaseCommand(testUser, caseInstanceId, definitions, inputs.cloneValueNode());
         testCase.addStep(startCase, caseFile -> caseFile.assertCaseFileItem(childItemPath).assertValue(Value.NULL));
 
@@ -311,7 +311,7 @@ public class TestBasicTypes {
         TestScript testCase = new TestScript(caseName);
 
         ValueMap inputs = getInputs();
-        String caseInstanceId = new Guid().toString();
+        ActorMetadata caseInstanceId = createIdentifier();
         StartCase startCase = createCaseCommand(testUser, caseInstanceId, definitions, inputs.cloneValueNode());
         testCase.addStep(startCase, caseFile -> caseFile.assertCaseFileItem(childItemPath).assertValue(Value.NULL));
 

@@ -18,6 +18,7 @@
 package org.cafienne.model.cmmn.actorapi.command;
 
 import com.fasterxml.jackson.core.JsonGenerator;
+import org.cafienne.actormodel.ActorMetadata;
 import org.cafienne.actormodel.exception.InvalidCommandException;
 import org.cafienne.actormodel.identity.CaseUserIdentity;
 import org.cafienne.actormodel.message.command.BootstrapMessage;
@@ -38,8 +39,6 @@ import java.io.IOException;
 @Manifest
 public class StartCase extends CaseCommand implements BootstrapMessage {
     protected final String tenant;
-    protected final String rootCaseId;
-    protected final String parentCaseId;
     protected final ValueMap inputParameters;
     protected final CaseDefinition definition;
     protected CaseTeam caseTeam;
@@ -55,8 +54,8 @@ public class StartCase extends CaseCommand implements BootstrapMessage {
      * @param debugMode           Indication whether case should run in debug mode or not
      *
      */
-    public StartCase(String tenant, CaseUserIdentity user, String caseInstanceId, CaseDefinition definition, ValueMap inputs, CaseTeam caseTeam, boolean debugMode) {
-        this(tenant, user, caseInstanceId, definition, inputs, caseTeam, debugMode, "", caseInstanceId);
+    public StartCase(String tenant, CaseUserIdentity user, ActorMetadata caseInstanceId, CaseDefinition definition, ValueMap inputs, CaseTeam caseTeam, boolean debugMode) {
+        this(tenant, user, caseInstanceId, definition, inputs, caseTeam, debugMode, "", "");
     }
 
     /**
@@ -70,7 +69,7 @@ public class StartCase extends CaseCommand implements BootstrapMessage {
      * @param parentCaseId        The id of the parent case, if it exists
      * @param rootCaseId          The root case id, if it exists.
      */
-    public StartCase(String tenant, CaseUserIdentity user, String caseInstanceId, CaseDefinition definition, ValueMap caseInputParameters, CaseTeam caseTeam, boolean debugMode, String parentCaseId, String rootCaseId) {
+    public StartCase(String tenant, CaseUserIdentity user, ActorMetadata caseInstanceId, CaseDefinition definition, ValueMap caseInputParameters, CaseTeam caseTeam, boolean debugMode, String parentCaseId, String rootCaseId) {
         super(user, caseInstanceId);
         // First validate the tenant information.
         this.tenant = tenant;
@@ -78,8 +77,6 @@ public class StartCase extends CaseCommand implements BootstrapMessage {
             throw new NullPointerException("Tenant cannot be null or empty");
         }
         this.definition = definition;
-        this.rootCaseId = rootCaseId;
-        this.parentCaseId = parentCaseId;
         this.inputParameters = caseInputParameters == null ? new ValueMap() : caseInputParameters;
         this.caseTeam = caseTeam;
         this.debugMode = debugMode;
@@ -88,8 +85,6 @@ public class StartCase extends CaseCommand implements BootstrapMessage {
     public StartCase(ValueMap json) {
         super(json);
         this.tenant = json.readString(Fields.tenant);
-        this.rootCaseId = json.readString(Fields.rootActorId);
-        this.parentCaseId = json.readString(Fields.parentActorId);
         this.definition = json.readDefinition(Fields.definition, CaseDefinition.class);
         this.inputParameters = json.readMap(Fields.inputParameters);
         this.debugMode = json.readBoolean(Fields.debugMode);
@@ -148,7 +143,7 @@ public class StartCase extends CaseCommand implements BootstrapMessage {
         }
 
         // First set the definition
-        caseInstance.addEvent(new CaseDefinitionApplied(caseInstance, rootCaseId, parentCaseId, definition));
+        caseInstance.addEvent(new CaseDefinitionApplied(caseInstance, definition));
 
         // First setup the case team, so that triggers or expressions in the case plan or case file can reason about the case team.
         caseInstance.getCaseTeam().create(caseTeam);
@@ -176,8 +171,6 @@ public class StartCase extends CaseCommand implements BootstrapMessage {
         writeField(generator, Fields.tenant, tenant);
         writeField(generator, Fields.team, caseTeam);
         writeField(generator, Fields.inputParameters, inputParameters);
-        writeField(generator, Fields.rootActorId, rootCaseId);
-        writeField(generator, Fields.parentActorId, parentCaseId);
         writeField(generator, Fields.definition, definition);
         writeField(generator, Fields.debugMode, debugMode);
     }

@@ -18,6 +18,7 @@
 package org.cafienne.model.cmmn.actorapi.command.plan;
 
 import com.fasterxml.jackson.core.JsonGenerator;
+import org.cafienne.actormodel.ActorMetadata;
 import org.cafienne.actormodel.exception.InvalidCommandException;
 import org.cafienne.actormodel.identity.CaseUserIdentity;
 import org.cafienne.infrastructure.serialization.Fields;
@@ -54,7 +55,7 @@ public class AddDiscretionaryItem extends CaseCommand {
      * @param definitionId The id of the discretionary item; can be used instead of the name.
      * @param parentId The id of the plan item that contains this discretionary item (i.e., the stage or human task in which it is being planned).
      */
-    public AddDiscretionaryItem(CaseUserIdentity user, String caseInstanceId, String name, String definitionId, String parentId, String newPlanItemId) {
+    public AddDiscretionaryItem(CaseUserIdentity user, ActorMetadata caseInstanceId, String name, String definitionId, String parentId, String newPlanItemId) {
         super(user, caseInstanceId);
         this.name = name;
         this.planItemId = (newPlanItemId == null || newPlanItemId.isEmpty()) ? new Guid().toString() : newPlanItemId;

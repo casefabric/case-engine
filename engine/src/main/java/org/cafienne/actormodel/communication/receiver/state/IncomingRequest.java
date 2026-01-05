@@ -1,9 +1,9 @@
-package org.cafienne.actormodel.communication.reply.state;
+package org.cafienne.actormodel.communication.receiver.state;
 
-import org.cafienne.actormodel.communication.reply.event.ActorRequestExecuted;
-import org.cafienne.actormodel.communication.reply.event.ActorRequestFailed;
-import org.cafienne.actormodel.communication.reply.event.ActorRequestStored;
-import org.cafienne.actormodel.communication.reply.event.ModelActorRequestEvent;
+import org.cafienne.actormodel.communication.receiver.event.ActorRequestExecuted;
+import org.cafienne.actormodel.communication.receiver.event.ActorRequestFailed;
+import org.cafienne.actormodel.communication.receiver.event.ActorRequestStored;
+import org.cafienne.actormodel.communication.receiver.event.ModelActorRequestEvent;
 
 class IncomingRequest {
 

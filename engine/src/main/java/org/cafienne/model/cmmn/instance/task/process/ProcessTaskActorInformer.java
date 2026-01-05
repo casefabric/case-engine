@@ -38,19 +38,19 @@ class ProcessTaskActorInformer extends ProcessInformer {
         final String rootActorId = task.getCaseInstance().getRootActorId();
         final String parentId = task.getCaseInstance().getId();
         final boolean debugMode = task.getCaseInstance().debugMode();
-        final StartProcess command = new StartProcess(user, tenant, taskId, taskName, task.getDefinition().getImplementationDefinition(), inputParameters, parentId, rootActorId, debugMode);
+        final StartProcess command = new StartProcess(user, tenant, task.target(), taskName, task.getDefinition().getImplementationDefinition(), inputParameters, debugMode);
 
         task.startTaskImplementation(command);
     }
 
     @Override
     protected void suspendImplementation() {
-        task.tellTaskImplementation(new SuspendProcess(getCaseInstance().getCurrentUser(), task.getId()));
+        task.tellTaskImplementation(new SuspendProcess(getCaseInstance().getCurrentUser(), task.target()));
     }
 
     @Override
     protected void resumeImplementation() {
-        task.tellTaskImplementation(new ResumeProcess(getCaseInstance().getCurrentUser(), task.getId()));
+        task.tellTaskImplementation(new ResumeProcess(getCaseInstance().getCurrentUser(), task.target()));
     }
 
     @Override
@@ -58,7 +58,7 @@ class ProcessTaskActorInformer extends ProcessInformer {
         if (task.getHistoryState() == State.Available) {
             getCaseInstance().addDebugInfo(() -> "Terminating process task '" + task.getName() + "' without it being started; no need to inform the task actor");
         } else {
-            task.tellTaskImplementation(new TerminateProcess(getCaseInstance().getCurrentUser(), task.getId()));
+            task.tellTaskImplementation(new TerminateProcess(getCaseInstance().getCurrentUser(), task.target()));
         }
     }
 
@@ -71,11 +71,11 @@ class ProcessTaskActorInformer extends ProcessInformer {
         final String rootActorId = task.getCaseInstance().getRootActorId();
         final String parentId = task.getCaseInstance().getId();
         final boolean debugMode = task.getCaseInstance().debugMode();
-        task.tellTaskImplementation(new ReactivateProcess(user, tenant, taskId, taskName, task.getDefinition().getImplementationDefinition(), inputParameters, parentId, rootActorId, debugMode));
+        task.tellTaskImplementation(new ReactivateProcess(user, tenant, task.target(), taskName, task.getDefinition().getImplementationDefinition(), inputParameters, parentId, rootActorId, debugMode));
     }
 
     @Override
     protected void migrateDefinition(ProcessTaskDefinition newDefinition) {
-        task.giveNewDefinition(new MigrateProcessDefinition(getCaseInstance().getCurrentUser(), task.getId(), newDefinition.getImplementationDefinition()));
+        task.giveNewDefinition(new MigrateProcessDefinition(getCaseInstance().getCurrentUser(), task.target(), newDefinition.getImplementationDefinition()));
     }
 }

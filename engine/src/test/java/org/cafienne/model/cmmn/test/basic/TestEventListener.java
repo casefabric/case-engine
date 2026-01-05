@@ -7,6 +7,7 @@
  */
 package org.cafienne.model.cmmn.test.basic;
 
+import org.cafienne.actormodel.ActorMetadata;
 import org.cafienne.model.cmmn.actorapi.command.StartCase;
 import org.cafienne.model.cmmn.actorapi.command.plan.MakeCaseTransition;
 import org.cafienne.model.cmmn.actorapi.command.plan.MakePlanItemTransition;
@@ -28,7 +29,7 @@ public class TestEventListener {
     @Test
     public void testEventListener() {
         // This is a set of basic tests for events with some related sentries.
-        String caseInstanceId = "EventListener";
+        ActorMetadata caseInstanceId = createIdentifier("EventListener");
         TestScript testCase = new TestScript(caseInstanceId);
 
         StartCase startCase = createCaseCommand(testUser, caseInstanceId, definitions);

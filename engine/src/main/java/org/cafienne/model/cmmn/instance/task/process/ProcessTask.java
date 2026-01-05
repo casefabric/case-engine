@@ -34,7 +34,7 @@ public class ProcessTask extends Task<ProcessTaskDefinition> {
     }
     @Override
     protected ActorMetadata target() {
-        return new ActorMetadata(ActorType.Process, getId(), getCaseInstance().metadata());
+        return new ActorMetadata(ActorType.Process, getId(), getCaseInstance().metadata);
     }
 
     @Override

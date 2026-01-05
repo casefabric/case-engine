@@ -26,6 +26,7 @@ import io.swagger.v3.oas.annotations.{Operation, Parameter}
 import jakarta.ws.rs._
 import org.apache.pekko.http.scaladsl.model.StatusCodes
 import org.apache.pekko.http.scaladsl.server.Route
+import org.cafienne.actormodel.{ActorMetadata, ActorType}
 import org.cafienne.actormodel.identity.{ConsentGroupUser, TenantUser}
 import org.cafienne.service.http.CaseEngineHttpServer
 import org.cafienne.service.http.userregistration.consentgroup.model.ConsentGroupAPI.ConsentGroupFormat
@@ -59,7 +60,7 @@ class TenantOwnersRoute(override val httpService: CaseEngineHttpServer) extends 
   def getTenantOwners: Route = get {
     tenantUser { tenantOwner =>
       path("owners") {
-        askTenant(new GetTenantOwners(tenantOwner, tenantOwner.tenant))
+        askTenant(new GetTenantOwners(tenantOwner, new ActorMetadata(ActorType.Tenant, tenantOwner.tenant)))
       }
     }
   }
@@ -93,7 +94,7 @@ class TenantOwnersRoute(override val httpService: CaseEngineHttpServer) extends 
       entity(as[ReplaceTenantFormat]) { newTenantInformation =>
         // Map users from external format to TenantUser case class and convert to java List
         val users = newTenantInformation.users.map(user => user.asTenantUser(tenantOwner.tenant))
-        askTenant(new ReplaceTenant(tenantOwner, tenantOwner.tenant, users.asJava))
+        askTenant(new ReplaceTenant(tenantOwner, new ActorMetadata(ActorType.Tenant, tenantOwner.tenant), users.asJava))
       }
     }
   }
@@ -123,7 +124,7 @@ class TenantOwnersRoute(override val httpService: CaseEngineHttpServer) extends 
     tenantUser { tenantOwner =>
       path("users") {
         entity(as[UserFormat]) { newUser =>
-          askTenant(new SetTenantUser(tenantOwner, tenantOwner.tenant, newUser.asTenantUser(tenantOwner.tenant)))
+          askTenant(new SetTenantUser(tenantOwner, new ActorMetadata(ActorType.Tenant, tenantOwner.tenant), newUser.asTenantUser(tenantOwner.tenant)))
         }
       }
     }
@@ -147,7 +148,7 @@ class TenantOwnersRoute(override val httpService: CaseEngineHttpServer) extends 
   def removeUser: Route = delete {
     tenantUser { tenantOwner =>
       path("users" / Segment) { userId =>
-        askTenant(new RemoveTenantUser(tenantOwner, tenantOwner.tenant, userId))
+        askTenant(new RemoveTenantUser(tenantOwner, new ActorMetadata(ActorType.Tenant, tenantOwner.tenant), userId))
       }
     }
   }

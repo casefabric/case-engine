@@ -18,13 +18,12 @@
 package org.cafienne.actormodel;
 
 import org.apache.pekko.actor.ActorRef;
-import org.apache.pekko.actor.PoisonPill;
 import org.apache.pekko.persistence.AbstractPersistentActor;
 import org.apache.pekko.persistence.JournalProtocol;
 import org.apache.pekko.persistence.SnapshotOffer;
 import org.apache.pekko.persistence.SnapshotProtocol;
-import org.cafienne.actormodel.communication.reply.state.IncomingRequestState;
-import org.cafienne.actormodel.communication.request.state.RemoteActorState;
+import org.cafienne.actormodel.communication.receiver.state.IncomingRequestState;
+import org.cafienne.actormodel.communication.sender.state.RemoteActorState;
 import org.cafienne.actormodel.debug.DebugInfoAppender;
 import org.cafienne.actormodel.exception.CommandException;
 import org.cafienne.actormodel.identity.UserIdentity;
@@ -51,29 +50,29 @@ public abstract class ModelActor extends AbstractPersistentActor {
      */
     private String tenant;
     /**
-     * The identifier of the model. Is expected to be unique. However, in practice it is derived from the Actor path.
+     * The CaseSystem in which this ModelActor runs
      */
-    private final String id;
+    public final CaseSystem caseSystem;
+    /**
+     * The identifier of this actor
+     */
+    public final ActorMetadata metadata;
     /**
      * Front door knows ModelActor state, and determines whether visitors can pass.
      */
-    private final Reception reception = new Reception(this);
+    private final Reception reception;
     /**
      * If ModelActors send messages to each other, the state of that is handled in the ModelActorCommunication class
      */
-    private final ModelActorCommunication actorCommunication = new ModelActorCommunication(this);
-    /**
-     * Contains the context for the currently message being handled (whether from recovery or while being live)
-     */
-    private MessageTransaction transaction;
-    /**
-     * User context of current message
-     */
-    private UserIdentity currentUser;
+    private final ModelActorCommunication actorCommunication;
     /**
      * Flag indicating whether the model actor runs in debug mode or not
      */
     private boolean debugMode;
+    /**
+     * Contains the context for the currently message being handled (whether from recovery or while being live)
+     */
+    private MessageTransaction transaction;
     /**
      * CaseScheduler is a lightweight manager to schedule asynchronous works for this Case instance.
      */
@@ -96,16 +95,15 @@ public abstract class ModelActor extends AbstractPersistentActor {
      */
     private EngineVersion engineVersion;
 
-    /**
-     * The CaseSystem in which this ModelActor runs
-     */
-    public final CaseSystem caseSystem;
-
     protected ModelActor(CaseSystem caseSystem) {
         this.caseSystem = caseSystem;
+        this.metadata = ActorMetadata.apply(self().path());
         this.debugMode = caseSystem.config().actor().debugEnabled();
-        this.id = self().path().name();
+        this.reception = new Reception(this);
+        this.actorCommunication = new ModelActorCommunication(this);
         this.scheduler = new CaseScheduler(this);
+//        System.out.println("\n=========  Recovering/creating " + metadata.path() + " | actor path  = " + self().path());
+        getLogger().info("Recovering/creating {} in parent {} with actor path {}", metadata.description(), metadata.parent(), self().path());
     }
 
     @Override
@@ -114,7 +112,9 @@ public abstract class ModelActor extends AbstractPersistentActor {
         super.postStop();
     }
 
-    public abstract ActorMetadata metadata();
+    final public ActorMetadata metadata() {
+        return metadata;
+    }
 
     abstract protected boolean supportsCommand(Object msg);
 
@@ -136,8 +136,12 @@ public abstract class ModelActor extends AbstractPersistentActor {
      * Returns the id of the parent of this model, i.e., the one that created this model
      * and maintains its lifecycle. Should return null or an empty string if there is none.
      */
+    public ActorMetadata getParentActor() {
+        return metadata.parent();
+    }
+
     public String getParentActorId() {
-        return "";
+        return getParentActor() != null ? getParentActor().actorId() : "";
     }
 
     /**
@@ -145,19 +149,19 @@ public abstract class ModelActor extends AbstractPersistentActor {
      * and maintains its lifecycle. Should return null or an empty string if there is none.
      */
     public String getRootActorId() {
-        return getId();
+        return this.metadata.root().actorId();
     }
 
     /**
      * Returns the Guid of the model instance
      */
     public String getId() {
-        return id;
+        return this.metadata.actorId();
     }
 
     @Override
     public String persistenceId() {
-        return this.id;
+        return this.getId();
     }
 
     /**
@@ -403,7 +407,7 @@ public abstract class ModelActor extends AbstractPersistentActor {
 
     @Override
     public String toString() {
-        return this.getClass().getSimpleName() + "[" + self().path().name() + "]";
+        return this.getClass().getSimpleName() + "[" + this.getId() + "]";
     }
 
     /**
@@ -425,8 +429,8 @@ public abstract class ModelActor extends AbstractPersistentActor {
         actorCommunication.register(remoteActorState);
     }
 
-    public RemoteActorState<?> getRemoteActorState(String actorId) {
-        return actorCommunication.getRemoteActorState(actorId);
+    public RemoteActorState<?> getRemoteActorState(ActorMetadata remoteActorMetadata) {
+        return actorCommunication.getRemoteActorState(remoteActorMetadata);
     }
 
     public IncomingRequestState getIncomingRequestState() {

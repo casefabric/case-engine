@@ -18,6 +18,7 @@
 package org.cafienne.model.cmmn.actorapi.command.team.removemember;
 
 import com.fasterxml.jackson.core.JsonGenerator;
+import org.cafienne.actormodel.ActorMetadata;
 import org.cafienne.actormodel.exception.InvalidCommandException;
 import org.cafienne.actormodel.identity.CaseUserIdentity;
 import org.cafienne.infrastructure.serialization.Fields;
@@ -37,7 +38,7 @@ import java.io.IOException;
 abstract class RemoveCaseTeamMemberCommand<M extends CaseTeamMember> extends CaseTeamCommand {
     protected final String memberId;
 
-    protected RemoveCaseTeamMemberCommand(CaseUserIdentity user, String caseInstanceId, String memberId) {
+    protected RemoveCaseTeamMemberCommand(CaseUserIdentity user, ActorMetadata caseInstanceId, String memberId) {
         super(user, caseInstanceId);
         this.memberId = memberId;
     }

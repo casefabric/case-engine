@@ -7,7 +7,7 @@ class V1_1_16__CreateAkkaSchema(tablePrefix: String) extends ClassicEventDBSchem
 
   val description = "CreateAkkaSchema"
 
-  val scriptName = "org.cafienne.persistence.schema.V1_1_16__CreateAkkaSchema"
+  override val scriptName = "org.cafienne.persistence.schema.V1_1_16__CreateAkkaSchema"
 
   val sql: String =
     s"""CREATE TABLE IF NOT EXISTS "${tablePrefix}event_journal" (

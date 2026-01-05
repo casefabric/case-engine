@@ -1,6 +1,7 @@
 package org.cafienne.model.cmmn.test.expression;
 
 
+import org.cafienne.actormodel.ActorMetadata;
 import org.cafienne.model.cmmn.actorapi.command.StartCase;
 import org.cafienne.model.cmmn.actorapi.command.casefile.CreateCaseFileItem;
 import org.cafienne.model.cmmn.actorapi.event.plan.CasePlanEvent;
@@ -23,7 +24,7 @@ import static org.cafienne.model.cmmn.test.TestScript.*;
 public class TestVariousSpelExpressions {
     private final CaseDefinition definitions = loadCaseDefinition("testdefinition/expression/spelexpressions.xml");
 
-    private final String caseInstanceId = "SpelExpressionsTest";
+    private final ActorMetadata caseInstanceId = createIdentifier("SpelExpressionsTest");
     private final String input = "basic";
     private final String other = "other input";
     private final String defaultOutput = "My Output";
@@ -50,7 +51,7 @@ public class TestVariousSpelExpressions {
                 taskCompleted.print();
                 testCase.getEventListener().awaitTaskOutputFilled(taskName, taskEvent -> {
                     TaskOutputAssertion toa = new TaskOutputAssertion(taskEvent);
-                    toa.assertValue("CaseID", caseInstanceId);
+                    toa.assertValue("CaseID", caseInstanceId.actorId());
                     toa.assertValue("TaskName", taskName);
                     toa.assertValue("TaskOutput", defaultOutput);
 //                    Value<?> v = toa.getValue("MultiOutput");
@@ -134,7 +135,7 @@ public class TestVariousSpelExpressions {
                 // Validate output again. Does not add too much value, as this is also done in the test above
                 testCase.getEventListener().awaitTaskOutputFilled(taskName, taskEvent -> {
                     TaskOutputAssertion toa = new TaskOutputAssertion(taskEvent);
-                    toa.assertValue("CaseID", caseInstanceId);
+                    toa.assertValue("CaseID", caseInstanceId.actorId());
                     toa.assertValue("TaskName", taskName);
                     toa.assertValue("TaskOutput", defaultOutput);
                     return true;
@@ -176,7 +177,7 @@ public class TestVariousSpelExpressions {
                 // Validate the output; it must be 'stop now'
                 testCase.getEventListener().awaitTaskOutputFilled(taskName, taskEvent -> {
                     TaskOutputAssertion toa = new TaskOutputAssertion(taskEvent);
-                    toa.assertValue("CaseID", caseInstanceId);
+                    toa.assertValue("CaseID", caseInstanceId.actorId());
                     toa.assertValue("TaskName", taskName);
                     toa.assertValue("TaskOutput", stopNowOutput);
                     return true;
@@ -212,7 +213,7 @@ public class TestVariousSpelExpressions {
                 // Validate the output; it must be 'stop now'
                 testCase.getEventListener().awaitTaskOutputFilled(taskName, taskEvent -> {
                     TaskOutputAssertion toa = new TaskOutputAssertion(taskEvent);
-                    toa.assertValue("CaseID", caseInstanceId);
+                    toa.assertValue("CaseID", caseInstanceId.actorId());
                     toa.assertValue("TaskName", taskName);
 //                    System.out.println("Value of special output: " + toa.getValue("MultiOutput"));
                     return true;

@@ -1,11 +1,10 @@
-package org.cafienne.actormodel.communication.request.command;
+package org.cafienne.actormodel.communication.sender.command;
 
 import com.fasterxml.jackson.core.JsonGenerator;
-import org.cafienne.actormodel.ActorMetadata;
 import org.cafienne.actormodel.ModelActor;
 import org.cafienne.actormodel.communication.CaseSystemCommunicationCommand;
-import org.cafienne.actormodel.communication.request.response.ActorRequestDeliveryReceipt;
-import org.cafienne.actormodel.communication.request.state.RemoteActorState;
+import org.cafienne.actormodel.communication.receiver.reply.ActorRequestDeliveryReceipt;
+import org.cafienne.actormodel.communication.sender.state.RemoteActorState;
 import org.cafienne.actormodel.exception.InvalidCommandException;
 import org.cafienne.actormodel.message.command.BootstrapMessage;
 import org.cafienne.actormodel.message.command.ModelCommand;
@@ -19,18 +18,15 @@ import java.io.IOException;
 @Manifest
 public class RequestModelActor extends CaseSystemCommunicationCommand implements BootstrapMessage {
     public final boolean debugMode;
-    public final ActorMetadata source;
 
     public RequestModelActor(ModelCommand command, RemoteActorState<?> state) {
-        super(state.target, command);
+        super(state.actor, state.receiver, command);
         this.debugMode = state.actor.debugMode();
-        this.source = state.source;
     }
 
     public RequestModelActor(ValueMap json) {
         super(json);
         this.debugMode = json.readBoolean(Fields.debugMode);
-        this.source = json.readMetadata(Fields.source);
     }
 
     @Override
@@ -54,13 +50,12 @@ public class RequestModelActor extends CaseSystemCommunicationCommand implements
 
     @Override
     public ModelResponse getResponse() {
-        return new ActorRequestDeliveryReceipt(source, this.command);
+        return new ActorRequestDeliveryReceipt(this.actor, sender, this.command);
     }
 
     @Override
     public void write(JsonGenerator generator) throws IOException {
         super.writeActorCommand(generator);
-        writeField(generator, Fields.source, source);
         writeField(generator, Fields.debugMode, debugMode);
     }
 

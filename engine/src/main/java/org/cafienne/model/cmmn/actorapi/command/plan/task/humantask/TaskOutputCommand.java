@@ -18,6 +18,7 @@
 package org.cafienne.model.cmmn.actorapi.command.plan.task.humantask;
 
 import com.fasterxml.jackson.core.JsonGenerator;
+import org.cafienne.actormodel.ActorMetadata;
 import org.cafienne.actormodel.identity.CaseUserIdentity;
 import org.cafienne.infrastructure.serialization.Fields;
 import org.cafienne.model.cmmn.instance.task.humantask.HumanTask;
@@ -31,7 +32,7 @@ import java.io.IOException;
 public abstract class TaskOutputCommand extends HumanTaskCommand {
 	protected final ValueMap taskOutput;
 
-	protected TaskOutputCommand(CaseUserIdentity user, String caseInstanceId, String taskId, ValueMap taskOutput) {
+	protected TaskOutputCommand(CaseUserIdentity user, ActorMetadata caseInstanceId, String taskId, ValueMap taskOutput) {
 		super(user, caseInstanceId, taskId);
 		this.taskOutput = taskOutput;
 	}

@@ -30,13 +30,12 @@ import java.time.Instant
   * in order to generate events from ModelActor Data Removal pattern and have those events end up also in Cafienne Debugger.
   */
 trait StorageEvent extends StorageMessage with CafienneJson with ModelEvent {
-  val metadata: ActorMetadata
+  override val metadata: ActorMetadata
   val user: StorageUser
   val tenant: String = user.tenant
   override def getCorrelationId: String = ""
   override val actorId: String = metadata.actorId
   override val actorType: ActorType = metadata.actorType
-  val parentActorId: ActorMetadata = metadata.parent
   val optionalJson: Option[ValueMap] = None
 
   private val json = optionalJson.getOrElse(

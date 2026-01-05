@@ -16,8 +16,9 @@ trait SchemaMigrator extends ResolvedMigration {
 
   /**
    * @return The name of the script, this will end up in the "script" column of the flyway history table
+   *         Defaults to the full class name of the migrator
    */
-  def scriptName: String
+  def scriptName: String = this.getClass.getSimpleName
 
   override def getScript: String = scriptName
 
@@ -25,7 +26,7 @@ trait SchemaMigrator extends ResolvedMigration {
 
   override def getExecutor: MigrationExecutor = new MigrationRunner(this)
 
-  override def getChecksum: Integer = null
+  override def getChecksum: Integer = scriptName.hashCode
 
   override def checksumMatches(checksum: Integer): Boolean = checksum == getChecksum
 
