@@ -21,4 +21,6 @@ import org.cafienne.actormodel.ActorMetadata
 import org.cafienne.persistence.querydb.query.exception.SearchFailure
 import org.cafienne.service.storage.actormodel.message.StorageFailure
 
-case class ArchiveNotFound(metadata: ActorMetadata) extends SearchFailure(s"Cannot find archive for ${metadata.path}") with StorageFailure
+case class ArchiveNotFound(metadata: ActorMetadata) extends StorageFailure {
+  override val getMessage = s"Cannot find archive for ${metadata.path}"
+}
