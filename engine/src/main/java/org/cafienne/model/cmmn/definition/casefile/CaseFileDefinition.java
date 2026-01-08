@@ -26,7 +26,7 @@ public class CaseFileDefinition extends CaseFileItemCollectionDefinition {
         super(element, modelDefinition, parentElement);
         if (element != null) {
             parse("caseFileItem", CaseFileItemDefinition.class, getChildren());
-            if (getChildren().size() < 1) {
+            if (getChildren().isEmpty()) {
                 modelDefinition.addDefinitionError("The case file must have at least one case file item");
             }
         }

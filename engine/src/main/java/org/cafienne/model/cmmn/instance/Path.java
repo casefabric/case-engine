@@ -38,18 +38,28 @@ public class Path implements Serializable {
     public final String name;
     private final String encodedName;
     public final int index;
-    private final String originalPath;
-    private final Path parent;
-    private final Path root;
-    private final Path child;
-    private final int depth;
+    public final String originalPath;
+    public final Path parent;
+    public final Path root;
+    public final Path child;
+    public final int depth;
+
+    @Override
+    public boolean equals(Object obj) {
+        if (obj instanceof Path) {
+            return this.toString().equals(obj.toString());
+        }
+        return false;
+    }
+
+    @Override
+    public int hashCode() {
+        return toString().hashCode();
+    }
 
     /**
      * Create a new path from a string. Uses the case definition to validate the path.
      * Throws an exception if the path is invalid, i.e., if it does not comply with the basic protocol.
-     *
-     * @param rawPath
-     * @throws InvalidPathException
      */
     public Path(String rawPath) throws InvalidPathException {
         this(convertRawPath(rawPath, true), rawPath);
@@ -57,10 +67,6 @@ public class Path implements Serializable {
 
     /**
      * Returns a path object in which the individual names keep any trailing spaces.
-     *
-     * @param rawPath
-     * @return
-     * @throws InvalidPathException
      */
     public static Path untrimmed(String rawPath) throws InvalidPathException {
         return new Path(convertRawPath(rawPath, false), rawPath);
@@ -68,8 +74,6 @@ public class Path implements Serializable {
 
     /**
      * Creates a path that matches the case file item definition's "path" within the case file.
-     *
-     * @param cfid
      */
     public Path(CaseFileItemDefinition cfid) {
         this(cfid, null);
@@ -77,8 +81,6 @@ public class Path implements Serializable {
 
     /**
      * Create a path for the case file item instance (including [index] if the item belongs to an array)
-     *
-     * @param caseFileItem
      */
     public Path(CaseFileItem caseFileItem) {
         this(caseFileItem, null);
@@ -176,12 +178,6 @@ public class Path implements Serializable {
 
     /**
      * Clones the path.
-     *
-     * @param pathToClone
-     * @param newPathRoot
-     * @param newPathParent
-     * @param requiredDepth
-     * @param requiredIndex
      */
     private Path(Path pathToClone, Path newPathRoot, Path newPathParent, int requiredDepth, int requiredIndex) {
         this.name = pathToClone.name;
@@ -212,11 +208,11 @@ public class Path implements Serializable {
         int openingBracket = myPart.indexOf("[");
         this.index = parseIndex(myPart, originalPath, openingBracket);
         this.encodedName = myPart.substring(0, openingBracket >= 0 ? openingBracket : myPart.length());
-        String decoded = decode(encodedName);
+//        String decoded = decode(encodedName);
 //        if (!encodedName.equals(decoded)) {
 //            System.out.println("Coded:   " + encodedName + "\nDecoded: " + decoded);
 //        }
-        this.name = decoded;
+        this.name = decode(encodedName);
 
         this.parent = depth > 0 ? new Path(chain, this, depth - 1, originalPath) : null;
         this.root = this.parent == null ? this : parent.root;
@@ -247,9 +243,7 @@ public class Path implements Serializable {
 
     /**
      * Resolve the path on the specified case instance to return the corresponding case file item
-     *
-     * @param caseInstance
-     * @return
+
      * @throws InvalidPathException if the path is not compliant with the case definition, or if it points to
      *                              a non-existing array element that is more than 1 element behind the array size. E.g., if array size is 3, then
      *                              a path [4] will fail, as that assumes 5 elements in the array, whereas array[3] points to a potentially new 4th element.
@@ -296,8 +290,6 @@ public class Path implements Serializable {
     /**
      * Resolve this path on the parent.
      *
-     * @param parentItem
-     * @return
      * @throws InvalidPathException if the path is not compliant with the case definition, or if it points to
      *                              a non-existing array element that is more than 1 element behind the array size. E.g., if array size is 3, then
      *                              a path [4] will fail, as that assumes 5 elements in the array, whereas array[3] points to a potentially new 4th element.
@@ -358,9 +350,6 @@ public class Path implements Serializable {
      * Then the 4th (string) object in the child-array will be replaced with a new ValueMap (i.e., an empty json object)
      * <p>
      * Note: this method is invoked currently only from CaseFileMerger, so in practice, the child-array will have values.
-     *
-     * @param casefile
-     * @return
      */
     public ValueMap resolveParent(ValueMap casefile) {
         Path parentPath = getParent();
@@ -422,8 +411,6 @@ public class Path implements Serializable {
 
     /**
      * Return the relative name of this path.
-     *
-     * @return
      */
     public String getPart() {
         return isArrayElement() ? encodedName + "[" + index + "]" : encodedName;
@@ -432,8 +419,6 @@ public class Path implements Serializable {
     /**
      * Returns this path as array path, so if index is -1 it returns this, else it returns
      * a new path without index element.
-     *
-     * @return
      */
     public Path getContainer() {
         return new Path(this.root, null, null, this.depth, -1);
@@ -442,8 +427,6 @@ public class Path implements Serializable {
     /**
      * Returns the parent path (or an empty path if parent is null)
      * This parent path has no child.
-     *
-     * @return
      */
     public Path getParent() {
         if (this.parent == null) {
@@ -455,8 +438,6 @@ public class Path implements Serializable {
 
     /**
      * Return the relative name of this path.
-     *
-     * @return
      */
     public String getName() {
         return name;
@@ -464,8 +445,6 @@ public class Path implements Serializable {
 
     /**
      * Returns the path index (or -1 if it does not have one)
-     *
-     * @return
      */
     public int getIndex() {
         return index;
@@ -473,8 +452,6 @@ public class Path implements Serializable {
 
     /**
      * Returns true if index greater than or equal to 0;
-     *
-     * @return
      */
     public boolean isArrayElement() {
         return index >= 0;
@@ -482,9 +459,6 @@ public class Path implements Serializable {
 
     /**
      * Returns true if the other path matches this path
-     *
-     * @param otherPath
-     * @return
      */
     public boolean matches(Path otherPath) {
         return match(this.leaf(), otherPath.leaf());
@@ -492,9 +466,6 @@ public class Path implements Serializable {
 
     /**
      * Returns true if the other path is a child of this path
-     *
-     * @param otherPath
-     * @return
      */
     public boolean hasChild(Path otherPath) {
         if (this.depth >= otherPath.depth) {
@@ -509,9 +480,6 @@ public class Path implements Serializable {
     /**
      * Returns true if this path element is an element in the other path.
      * E.g. other path is /abc, and this is /abc[0] then it returns true
-     *
-     * @param otherPath
-     * @return
      */
     public boolean isArrayElementOf(Path otherPath) {
         return (this.depth == otherPath.depth && this.isArrayElement() && !otherPath.isArrayElement() && this.name.equals(otherPath.name) && match(this.parent, otherPath.parent));
@@ -543,10 +511,6 @@ public class Path implements Serializable {
     /**
      * Check whether path is not null, whether it has empty elements,
      * and removes first and last slash if they exist.
-     *
-     * @param rawPath
-     * @return
-     * @throws InvalidPathException
      */
     public static String[] convertRawPath(String rawPath, boolean trim) throws InvalidPathException {
         if (rawPath == null) {

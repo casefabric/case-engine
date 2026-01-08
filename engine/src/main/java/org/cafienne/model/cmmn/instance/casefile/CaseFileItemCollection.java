@@ -117,6 +117,7 @@ public abstract class CaseFileItemCollection<T extends CaseFileItemCollectionDef
         }
         // If we reach this point, the item does not yet exist, so create it.
         // Note: without setting a value or transitioning it into the Available state!
+        // NOTE: the reason is that the same is used inside command validation code, and since that may fail, we should not generate creation events
         return constructItem(childDefinition);
     }
 
