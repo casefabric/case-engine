@@ -22,6 +22,7 @@ import org.cafienne.model.cmmn.actorapi.event.migration.CaseFileItemDropped;
 import org.cafienne.model.cmmn.actorapi.event.migration.CaseFileItemMigrated;
 import org.cafienne.model.cmmn.definition.CMMNElementDefinition;
 import org.cafienne.model.cmmn.definition.casefile.CaseFileError;
+import org.cafienne.model.cmmn.definition.casefile.CaseFileItemCollectionDefinition;
 import org.cafienne.model.cmmn.definition.casefile.CaseFileItemDefinition;
 import org.cafienne.model.cmmn.definition.casefile.PropertyDefinition;
 import org.cafienne.model.cmmn.instance.Case;
@@ -30,9 +31,11 @@ import org.cafienne.model.cmmn.instance.State;
 import org.cafienne.model.cmmn.instance.sentry.CaseFileItemOnPart;
 import org.cafienne.model.cmmn.instance.sentry.TransitionGenerator;
 import org.cafienne.util.json.Value;
+import org.cafienne.util.json.ValueList;
 import org.cafienne.util.json.ValueMap;
 import org.w3c.dom.Element;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -80,9 +83,6 @@ public class CaseFileItem extends CaseFileItemCollection<CaseFileItemDefinition>
 
     /**
      * Constructor for CaseFileItems that belong to an array
-     *
-     * @param array
-     * @param indexInArray
      */
     protected CaseFileItem(CaseFileItemArray array, int indexInArray) {
         this(array.getCaseInstance(), array.getDefinition(), array.getParent(), array, indexInArray, false);
@@ -90,10 +90,6 @@ public class CaseFileItem extends CaseFileItemCollection<CaseFileItemDefinition>
 
     /**
      * Constructor for {@link CaseFileItemArray}.
-     *
-     * @param caseInstance
-     * @param definition
-     * @param parent
      */
     protected CaseFileItem(CaseFileItemDefinition definition, Case caseInstance, CaseFileItemCollection<?> parent) {
         this(caseInstance, definition, parent, null, -1, true);
@@ -101,10 +97,6 @@ public class CaseFileItem extends CaseFileItemCollection<CaseFileItemDefinition>
 
     /**
      * Constructor for plain CaseFileItems (i.e., not belonging to an array)
-     *
-     * @param caseInstance
-     * @param definition
-     * @param parent
      */
     public CaseFileItem(Case caseInstance, CaseFileItemDefinition definition, CaseFileItemCollection<?> parent) {
         this(caseInstance, definition, parent, null, -1, false);
@@ -139,7 +131,6 @@ public class CaseFileItem extends CaseFileItemCollection<CaseFileItemDefinition>
     /**
      * Returns the parent of this case file item, or null if this is a top level item (i.e., it is a child of the casefile)
      *
-     * @return
      */
     public CaseFileItem getParent() {
         return parent;
@@ -155,8 +146,6 @@ public class CaseFileItem extends CaseFileItemCollection<CaseFileItemDefinition>
 
     /**
      * Links the on part to this case file item. Is used by the case file item to connect the connected criterion whenever a transition happens.
-     *
-     * @param onPart
      */
     public void connectOnPart(CaseFileItemOnPart onPart) {
         getPublisher().connectOnPart(onPart);
@@ -209,10 +198,50 @@ public class CaseFileItem extends CaseFileItemCollection<CaseFileItemDefinition>
         addDebugInfo(() -> getDescription() + ": Completed behavior for transition " + event.getTransition());
     }
 
+    private void createAncestorChain() {
+        // This method will invoke an update on the CaseFile with an empty JSON map on the path of our parent.
+        //  It will create CaseFileItemCreated events on those elements, but with an empty value.
+        // Create an empty map that will be run on the CaseFile to generate the correct creation events
+        Value<?> caseFileUpdate = new ValueMap();
+
+        // This code will iterate the ancestor chain from root downwards.
+        // It creates an empty ValueMap or ValueList for each item (depending on its multiplicity).
+        // Keep track of the "current" ancestor that is worked on (path, definition and value).
+        Path ancestorPath = this.getPath().getParent().root;
+        CaseFileItemCollectionDefinition ancestorDefinition = getCaseInstance().getCaseFile().getDefinition();
+        Value<?> ancestorValue = caseFileUpdate;
+
+        // Now do a top-down iteration of the path, creating a proper child value (whether array or map) and adding that to the parent.
+        while (ancestorPath != null) {
+            CaseFileItemDefinition childDefinition = ancestorDefinition.getChild(ancestorPath.name);
+            // Determine whether child must be list of map
+            Value<?> childValue = childDefinition.getMultiplicity().isIterable() ? new ValueList() : new ValueMap();
+            // Check the ancestor value type, and add or put the child value.
+            if (ancestorValue.isList()) {
+                ancestorValue.asList().add(childValue);
+            } else {
+                ancestorValue.asMap().put(childDefinition.getName(), childValue);
+            }
+            // Iterate to next child in the ancestor chain
+            ancestorPath = ancestorPath.child;
+            ancestorDefinition = childDefinition;
+            ancestorValue = childValue;
+        }
+        addDebugInfo(() -> "Updating case file contents with empty values on path " + this.getPath().getParent());
+        getCaseInstance().getCaseFile().updateContent(caseFileUpdate);
+    }
+
     @Override
     public void createContent(Value<?> newContent) {
         // EVENT ORDER for Create Content: first create ourselves, then the children
         generateContentWarnings(newContent, "Create");
+
+        // First check if our parent has been created. If not, we'll add empty data in our ancestor chain, in order to generate CaseFileItemCreated events.
+        // Note: if parent == null, it means we're a root level CaseFileItem, so then there is no ancestor chain that needs to be created.
+        if (parent != null && parent.getState().isNull()) {
+            addDebugInfo(() -> "Create content in " + getPath() + " requires parent content. Parent item has not yet been created. Empty parent content will be created first");
+            createAncestorChain();
+        }
         addCaseFileEvent(new CaseFileItemCreated(this, newContent));
         if (newContent.isMap()) {
             newContent.asMap().getValue().forEach((name, newChildValue) -> {
@@ -266,14 +295,14 @@ public class CaseFileItem extends CaseFileItemCollection<CaseFileItemDefinition>
         addDebugInfo(() -> {
             if (newContent.isMap()) {
                 // Filter properties that are not defined
-                List<String> undefinedProperties = newContent.asMap().getValue().keySet().stream().filter(this::isUndefined).collect(Collectors.toList());
+                List<String> undefinedProperties = newContent.asMap().getValue().keySet().stream().filter(this::isUndefined).toList();
                 if (undefinedProperties.size() == 1) {
-                    return op + " on CaseFileItem[" + getPath() + "] contains undefined property '" + undefinedProperties.get(0) + "'";
+                    return op + " on CaseFileItem[" + getPath() + "] contains undefined property '" + undefinedProperties.getFirst() + "'";
                 } else if (undefinedProperties.size() > 1) {
                     return op + " on CaseFileItem[" + getPath() + "] contains undefined properties " + undefinedProperties.stream().map(p -> "'" + p + "'").collect(Collectors.joining(", "));
                 }
             } else {
-                if (getDefinition().getCaseFileItemDefinition().getProperties().size() > 0) {
+                if (!getDefinition().getCaseFileItemDefinition().getProperties().isEmpty()) {
                     return op + " on CaseFileItem[" + getPath() + "] is done with a value of type " + newContent.getValue().getClass().getSimpleName() + "; a Map<Name,Value> is expected instead.";
                 }
             }
@@ -377,8 +406,6 @@ public class CaseFileItem extends CaseFileItemCollection<CaseFileItemDefinition>
 
     /**
      * Sets the value of this CaseFileItem. Internal framework method not to be used from applications.
-     *
-     * @param newValue
      */
     protected void setValue(Value<?> newValue) {
         addDebugInfo(() -> "Setting case file item [" + getPath() + "] value to: ", newValue);
@@ -397,25 +424,18 @@ public class CaseFileItem extends CaseFileItemCollection<CaseFileItemDefinition>
 
     /**
      * Hook to inform array (if we belong to one) about our change.
-     *
-     * @param item
      */
     protected void itemChanged(CaseFileItem item) {
     }
 
     /**
      * Hook to inform array (if we belong to one) about removal of a child.
-     *
-     * @param index
      */
     protected void itemRemoved(int index) {
     }
 
     /**
-     * This updates the json structure of the parent CaseFileItem, without triggering CaseFileItemTransitions
-     *
-     * @param childName
-     * @param childValue
+     * This updates the JSON structure of the parent CaseFileItem, without triggering CaseFileItemTransitions
      */
     private void propagateValueChangeToParent(String childName, Value<?> childValue) {
         if (parent != null) {
@@ -439,8 +459,6 @@ public class CaseFileItem extends CaseFileItemCollection<CaseFileItemDefinition>
 
     /**
      * Returns the content of the CaseFileItem
-     *
-     * @return
      */
     public Value<?> getValue() {
         return value;
@@ -448,8 +466,6 @@ public class CaseFileItem extends CaseFileItemCollection<CaseFileItemDefinition>
 
     /**
      * Returns the last known transition on this case file item
-     *
-     * @return
      */
     public CaseFileItemTransition getLastTransition() {
         return lastTransition;
@@ -457,8 +473,6 @@ public class CaseFileItem extends CaseFileItemCollection<CaseFileItemDefinition>
 
     /**
      * Returns a path to this case file item.
-     *
-     * @return
      */
     public Path getPath() {
         return new Path(this);
@@ -466,8 +480,6 @@ public class CaseFileItem extends CaseFileItemCollection<CaseFileItemDefinition>
 
     /**
      * Returns the current state of the case file item.
-     *
-     * @return
      */
     public State getState() {
         return state;
@@ -479,8 +491,6 @@ public class CaseFileItem extends CaseFileItemCollection<CaseFileItemDefinition>
      * Items in it have their own state, complying with the standard.
      * Array also has a state helping to understand how to deal with operations that slightly deviates
      * (e.g., Create can be done on an array in state "Available" and results in adding an element)
-     *
-     * @param newState
      */
     protected void setState(State newState) {
         this.state = newState;
@@ -498,8 +508,6 @@ public class CaseFileItem extends CaseFileItemCollection<CaseFileItemDefinition>
 
     /**
      * Dump the CaseFile item as XML.
-     *
-     * @param parentElement
      */
     public void dumpMemoryStateToXML(Element parentElement) {
         Element caseFileItemXML = parentElement.getOwnerDocument().createElement("CaseFileItem");
@@ -522,8 +530,6 @@ public class CaseFileItem extends CaseFileItemCollection<CaseFileItemDefinition>
     /**
      * Reference to most recently updated case file item. Returns <code>this</code> by default. CaseFileItemArray overwrites it
      * and returns the most recently changed / updated case file item in it's array
-     *
-     * @return
      */
     public CaseFileItem getCurrent() {
         return this;
@@ -532,7 +538,6 @@ public class CaseFileItem extends CaseFileItemCollection<CaseFileItemDefinition>
     /**
      * Returns the location of this case file item within the array it belongs to. If the case file item is not "iterable", then -1 is returned.
      *
-     * @return
      */
     public int getIndex() {
         return indexInArray;
@@ -555,17 +560,16 @@ public class CaseFileItem extends CaseFileItemCollection<CaseFileItemDefinition>
     }
 
     protected boolean allowTransition(CaseFileItemTransition intendedTransition) {
-        switch (getState()) {
-            case Null:
+        return switch (getState()) {
+            case Null ->
                 // Also support upserting a case file item; note: we explicitly do NOT check whether the parent CFI is in state Available. Not sure if that is required...
-                return intendedTransition == CaseFileItemTransition.Create || intendedTransition == CaseFileItemTransition.Update || intendedTransition == CaseFileItemTransition.Replace;
-            case Available:
-                return intendedTransition == CaseFileItemTransition.Update || intendedTransition == CaseFileItemTransition.Replace || intendedTransition == CaseFileItemTransition.Delete;
-            default: {
+                    intendedTransition == CaseFileItemTransition.Create || intendedTransition == CaseFileItemTransition.Update || intendedTransition == CaseFileItemTransition.Replace;
+            case Available -> intendedTransition == CaseFileItemTransition.Update || intendedTransition == CaseFileItemTransition.Replace || intendedTransition == CaseFileItemTransition.Delete;
+            default -> {
                 addDebugInfo(() -> "CFI[" + getPath() + "] is in state " + getState() + " and then we cannot do transition " + intendedTransition);
-                return false;
+                yield false;
             }
-        }
+        };
     }
 
     @Override

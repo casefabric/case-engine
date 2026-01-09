@@ -56,7 +56,7 @@ public class CaseFile extends CaseFileItemCollection<CaseFileDefinition> {
 
     @Override
     public void createContent(Value<?> newContent) {
-        validateValueMap(newContent).getValue().entrySet().forEach(entry -> getItem(entry.getKey()).createContent(entry.getValue()));
+        validateValueMap(newContent).getValue().forEach((key, value) -> getItem(key).createContent(value));
     }
 
     @Override
@@ -68,14 +68,14 @@ public class CaseFile extends CaseFileItemCollection<CaseFileDefinition> {
     public void replaceContent(Value<?> newContent) {
         ValueMap newCaseFileContent = validateValueMap(newContent);
         // Replace new content found in the map
-        newCaseFileContent.getValue().entrySet().forEach(entry -> getItem(entry.getKey()).replaceContent(entry.getValue()));
+        newCaseFileContent.getValue().forEach((key, value) -> getItem(key).replaceContent(value));
         // Now remove children not found in the map
         removeReplacedItems(newCaseFileContent);
     }
 
     @Override
     public void updateContent(Value<?> newContent) {
-        validateValueMap(newContent).getValue().entrySet().forEach(entry -> getItem(entry.getKey()).updateContent(entry.getValue()));
+        validateValueMap(newContent).getValue().forEach((key, value) -> getItem(key).updateContent(value));
     }
 
     @Override
@@ -84,9 +84,7 @@ public class CaseFile extends CaseFileItemCollection<CaseFileDefinition> {
             // Deleting entire case file is allowed under all circumstances...
             return;
         }
-        validateValueMap(newContent).getValue().entrySet().stream().forEach(entry -> {
-            String itemName = entry.getKey();
-            Value<?> newItemContent = entry.getValue();
+        validateValueMap(newContent).getValue().forEach((itemName, newItemContent) -> {
             CaseFileItem item = getItem(itemName);
             if (item == null) {
                 throw new CaseFileError("Item '" + itemName + "' is not found in the Case File definition");
@@ -123,7 +121,6 @@ public class CaseFile extends CaseFileItemCollection<CaseFileDefinition> {
         } catch (Exception willNotOccur) {
             throw new RuntimeException("Cannot parse xml???", willNotOccur);
         }
-        String caseFileString = XMLHelper.printXMLNode(xmlDocument.getDocumentElement().getFirstChild());
-        return caseFileString;
+        return XMLHelper.printXMLNode(xmlDocument.getDocumentElement().getFirstChild());
     }
 }
