@@ -31,6 +31,8 @@ class ApiConfig(val parent: CaseSystemConfig) extends MandatoryConfig {
     config.getInt("bindport")
   }
 
+  val routes: Seq[String] = readStrings("routes")
+
   val anonymousConfig: AnonymousConfig = {
     new AnonymousConfig(this)
   }
