@@ -60,6 +60,19 @@ class CaseEngineHttpServer(val caseSystem: CaseSystem) extends LazyLogging {
     addRoute(new AnonymousRequestRoutes(this))
   }
 
+  caseSystem.config.api.routes.foreach(routeString => {
+    try {
+      logger.info(s"Parsing $routeString to a class.")
+      val routeClass = Class.forName(routeString).asInstanceOf[Class[CaseServiceRoute]]
+      val route = routeClass.getConstructor(classOf[CaseEngineHttpServer]).newInstance(this)
+      addRoute(route)
+      logger.info(s"Added route $route to the HTTP API.")
+    } catch {
+      case t: Throwable => throw new IllegalArgumentException("Cannot convert " + routeString +" to a proper route class", t)
+    }
+  })
+
+
   /**
     * Method to extend the default routes that Cafienne exposes
     * @param caseServiceRoute The additional Route must extend CaseServiceRoute
