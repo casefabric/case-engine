@@ -35,14 +35,14 @@ import org.cafienne.persistence.infrastructure.lastmodified.header.Headers
 import org.cafienne.persistence.querydb.query.exception.SearchFailure
 import org.cafienne.service.http.CaseEngineHttpServer
 import org.cafienne.service.http.anonymous.model.AnonymousAPI._
-import org.cafienne.service.infrastructure.route.{CaseTeamValidator, LastModifiedDirectives}
+import org.cafienne.service.infrastructure.route.{CaseTeamValidator, CustomHeaderDirectives}
 import org.cafienne.util.Guid
 
 import scala.concurrent.ExecutionContext
 
 @SecurityRequirement(name = "oauth2", scopes = Array("openid"))
 @Path("/request")
-class CaseRequestRoute(override val httpService: CaseEngineHttpServer) extends AnonymousRoute with CaseTeamValidator with LastModifiedDirectives {
+class CaseRequestRoute(override val httpService: CaseEngineHttpServer) extends AnonymousRoute with CaseTeamValidator with CustomHeaderDirectives {
 
   // Reading the definitions executes certain validations immediately
   val configuredCaseDefinitions: Map[String, AnonymousCaseDefinition] = caseSystem.config.api.anonymousConfig.definitions
