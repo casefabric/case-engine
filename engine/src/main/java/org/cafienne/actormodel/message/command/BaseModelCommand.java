@@ -38,11 +38,12 @@ import java.io.StringWriter;
 
 public abstract class BaseModelCommand<T extends ModelActor, U extends UserIdentity> implements ModelCommand {
     protected final ValueMap json;
-    public final String correlationId;
+    private String correlationId;
     public final String actorId;
     public final ActorMetadata target;
     protected transient T actor;
     private ModelResponse response;
+    private final boolean fromJson;
 
     /**
      * Store the user that issued the Command.
@@ -50,6 +51,7 @@ public abstract class BaseModelCommand<T extends ModelActor, U extends UserIdent
     private final U user;
 
     protected BaseModelCommand(U user, ActorMetadata target) {
+        this.fromJson = false;
         this.json = new ValueMap();
         this.target = validateMetadata(target);
         this.actorId = target.actorId();
@@ -85,6 +87,7 @@ public abstract class BaseModelCommand<T extends ModelActor, U extends UserIdent
 
     protected BaseModelCommand(ValueMap json) {
         this.json = json;
+        this.fromJson = true;
         if (json.has(Fields.metadata)) {
             ValueMap metadata = json.readMap(Fields.metadata);
             this.user = actorType().readUser(metadata.with(Fields.user));
@@ -98,6 +101,14 @@ public abstract class BaseModelCommand<T extends ModelActor, U extends UserIdent
             this.correlationId = json.readString(Fields.correlationId);
             this.actorId = json.readString(Fields.actorId);
             this.target = new ActorMetadata(this.actorType(), actorId, null);
+        }
+    }
+
+    public void setCorrelationId(String correlationId) {
+        if (this.fromJson) {
+            throw new RuntimeException("Cannot set correlation id on a command of type " + this.getClass().getSimpleName());
+        } else {
+            this.correlationId = correlationId;
         }
     }
 

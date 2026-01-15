@@ -24,22 +24,22 @@ import org.apache.pekko.http.scaladsl.model.{ContentTypes, HttpEntity, StatusCod
 import org.apache.pekko.http.scaladsl.server.Directives.{complete, optionalHeaderValueByName, respondWithHeader, respondWithHeaders}
 import org.apache.pekko.http.scaladsl.server.{Directive0, Route}
 import org.cafienne.actormodel.message.response.ModelResponse
-import org.cafienne.persistence.infrastructure.lastmodified.header.LastModifiedHeader
+import org.cafienne.persistence.infrastructure.lastmodified.header.{Headers, LastModifiedHeader}
 import org.cafienne.persistence.querydb.schema.QueryDB
 
-trait LastModifiedDirectives extends LazyLogging {
+trait CustomHeaderDirectives extends LazyLogging {
   implicit val queryDB: QueryDB
   /**
-    * Simple CaseResponse converter to JSON
-    */
+   * Simple CaseResponse converter to JSON
+   */
   implicit val modelResponseMarshaller: Marshaller[ModelResponse, HttpEntity.Strict] = Marshaller.withFixedContentType(ContentTypes.`application/json`) { value: ModelResponse =>
     HttpEntity(ContentTypes.`application/json`, value.toJson.toString)
   }
 
 
   /**
-    * Complete by marshalling the response as JSON and with writing last modified header
-    */
+   * Complete by marshalling the response as JSON and with writing last modified header
+   */
   def completeWithLMH[R <: ModelResponse](statusCode: StatusCodes.Success, response: R, headerName: String): Route = {
     writeLastModifiedHeader(response, headerName) {
       complete(statusCode, response)
@@ -47,8 +47,8 @@ trait LastModifiedDirectives extends LazyLogging {
   }
 
   /**
-    * Complete without a response but still with writing last modified header
-    */
+   * Complete without a response but still with writing last modified header
+   */
   def completeOnlyLMH[R <: ModelResponse](statusCode: StatusCodes.Success, response: R, headerName: String): Route = {
     writeLastModifiedHeader(response, headerName) {
       complete(statusCode)
@@ -74,4 +74,6 @@ trait LastModifiedDirectives extends LazyLogging {
       respondWithHeaders(Seq())
     }
   }
+
+  def readCorrelationId(subRoute: Option[String] => Route): Route = optionalHeaderValueByName(Headers.CORRELATION_ID) { correlationId => subRoute(correlationId) }
 }
