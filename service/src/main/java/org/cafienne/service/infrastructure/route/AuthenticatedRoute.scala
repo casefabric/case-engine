@@ -34,7 +34,7 @@ import scala.concurrent.ExecutionContext
 /**
   * Base for enabling authentication
   */
-trait AuthenticatedRoute extends CaseServiceRoute with AuthenticationDirectives with LastModifiedDirectives {
+trait AuthenticatedRoute extends CaseServiceRoute with AuthenticationDirectives with CustomHeaderDirectives {
 
   override val userCache: IdentityRegistration = caseSystem.identityRegistration
   override implicit val ex: ExecutionContext = caseSystem.system.dispatcher

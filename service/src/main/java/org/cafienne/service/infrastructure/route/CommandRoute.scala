@@ -36,11 +36,14 @@ import scala.util.{Failure, Success}
 
 trait CommandRoute extends AuthenticatedRoute {
   def askModelActor(command: ModelCommand): Route = {
-    CommandRouteExecutor.askModelActor(caseSystem, command)
+    readCorrelationId { correlationID =>
+        correlationID.foreach(c => command.setCorrelationId(c))
+        CommandRouteExecutor.askModelActor(caseSystem, command)
+    }
   }
 }
 
-object CommandRouteExecutor extends LastModifiedDirectives with LazyLogging {
+object CommandRouteExecutor extends CustomHeaderDirectives with LazyLogging {
   override implicit val queryDB: QueryDB = null // no need for this one
 
   def askModelActor(caseSystem: CaseSystem, command: ModelCommand): Route = {

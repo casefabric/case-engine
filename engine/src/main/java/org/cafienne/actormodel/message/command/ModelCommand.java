@@ -34,6 +34,12 @@ public interface ModelCommand extends UserMessage {
     ActorMetadata target();
 
     /**
+     * Enable setting the correlation id for this command from an outside source.
+     * Note: this may throw an exception if the method is invoked during or after command handling.
+     */
+    void setCorrelationId(String correlationId);
+
+    /**
      * Through this method, the command is made aware of the actor that is handling it.
      */
     void setActor(ModelActor actor);
