@@ -27,7 +27,7 @@ object Dependencies {
   val swaggerVersion     = "2.2.34"
   val slickVersion       = "3.5.2"
   val jasperVersion      = "6.20.0"
-  val embabelVersion     = "0.3.1-SNAPSHOT"
+  val embabelVersion     = "0.3.2-SNAPSHOT"
 
   def pekkoModule(name: String, version: String = pekkoVersion): ModuleID = "org.apache.pekko" %% s"pekko-$name" % version
   def pekkoPersistenceModule(name: String, version: String = pekkoPersistenceVersion): ModuleID = pekkoModule(s"persistence-$name", version)
