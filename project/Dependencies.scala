@@ -22,7 +22,7 @@ object Dependencies {
   val pekkoHttpVersion    = "1.2.0"
   val pekkoVersion        = "1.1.4"
   val pekkoPersistenceVersion = "1.1.4"
-  val jacksonVersion     = "2.18.4"
+  val jacksonVersion     = "2.19.4"
   val enumeratumVersion  = "1.9.0"
   val swaggerVersion     = "2.2.34"
   val slickVersion       = "3.5.2"
@@ -112,9 +112,9 @@ object Dependencies {
     , "io.swagger.core.v3"      %  "swagger-annotations"                  % swaggerVersion
     , "io.swagger.core.v3"      %  "swagger-models"                       % swaggerVersion
     , "com.github.swagger-akka-http" %% "swagger-pekko-http"              % "2.14.0" excludeAll ExclusionRule(organization = "org.apache.pekko")
-    , "com.github.swagger-akka-http" %% "swagger-scala-module"            % "2.13.1" excludeAll ExclusionRule(organization = "org.apache.pekko")
+    , "com.github.swagger-akka-http" %% "swagger-scala-module"            % "2.14.0" excludeAll ExclusionRule(organization = "org.apache.pekko")
     , "javax.xml.bind"          %  "jaxb-api"                             % "2.3.1" // Note: this one is still needed for swagger-pekko-http
-    , "org.yaml"                %"snakeyaml"                              % "2.4"
+    , "org.yaml"                %"snakeyaml"                              % "2.5"
     // JWT Support
     , "com.github.t3hnar"       %% "scala-bcrypt"                         % "4.3.0"
     , "com.github.j5ik2o"       %% "sw4jj"                                % "1.1.60" // Simple scala Wrapper For Java-Jwt
