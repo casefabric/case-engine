@@ -38,6 +38,7 @@ import org.cafienne.system.health.HealthMonitor;
 import org.slf4j.Logger;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -164,7 +165,9 @@ public class ModelActorTransaction extends UserMessageTransaction<ModelCommand> 
     }
 
     private Tagged addTags(ModelEvent event) {
-        return new Tagged(event, event.tags());
+        HashSet tags = new HashSet(event.tags());
+        tags.add(event.metadata().root().actorId());
+        return new Tagged(event, tags);
     }
 
     private void persistEventsAndThenReply(ModelResponse response) {
